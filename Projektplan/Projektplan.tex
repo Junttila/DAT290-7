@@ -50,7 +50,7 @@ Detta projekt uppkom från ett behov av en uppgradering till den klassiska radio
 (((Projektets syfte är att uppgradera en radiostyrd bil till en mer modern teknisk produkt. Genom att ersätta handkontrollen med mer aktuell teknologi blir bilen mer användarvänlig och dess funktioner mer adapterade till dagens samhälle. ))) ÄNDRA TILL DETTA, elr liknande??
 
 \section{Mål}
-Projektet går ut på att ersätta en del av elektroniken i en radiostyrd bil. Det utgår ifrån en bil där mottagare och sändare i den befintliga styrelektroniken byts ut mot ARM-baserade system. Vidare ska en kontrollapplikation implementeras (VAR NÅGONSTANS/HUR?). Bilen ska självständigt kunna köra rakt fram i högsta möjliga takt och på ett avstånd av max 1 cm från en vägg bromsa in helt utan att kollidera med den. Dessa uppgraderingar ska båda använda sig av Bluetooth. 
+Projektet går ut på att ersätta en del av elektroniken i en radiostyrd bil. Det utgår ifrån en bil där mottagare och sändare i den befintliga styrelektroniken byts ut mot ARM-baserade system. Vidare ska en kontrollapplikation implementeras med ett antal avvståndsmätare. Bilen ska självständigt kunna köra rakt fram i högsta möjliga takt och på ett avstånd av maximalt 1 cm från en vägg bromsa in helt utan att kollidera med den. Dessa uppgraderingar ska båda använda sig av Bluetooth. 
 
 Sedan implementeras styrning via en telefonapplikation som ska kunna kontrollera bilen genom ett Androidsystem. Även denna uppgradering ska använda sig av Bluetooth.
 
@@ -59,6 +59,9 @@ Sedan implementeras styrning via en telefonapplikation som ska kunna kontrollera
 %Den hårdvara som tillhandahålls är radiobil, handkontroll(sändare) och signalomvandlare(mottagare). Radiosignaler på okänd frekvens skickas från handkontrollen och avkodas av mottagaren i radiobilen. Därefter omvandlas radiosignalerna till elektroniska signaler genom mottagaren som kontrollerar antingen bilens hastighet eller riktning. Bilens hastighet kontrolleras analogt av motorns kraftutslag, medan riktningen beror av hjulens gradförskjutning. Genom en yttterligare signal kan bilens hastighet reverseras. Elektroniska signaler
 
 För att kunna kontrollera en radiobil används en handkontroll(sändare) och en signalomvandlare(mottagare). Radiosignaler på en okänd frekvens skickas från handkontrollen och avkodas av mottagaren i radiobilen. Dessa omvandlas då till elektroniska signaler som antingen kontrollerar bilens hastighet eller riktning. Parallellt med detta styrs även bilens hastighet av motorns kraftutslag, medan riktningen beror på hjulens gradförskjutning. Genom en ytterligare signal kan bilens hastighet även reverseras. Bilens styrenhet omvandlar radiosignaler som sedan kontrollerar bilens rörelse.
+
+\subsection{Nya styrsignaler}
+Bilens styrsignaler kontrolleras av kontrollenhet MRX-242. Denna enhet fungerar samtidigt som radiomottagare och styrsignalgenerator, och generar signaler till båda motorerna I bilen genom tre kablar. I mening att ersätta dessa med nya signaler finns även tillgång till ett ytterligare kopplingsblock. Blocket kopplas mellan MXR-242 och motorerna, och kommer initialt konfigureras att mäta signalerna från den ursprungliga kontrollenheten i bilen. När dessa är kända kommer blocket omkopplas för att generera nya anpassade styrsignaler. 
 
 \section{Systemöversikt}
 \subsection{Ersättning sändare}
@@ -96,7 +99,11 @@ Vad gäller rapportskrivning finns tillgång till ett dokumentationsprogram, Lat
 \begin{tabular}{|l|l|l|} \hline
 \bf Nr & \bf Beskrivning & \bf Datum \\ \hline \hline
 1 & Projektplan inlämnad & 2016-09-11 \\\hline
- & Projektrapport inlämnad & 2016-10-23 \\ \hline
+2 & Kontrollutbyte klar & 2016-09-23 \\ \hline
+3 & Undviken kollidering klar & 2016-10-07 \\ \hline
+4 & Androidapplikation klar & 2016-10-14 \\ \hline
+5 & Demonstrationsförberedelser klara & 2016-10-18 \\ \hline
+6 & Projektrapport inlämnad & 2016-10-23 \\ \hline
 
 \end{tabular}
 
@@ -104,7 +111,24 @@ Vad gäller rapportskrivning finns tillgång till ett dokumentationsprogram, Lat
 
 \begin{tabular}{|l|l|l|} \hline
 \bf Nr & \bf Beskrivning & \bf Tidsåtgång \\ \hline \hline
-
+ & Uppdatering loggbok & 10 h \\ \hline
+ & Sriva dagordningar & 6 h \\ \hline
+ & Projektplansskrivning & 50 h \\ \hline
+ & Projektrapportsskrivning & 250 h \\ \hline
+ & Demonstrationsförberedelser & 50 h \\ \hline
+ & Oppositionsskrivning & 9 h \\ \hline
+ & Granskning och modifiering & 40 h \\ \hline
+ & Föreläsningar & 140 h \\ \hline
+ & Androidprogrammering & 60 h \\ \hline
+ & Projektmöten & 65 h \\ \hline
+ & Förståelse av billaboration & 60 h \\ \hline
+ & Styrsignalsgenererande & 100 h \\ \hline
+ & Handkontrollsutbyte & 100 h \\ \hline
+ & Bluetoothöverskrivning & 50 h \\ \hline
+ & Undviken väggkollidering & 200 h \\ \hline
+ & Dokumentation under laboration & 20 h \\ \hline
+ & Konsultation & 10 h \\ \hline
+ 
 \end{tabular}
 
 \section{Tidsplan}
@@ -162,19 +186,28 @@ Projektrapport           & 2016-10-23 & Lärarteam & PP inlämning (LaTeX) \\ \h
 För att på ett bra sätt isolera eventuella problem samt verifiera funktion och kvalité kommer projektet utföras i flera steg där varje steg är en utökning av det förra som noggrant testas innan nästa påbörjas. 
 
 
-\subsection{Test av styrsignaler}
-Styrsignaler skickat av bilens radiomottagare till styrkretsen analyseras först för att få en förståelse över hur de fungerar. Genom denna analys möjliggörs det att återskapa samma styrsignaler med en egen krets. För att verifiera att detta resultat är korrekt kommer bilens styrkrets (via kabel) kopplas till en krets som genererar styrsignaler enligt de specifikationerna som analysen har resulterat i. Följande moment ska kunna utföras med samma möjligheter som med bilens inbyggda radiomottagare.
+\subsection{Styrsignaler}
+Till att börja med ska styrsignaler som bilens radiomottagare skickar till styrkretsen analyseras för att få en förståelse av hur de fungerar och kunna därmed återskapa samma styrsignaler med en egen krets. Styrsignalernas ändamål är att få bilens främre hjul att svänga samt att köra bilen framåt och bakåt. För att verifiera att analysens resultat är korrekt kommer bilens styrkrets (via kabel) kopplas till en krets som genererar styrsignaler enligt de specifikationerna som analysen har resulterat i. Följande moment ska kunna utföras med samma möjligheter som med bilens inbyggda radiomottagare.
+
+%Styrsignaler skickat av bilens radiomottagare till styrkretsen analyseras först för att få en förståelse över hur de fungerar. Genom denna analys möjliggörs det att återskapa samma styrsignaler med en egen krets. För att verifiera att detta resultat är korrekt kommer bilens styrkrets (via kabel) kopplas till en krets som genererar styrsignaler enligt de specifikationerna som analysen har resulterat i. Följande moment ska kunna utföras med samma möjligheter som med bilens inbyggda radiomottagare.
 \begin{itemize}  
     \item Svänga höger och vänster med olika rattutslag.
     \item Köra framåt och bakåt med olika hastigheter.
 \end{itemize}
-Då det finns en specifikation på styrsignaler ska dessa börjas skickas trådlöst. Först sker detta via direkt seriell överföring över (433MHz?)-bandet. En separat krets ska kunna bestämma vilka styrsignaler som en inbäddad krets ska skicka till bilens styrmodul. Dessa funktioner kommer verifieras på samma sätt som i det tidigare nämnda testet och ha identiska krav.  
+
+\subsection{Enkel trådlös kommunikation}
+En separat krets ska via kommunikation över 433MHz-bandet kunna bestämma vilka styrsignaler som en inbäddad krets ska skicka till bilens styrmodul. Samma funktioner ska testas som under testet via kabel med samma krav det vill säga att bilen ska kunna styras med samma möjligheter som med den inbyggda radiomottagaren.
+
+%Då det finns en specifikation på styrsignaler ska dessa börjas skickas trådlöst. Först sker detta via direkt seriell överföring över (433MHz?)-bandet. En separat krets ska kunna bestämma vilka styrsignaler som en inbäddad krets ska skicka till bilens styrmodul. Dessa funktioner kommer verifieras på samma sätt som i det tidigare nämnda testet och ha identiska krav.  
+
+\subsection{Bluetooth}
+När det finns trådlös styrningsmöjlighet kommer den tidigare kommunikationsmetoden ersättas med Bluetooth-protokollet som fungerar på liknande men utökat sätt. Åter igen ska den inbäddade kretsen kunna styra bilen enligt signaler som den separata modulen skickar via Bluetooth. Det ska ske med samma krav som i det förgående testet. Utöver det måste den inbäddade kretsen kunna upprätta en anslutning med den separata modulen vilket kommer testas i samband med styrningstestet.
 
 
 %Bluetooth protokoll på liknande men utökat? Hur? Systemöversikt?
-När det finns trådlös styrningsmöjlighet kommer den tidigare kommunikationsmetoden ersättas med ett Bluetooth-protokoll som fungerar på liknande men utökat sätt. Återigen ska den inbäddade kretsen kunna styra bilen enligt signaler som den separata modulen skickar via Bluetooth. Även detta test sker med samma krav som i föregående. Utöver det måste den inbäddade kretsen kunna upprätta en anslutning med den separata modulen vilket kommer kontrolleras i samband med styrningstestet.
+%När det finns trådlös styrningsmöjlighet kommer den tidigare kommunikationsmetoden ersättas med ett Bluetooth-protokoll som fungerar på liknande men utökat sätt. Återigen ska den inbäddade kretsen kunna styra bilen enligt signaler som den separata modulen skickar via Bluetooth. Även detta test sker med samma krav som i föregående. Utöver det måste den inbäddade kretsen kunna upprätta en anslutning med den separata modulen vilket kommer kontrolleras i samband med styrningstestet.
 
-
-%Vilka fler test behöver vi? 
+\subsection{Avståndsmätare}
+Slutligen när avståndsmätaren har implementerats ska denna testas genom körning av bilen mot en vägg och mätning av avståndet till väggen då bilen har stannat. Detta ska utföras ett flertal gånger med olika hastigheter. 
 
 \end{document}
