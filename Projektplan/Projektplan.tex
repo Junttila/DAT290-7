@@ -23,7 +23,6 @@
 
 \vspace{10mm}
 
-%Vet ej vilket datum som ska stå
 {DATUM}
 
 
@@ -50,51 +49,51 @@ Detta projekt uppkom från ett behov av en uppgradering till den klassiska radio
 (Projektets syfte är att uppgradera en radiostyrd bil till en mer modern teknisk produkt. Genom att ersätta handkontrollen med mer aktuell teknologi blir bilen mer användarvänlig och dess funktioner mer adapterade till dagens samhälle. ) ÄNDRA TILL DETTA, elr liknande??
 
 \section{Mål}
-Projektet går ut på att ersätta en del av elektroniken i en radiostyrd bil. Det utgår ifrån en bil där mottagare och sändare i den befintliga styrelektroniken byts ut mot ARM-baserade system. Vidare ska en kontrollapplikation implementeras med ett antal avvståndsmätare. Bilen ska självständigt kunna köra rakt fram i högsta möjliga takt och på ett avstånd av maximalt 1 cm från en vägg bromsa in helt utan att kollidera med den. Dessa uppgraderingar ska båda använda sig av Bluetooth. 
+Projektet går ut på att ersätta en del av elektroniken i en radiostyrd bil. Det utgår från en bil där mottagare och sändare i den befintliga styrelektroniken byts ut mot ARM-baserade system. Vidare ska en kontrollapplikation implementeras med hjälp av ett antal avståndsmätare, därefter ska bilen självständigt kunna köra rakt fram i högsta möjliga takt och på ett avstånd av maximalt 1 cm från en vägg bromsa in helt utan att kollidera med väggen. Dessa uppgraderingar ska båda använda sig av Bluetooth. 
 
 Sedan implementeras styrning via en telefonapplikation som ska kunna kontrollera bilen genom ett Androidsystem. Även denna uppgradering ska använda sig av Bluetooth.
 
 
 \section{Bakgrund}
-%Den hårdvara som tillhandahålls är radiobil, handkontroll(sändare) och signalomvandlare(mottagare). Radiosignaler på okänd frekvens skickas från handkontrollen och avkodas av mottagaren i radiobilen. Därefter omvandlas radiosignalerna till elektroniska signaler genom mottagaren som kontrollerar antingen bilens hastighet eller riktning. Bilens hastighet kontrolleras analogt av motorns kraftutslag, medan riktningen beror av hjulens gradförskjutning. Genom en yttterligare signal kan bilens hastighet reverseras. Elektroniska signaler
-
-För att kunna kontrollera en radiobil används en handkontroll(sändare) och en signalomvandlare(mottagare). Radiosignaler på en okänd frekvens skickas från handkontrollen och avkodas av mottagaren i radiobilen. Dessa omvandlas då till elektroniska signaler som antingen kontrollerar bilens hastighet eller riktning. Parallellt med detta styrs även bilens hastighet av motorns kraftutslag, medan riktningen beror på hjulens gradförskjutning. Genom en ytterligare signal kan bilens hastighet även reverseras. Bilens styrenhet omvandlar radiosignaler som sedan kontrollerar bilens rörelse.
+För att kunna kontrollera en radiobil används en handkontroll(sändare) och en signalomvandlare(mottagare). Radiosignaler på en okänd frekvens skickas från sändaren och avkodas av mottagaren i radiobilen. Dessa omvandlas då till elektroniska signaler som antingen kontrollerar bilens hastighet eller riktning. Parallellt med detta styrs även bilens hastighet av motorns kraftutslag, medan riktningen beror på hjulens gradförskjutning. Genom en ytterligare signal kan bilens hastighet även reverseras. Bilens styrenhet omvandlar radiosignaler som sedan kontrollerar bilens rörelse.
 
 \subsection{Nya styrsignaler}
-Bilens styrsignaler kontrolleras av kontrollenhet MRX-242. Denna enhet fungerar samtidigt som radiomottagare och styrsignalgenerator, och generar signaler till båda motorerna I bilen genom tre kablar. I mening att ersätta dessa med nya signaler finns även tillgång till ett ytterligare kopplingsblock. Blocket kopplas mellan MXR-242 och motorerna, och kommer initialt konfigureras att mäta signalerna från den ursprungliga kontrollenheten i bilen. När dessa är kända kommer blocket omkopplas för att generera nya anpassade styrsignaler. 
+Bilens styrsignaler kontrolleras av en kontrollenhet, MRX-242. Enheten fungerar simultant som radiomottagare och styrsignalgenerator, och generar signaler till båda motorerna I bilen via tre kablar. I mening att ersätta dessa med nya signaler finns även tillgång till ett ytterligare kopplingsblock. Blocket kopplas mellan MXR-242 och motorerna, och kommer initialt konfigureras att mäta signalerna från den ursprungliga kontrollenheten i bilen. När dessa är kända kommer blocket omkopplas för att generera nya anpassade styrsignaler. 
 
 \section{Systemöversikt}
 \subsection{Ersättning sändare}
-Den nya konstruktionen omfattas till viss del av en sändare. Denna består av experimentskortet MD407, en bluetoothmodul samt ett gränssnitt som består av potentiometrar och knappar. I ett första steg kommer en radiolänk i 433 MHz-bandet att användas, detta på grund av en enklare implementering.
+Den nya konstruktionen omfattas till viss del av en sändare. Denna består av experimentkortet MD407, en bluetoothmodul samt ett gränssnitt som består av potentiometrar och knappar. I ett första steg kommer en radiolänk i 433 MHz-bandet att användas, detta på grund av en enklare implementering.
 
 \subsection{Ersättning mottagare}
-Som komplement till sändaren kävs också en ny mottage. Även mottagaren består av ett MD407-kort och en bluetoothmodul. Detta MD407-kort genererar styrsignaler till befintlig elektronik i bilen som har hand om varvkontroll på elmotorn samt rattutslag.
+Som komplement till sändaren kävs också en ny mottagare. Även mottagaren består av ett MD407-kort och en bluetoothmodul. Detta MD407-kort genererar styrsignaler till befintlig elektronik i bilen som har hand om varvkontroll på elmotorn samt rattutslag.
 För att kunna utföra funktionen där bilen ställer sig mot en vägg kommer även mottagaren utrustas med en avståndsmätare. Denna använder sig av ultraljud och mäter tiden det tar för ljud att återvända efter att ha studsat mot väggen.
 
 \subsection{Utökning Androidapplikation}
-Utöver grundsystemet så kommer även en applikation till Android att utvecklas. Tanken är att från en mobiltelefon kunna styra bilen på samma sätt som med fjärrkontrollen. Appen kommer ha ett grafiskt gränssnitt med knappar för att köra bilen framåt, bakåt, svänga vänster samt svänga höger. Därtill kommer en knapp som initierar grundsystemets funktion för att ställa sig mot en vägg så snabbt som möjligt. Det kommer också vara nödvändigt att ha möjligheten att avbryta processen, vilket görs genom att trycka på någon av de övriga knapparna.
+Utöver grundsystemet så kommer även en applikation till Android att utvecklas. Tanken är att från en mobiltelefon kunna styra bilen på samma sätt som med fjärrkontrollen. Applikationen ska ha ett grafiskt gränssnitt med knappar för att köra bilen framåt, bakåt, svänga vänster samt svänga höger. Till detta tillkommer en knapp som initierar grundsystemets funktion för att ställa sig mot en vägg så under kortast möjliga tid. Det kommer också bli nödvändigt att ha möjligheten att avbryta processen, vilket kommer implementeras i programmet genom att trycka på någon av de övriga knapparna.
 
 \section{Resursplan}
+
 \begin{tabular}{|l|l|l|}  \hline
- \bf Namn & \bf Mail & \bf Ansvar  \\ \hline \hline
- Joakim Junttila & \url{jcb.​junttila@gmail.​com} & Projektledare \\ \hline
- Johanna Gudmandsen  & \url{Johanna.gudmandsen@gmail.com} & Dokumentationsansvarig \\ \hline
- Gustav Holst & \url{holst.g@hotmail.se} & Systemintegrationsansvarig \\ \hline
- Henrik Klein Moberg & \url{Ccx555@gmail.com} & Loggboksansvarig \\ \hline
- Anders Berggren Sjöblom & \url{anders_berggren-sjoblom@hotmail.com} & Resursansvarig \\ \hline
- Stanislaw Zwierzchowski & \url{staszw@openmailbox.org} & Verifieringsansvarig \\ \hline
- Carl Lundgren & \url{carl.lundgren@hotmail.com} & Granskningsansvarig \\ \hline
+ \bf Namn                & \bf Mail                                  & \bf Ansvar                 \\ \hline \hline
+ Joakim Junttila         & \url{jcb.​junttila@gmail.​com}              & Projektledare              \\ \hline
+ Johanna Gudmandsen      & \url{Johanna.gudmandsen@gmail.com}        & Dokumentationsansvarig     \\ \hline
+ Gustav Holst            & \url{holst.g@hotmail.se}                  & Systemintegrationsansvarig \\ \hline
+ Henrik Klein Moberg     & \url{Ccx555@gmail.com}                    & Loggboksansvarig           \\ \hline
+ Anders Berggren Sjöblom & \url{anders_berggren-sjoblom@hotmail.com} & Resursansvarig             \\ \hline
+ Stanislaw Zwierzchowski & \url{staszw@openmailbox.org}              & Verifieringsansvarig       \\ \hline
+ Carl Lundgren           & \url{carl.lundgren@hotmail.com}           & Granskningsansvarig        \\ \hline
 \end{tabular}
 
 \vspace{5mm}
-\noindent Under projektet kommer tillgång till små laborationssalar med datorer att ordnas. Salarna för laborationer återifnns i EDIT-huset på Chalmers. Där finns utrustning med mera som kan komma att behövas i projektet. Gruppen kommer ha ett halvt skåp som kan användas till att förvara material. Bokning av andra salar till möten och skrivarbete kommer göras när detta blir nödvändigt, till detta danvänds grupprummen på Chalmers.
+\noindent Under projektet kommer tillgång till små laborationssalar med datorer att ordnas. Salarna för laborationer återfinns i EDIT-huset på Chalmers, vilka har utrustning med mera som kan komma att behövas i projektet. Gruppen kommer ha ett halvt skåp som kan användas till att förvara material. Bokning av andra salar till möten och skrivarbete kommer göras när detta blir nödvändigt, till detta danvänds grupprummen på Chalmers.
 
-%Vad används potentiometer till?
-Vidare finns även en del hårdvara att tillgå. Från början av projektet ges en radiostyrdd bil ut och handkontrollen till denna. Dessutom kommer en adapter för egen införing av signaler och moduler för bluetooth- och 433mHz-sändning att tillhandahållas. Förutom det behövs också mätutrustning såsom till exempel potentiometer. Slutligen finns det även sensorer som mäter avstånd via ultraljud. Begäran av annan hårdvara som kan komma att behövas anges till den teknikansvarige i lärarteamet som då ges ut med godkänd anledning.
+Vidare finns även en del hårdvara att tillgå. Från början av projektet ges en radiostyrdd bil ut och handkontrollen till denna. Dessutom kommer en adapter för egen införing av signaler och moduler för bluetooth- och 433MHz-sändning att tillhandahållas. Förutom det behövs också mätutrustning såsom till exempel potentiometer som möjliggör för ett reglerbart motstånd. Slutligen finns det även sensorer som mäter avstånd via ultraljud. Begäran av annan hårdvara som kan komma att behövas anges till den teknikansvarige i lärarteamet som då ger ut detta med godkänd anledning.
  
-Vad gäller rapportskrivning finns tillgång till ett dokumentationsprogram, Latex, och en versionshanterare, Git. 
+Vad gäller rapportskrivning samt programmerigskod finns tillgång till ett dokumentationsprogram, Latex, och en versionshanterare, Git. 
 
 \section{Milstolpar}
+Milstolpar uppsatta för projektet finns angivna nedan.
+\vspace{5mm}
 
 \begin{tabular}{|l|l|l|} \hline
 \bf Nr & \bf Beskrivning & \bf Datum \\ \hline \hline
@@ -108,27 +107,28 @@ Vad gäller rapportskrivning finns tillgång till ett dokumentationsprogram, Lat
 \end{tabular}
 
 \section{Aktiviteter}
+Aktiviteter för projektet finns angiven nedan.
+\vspace{5mm}
 
 \begin{tabular}{|l|l|l|} \hline
-\bf Nr & \bf Beskrivning & \bf Tidsåtgång \\ \hline \hline
- & Uppdatering loggbok & 10 h \\ \hline
- & Sriva dagordningar & 6 h \\ \hline
- & Projektplansskrivning & 50 h \\ \hline
- & Projektrapportsskrivning & 250 h \\ \hline
- & Demonstrationsförberedelser & 50 h \\ \hline
- & Oppositionsskrivning & 9 h \\ \hline
- & Granskning och modifiering & 40 h \\ \hline
- & Föreläsningar & 140 h \\ \hline
- & Androidprogrammering & 60 h \\ \hline
- & Projektmöten & 65 h \\ \hline
- & Förståelse av billaboration & 60 h \\ \hline
- & Styrsignalsgenererande & 100 h \\ \hline
- & Handkontrollsutbyte & 100 h \\ \hline
- & Bluetoothöverskrivning & 50 h \\ \hline
- & Undviken väggkollidering & 200 h \\ \hline
- & Dokumentation under laboration & 20 h \\ \hline
- & Konsultation & 10 h \\ \hline
- 
+\bf Nr & \bf Beskrivning                & \bf Tidsåtgång \\ \hline \hline
+1      & Sriva dagordningar             & 6   h \\ \hline
+2      & Uppdatering loggbok            & 10  h \\ \hline
+3      & Projektmöten                   & 65  h \\ \hline
+4      & Projektplansskrivning          & 50  h \\ \hline
+5      & Oppositionsskrivning           & 9   h \\ \hline
+6      & Projektrapportsskrivning       & 250 h \\ \hline
+7      & Demonstrationsförberedelser    & 50  h \\ \hline
+8      & Granskning och modifiering     & 40  h \\ \hline
+9      & Föreläsningar                  & 140 h \\ \hline
+10     & Konsultation                   & 10  h \\ \hline 
+11     & Förståelse av billaboration    & 60  h \\ \hline
+12     & Styrsignalsgenererande         & 100 h \\ \hline
+13     & Handkontrollsutbyte            & 100 h \\ \hline
+14     & Bluetoothöverskrivning         & 50  h \\ \hline
+15     & Undviken väggkollidering       & 200 h \\ \hline
+16     & Androidprogrammering           & 60  h \\ \hline 
+17     & Dokumentation under laboration & 20  h \\ \hline
 \end{tabular}
 
 \section{Tidsplan}
@@ -136,15 +136,15 @@ Vad gäller rapportskrivning finns tillgång till ett dokumentationsprogram, Lat
 \section{Mötesplan}
 
 \begin{tabular}{|l|l|l|} \hline
-\bf Vad & \bf Datum & \bf Var \\ \hline \hline
-Projektgruppsmöte & 2016-08-31 & 4207 \\ \hline
-Projektgruppsmöte & 2016-09-07 & 4207 \\ \hline
-Projektgruppsmöte & 2016-09-14 & 4207 \\ \hline
-Projektgruppsmöte & 2016-09-21 & 4207 \\ \hline
-Projektgruppsmöte & 2016-09-28 & 4207 \\ \hline
-Projektgruppsmöte & 2016-10-05 & 4207 \\ \hline
-Projektgruppsmöte & 2016-10-12 & 4207 \\ \hline
-Projektgruppsmöte & 2016-10-19 & 4207 \\ \hline
+\bf Vad           & \bf Datum  & \bf Var \\ \hline \hline
+Projektgruppsmöte & 2016-08-31 &    4207 \\ \hline
+Projektgruppsmöte & 2016-09-07 &    4207 \\ \hline
+Projektgruppsmöte & 2016-09-14 &    4207 \\ \hline
+Projektgruppsmöte & 2016-09-21 &    4207 \\ \hline
+Projektgruppsmöte & 2016-09-28 &    4207 \\ \hline
+Projektgruppsmöte & 2016-10-05 &    4207 \\ \hline
+Projektgruppsmöte & 2016-10-12 &    4207 \\ \hline
+Projektgruppsmöte & 2016-10-19 &    4207 \\ \hline
 \end{tabular}
 
 \vspace{5mm}
@@ -155,7 +155,7 @@ Projektgruppsmöte & 2016-10-19 & 4207 \\ \hline
 \section{Kommunikationsplan}
 
 \begin{tabular}{|l|l|l|l|} \hline
-\bf Vad                  & \bf När    & \bf Till & \bf Hur               \\ \hline \hline
+\bf Vad                  & \bf När    & \bf Till  & \bf Hur               \\ \hline \hline
 Mötesprotokoll möte LV1  & 2016-08-31 & Alla      & PP loggbok   (text)  \\ \hline
 Dagordning möte LV2      & 2016-09-06 & Alla      & PP loggbok           \\ \hline
 Mötesprotokoll möte LV2  & 2016-09-07 & Alla      & PP loggbok   (text)  \\ \hline
@@ -183,29 +183,20 @@ Projektrapport           & 2016-10-23 & Lärarteam & PP inlämning (LaTeX) \\ \h
 
 
 \section{Kvalitetsplan}
-För att på ett bra sätt isolera eventuella problem samt verifiera funktion och kvalité kommer projektet utföras i flera steg där varje steg är en utökning av det förra som noggrant testas innan nästa påbörjas. 
-
+För att på ett bra sätt isolera eventuella problem samt verifiera funktion och kvalité kommer projektet utföras i flera steg där varje steg är en utökning av det förra som noggrant testas innan det påbörjas. 
 
 \subsection{Styrsignaler}
-Till att börja med ska styrsignaler som bilens radiomottagare skickar till styrkretsen analyseras för att få en förståelse av hur de fungerar och kunna därmed återskapa samma styrsignaler med en egen krets. Styrsignalernas ändamål är att få bilens främre hjul att svänga samt att köra bilen framåt och bakåt. För att verifiera att analysens resultat är korrekt kommer bilens styrkrets (via kabel) kopplas till en krets som genererar styrsignaler enligt de specifikationerna som analysen har resulterat i. Följande moment ska kunna utföras med samma möjligheter som med bilens inbyggda radiomottagare.
-
-%Styrsignaler skickat av bilens radiomottagare till styrkretsen analyseras först för att få en förståelse över hur de fungerar. Genom denna analys möjliggörs det att återskapa samma styrsignaler med en egen krets. För att verifiera att detta resultat är korrekt kommer bilens styrkrets (via kabel) kopplas till en krets som genererar styrsignaler enligt de specifikationerna som analysen har resulterat i. Följande moment ska kunna utföras med samma möjligheter som med bilens inbyggda radiomottagare.
+Först ska samtliga av styrsignalerna som bilens radiomottagare kan skicka till styrkretsen analyseras för att få en förståelse av hur de fungerar och därmed kunna återskapa samma styrsignaler med en egen krets. För att verifiera att analysens resultat är korrekt kommer bilens styrkrets, via kabel, kopplas till en krets som genererar styrsignaler enligt de specifikationerna som analysen har resulterat i. Följande moment ska kunna utföras med samma möjligheter som med bilens inbyggda radiomottagare.
 \begin{itemize}  
     \item Svänga höger och vänster med olika rattutslag.
     \item Köra framåt och bakåt med olika hastigheter.
 \end{itemize}
 
 \subsection{Enkel trådlös kommunikation}
-En separat krets ska via kommunikation över 433MHz-bandet kunna bestämma vilka styrsignaler som en inbäddad krets ska skicka till bilens styrmodul. Samma funktioner ska testas som under testet via kabel med samma krav det vill säga att bilen ska kunna styras med samma möjligheter som med den inbyggda radiomottagaren.
-
-%Då det finns en specifikation på styrsignaler ska dessa börjas skickas trådlöst. Först sker detta via direkt seriell överföring över (433MHz?)-bandet. En separat krets ska kunna bestämma vilka styrsignaler som en inbäddad krets ska skicka till bilens styrmodul. Dessa funktioner kommer verifieras på samma sätt som i det tidigare nämnda testet och ha identiska krav.  
+Dessa styrsignaler ska sedan börja skickas trådlöst. En separat krets ska via kommunikation över 433MHz-bandet kunna bestämma vilka styrsignaler som en inbäddad krets ska skicka till bilens styrmodul. Dessa funktioner kommer verifieras på samma sätt som i det tidigare nämnda testet och ha identiska krav.  
 
 \subsection{Bluetooth}
-När det finns trådlös styrningsmöjlighet kommer den tidigare kommunikationsmetoden ersättas med Bluetooth-protokollet som fungerar på liknande men utökat sätt. Åter igen ska den inbäddade kretsen kunna styra bilen enligt signaler som den separata modulen skickar via Bluetooth. Det ska ske med samma krav som i det förgående testet. Utöver det måste den inbäddade kretsen kunna upprätta en anslutning med den separata modulen vilket kommer testas i samband med styrningstestet.
-
-
-%Bluetooth protokoll på liknande men utökat? Hur? Systemöversikt?
-%När det finns trådlös styrningsmöjlighet kommer den tidigare kommunikationsmetoden ersättas med ett Bluetooth-protokoll som fungerar på liknande men utökat sätt. Återigen ska den inbäddade kretsen kunna styra bilen enligt signaler som den separata modulen skickar via Bluetooth. Även detta test sker med samma krav som i föregående. Utöver det måste den inbäddade kretsen kunna upprätta en anslutning med den separata modulen vilket kommer kontrolleras i samband med styrningstestet.
+När det finns trådlös styrningsmöjlighet kommer den tidigare kommunikationsmetoden ersättas med Bluetooth-protokollet som fungerar på ett liknande men utökat sätt. Återigen ska den inbäddade kretsen kunna styra bilen enligt signaler som den separata modulen skickar via Bluetooth. Det ska ske med samma krav som i de förgående testen. Utöver det måste den inbäddade kretsen kunna upprätta en anslutning med den separata modulen vilket kommer kontrolleras i samband med styrningstestet.
 
 \subsection{Avståndsmätare}
 Slutligen när avståndsmätaren har implementerats ska denna testas genom körning av bilen mot en vägg och mätning av avståndet till väggen då bilen har stannat. Detta ska utföras ett flertal gånger med olika hastigheter. 
