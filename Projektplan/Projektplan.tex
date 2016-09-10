@@ -53,10 +53,11 @@ Sedan implementeras styrning via en telefonapplikation som ska kunna kontrollera
 
 
 \section{Bakgrund}
-För att kunna kontrollera en radiobil används en handkontroll(sändare) och en signalomvandlare(mottagare). Radiosignaler på en okänd frekvens skickas från sändaren och avkodas av mottagaren i radiobilen. Dessa omvandlas då till elektroniska signaler som antingen kontrollerar bilens hastighet eller riktning. Parallellt med detta styrs även bilens hastighet av motorns kraftutslag, medan riktningen beror på hjulens gradförskjutning. Genom en ytterligare signal kan bilens hastighet även reverseras. Bilens styrenhet omvandlar radiosignaler som sedan kontrollerar bilens rörelse.
+Sven Knutsson förklarar att för att kunna kontrollera en radiobil används en handkontroll(sändare) och en signalomvandlare(mottagare). Radiosignaler på en okänd frekvens skickas från sändaren och avkodas av mottagaren i radiobilen. Dessa omvandlas då till elektroniska signaler som antingen kontrollerar bilens hastighet eller riktning. Parallellt med detta styrs även bilens hastighet av motorns kraftutslag, medan riktningen beror på hjulens gradförskjutning. Genom en ytterligare signal kan bilens hastighet även reverseras. Bilens styrenhet omvandlar radiosignaler som sedan kontrollerar bilens rörelse.
 
+%Referera från projektdirektiv
 \subsection{Nya styrsignaler}
-Bilens styrsignaler kontrolleras av en kontrollenhet, MRX-242. Enheten fungerar simultant som radiomottagare och styrsignalgenerator, och generar signaler till båda motorerna I bilen via tre kablar. I mening att ersätta dessa med nya signaler finns även tillgång till ett ytterligare kopplingsblock. Blocket kopplas mellan MXR-242 och motorerna, och kommer initialt konfigureras att mäta signalerna från den ursprungliga kontrollenheten i bilen. När dessa är kända kommer blocket omkopplas för att generera nya anpassade styrsignaler. 
+Bilens styrsignaler kontrolleras av en kontrollenhet, MRX-242. Enheten fungerar simultant som radiomottagare och styrsignalgenerator, och generar signaler till båda motorerna I bilen via tre kablar. I mening att ersätta dessa med nya signaler finns även tillgång till ett ytterligare kopplingsblock. Blocket kopplas mellan MXR-242 och motorerna, och kommer initialt konfigureras att mäta signalerna från den ursprungliga kontrollenheten i bilen. När dessa är kända kommer blocket omkopplas för att generera nya anpassade styrsignaler~\cite{projektDir}. 
 
 \section{Systemöversikt}
 \subsection{Ersättning sändare}
@@ -67,9 +68,11 @@ Som komplement till sändaren krävs också en ny mottagare. Även mottagaren be
 För att kunna utföra funktionen där bilen ställer sig mot en vägg kommer även mottagaren utrustas med en avståndsmätare. Denna använder sig av ultraljud och mäter tiden det tar för ljud att återvända efter att ha studsat mot väggen.
 
 \subsection{Utökning Androidapplikation}
-Utöver grundsystemet så kommer även en applikation till Android att utvecklas. Tanken är att från en mobiltelefon kunna styra bilen på samma sätt som med fjärrkontrollen. Applikationen ska ha ett grafiskt gränssnitt med knappar för att köra bilen framåt, bakåt, svänga vänster samt svänga höger. Till detta tillkommer en knapp som initierar grundsystemets funktion för att ställa sig mot en vägg så under kortast möjliga tid. Det kommer också bli nödvändigt att ha möjligheten att avbryta processen, vilket kommer implementeras i programmet så att genom en knapptryckning stoppas programmet för att undvika skador på bilen.
+Utöver grundsystemet så kommer även en applikation till Android att utvecklas. Tanken är att från en mobiltelefon kunna styra bilen på samma sätt som med fjärrkontrollen. Applikationen ska ha ett grafiskt gränssnitt med knappar för att köra bilen framåt, bakåt, svänga vänster samt svänga höger. Till detta tillkommer en knapp som initierar grundsystemets funktion för att ställa sig mot en vägg så under kortast möjliga tid. Det kommer också bli nödvändigt att ha möjligheten att avbryta processen, vilket kommer implementeras i programmet genom att en knapptryckning stoppas programmet för att undvika skador på bilen.
 
 \section{Resursplan}
+Kontaktinformation till samtliga medlemmar i projektgruppen och kontaktinformation till dessa finns anguvet nedan.
+\vspace{5mm}
 
 \begin{tabular}{|l|l|l|}  \hline
  \bf Namn                & \bf Mail                                  & \bf Ansvar                 \\ \hline \hline
@@ -90,7 +93,7 @@ Vidare finns även en del hårdvara att tillgå. Från början av projektet ges 
 Vad gäller rapportskrivning samt programmerigskod finns det tillgång till ett dokumentationsprogram, Latex, och en versionshanterare, Git. 
 
 \section{Milstolpar}
-Milstolpar uppsatta för projektet finns angivna nedan.
+Milstolpar uppsatta för projektet visas nedan.
 \vspace{5mm}
 
 \begin{tabular}{|l|l|l|} \hline
@@ -110,30 +113,33 @@ Aktiviteter för projektet finns angiven nedan.
 
 \begin{tabular}{|l|l|l|} \hline
 \bf Nr & \bf Beskrivning                & \bf Tidsåtgång \\ \hline \hline
-1      & Sriva dagordningar             & 6   h \\ \hline
-2      & Uppdatering loggbok            & 10  h \\ \hline
-3      & Projektmöten                   & 65  h \\ \hline
-4      & Projektplansskrivning          & 50  h \\ \hline
-5      & Oppositionsskrivning           & 9   h \\ \hline
-6      & Projektrapportsskrivning       & 250 h \\ \hline
-7      & Demonstrationsförberedelser    & 50  h \\ \hline
-8      & Granskning och modifiering     & 40  h \\ \hline
-9      & Föreläsningar                  & 140 h \\ \hline
-10     & Konsultation                   & 10  h \\ \hline 
-11     & Förståelse av billaboration    & 60  h \\ \hline
-12     & Styrsignalsgenererande         & 100 h \\ \hline
-13     & Handkontrollsutbyte            & 100 h \\ \hline
-14     & Bluetoothöverskrivning         & 50  h \\ \hline
-15     & Undviken väggkollidering       & 200 h \\ \hline
-16     & Androidprogrammering           & 60  h \\ \hline 
-17     & Dokumentation under laboration & 20  h \\ \hline
+1      & Projektrapportsskrivning       & 250 h \\ \hline
+2      & Undviken väggkollidering       & 200 h \\ \hline
+3      & Föreläsningar                  & 140 h \\ \hline
+4      & Styrsignalsgenererande         & 100 h \\ \hline
+5      & Handkontrollsutbyte            & 100 h \\ \hline
+6      & Projektmöten                   & 65  h \\ \hline
+7      & Androidprogrammering           & 60  h \\ \hline 
+8      & Förståelse av billaboration    & 60  h \\ \hline
+9      & Bluetoothöverskrivning         & 50  h \\ \hline
+10     & Demonstrationsförberedelser    & 50  h \\ \hline
+11     & Projektplansskrivning          & 50  h \\ \hline
+12     & Granskning och modifiering     & 40  h \\ \hline
+13     & Dokumentation under laboration & 20  h \\ \hline
+14     & Konsultation                   & 10  h \\ \hline 
+15     & Uppdatering loggbok            & 10  h \\ \hline
+16     & Oppositionsskrivning           & 9   h \\ \hline
+17     & Sriva dagordningar             & 6   h \\ \hline
 \end{tabular}
 
 \section{Tidsplan}
+Hur tiden för projektet ska fördelas visas nedan.
 
 \includegraphics[width=\textwidth]{gantt.pdf}
 
 \section{Mötesplan}
+Mötesplanen är agiven nedan.
+\vspace{5mm}
 
 \begin{tabular}{|l|l|l|} \hline
 \bf Vad           & \bf Datum  & \bf Var \\ \hline \hline
@@ -153,6 +159,8 @@ Projektgruppsmöte & 2016-10-19 &    4207 \\ \hline
 
 
 \section{Kommunikationsplan}
+Kommunikationen mellan projektgrupp samt lärare är angivet nedan.
+\vspace{5mm}
 
 \begin{tabular}{|l|l|l|l|} \hline
 \bf Vad                  & \bf När    & \bf Till  & \bf Hur               \\ \hline \hline
@@ -200,5 +208,10 @@ När det finns trådlös styrningsmöjlighet kommer den tidigare kommunikationsm
 
 \subsection{Avståndsmätare}
 Slutligen när avståndsmätaren har implementerats ska denna testas genom körning av bilen mot en vägg och mätning av avståndet till väggen då bilen har stannat. Detta ska utföras ett flertal gånger med olika hastigheter. 
+
+\newpage
+\bibliographystyle{IEEEtran}
+\bibliography{referenser}
+
 
 \end{document}
