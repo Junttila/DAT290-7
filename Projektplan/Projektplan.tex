@@ -5,6 +5,9 @@
 \usepackage{amsmath}
 \usepackage{graphicx}
 \usepackage{url}
+\usepackage{float}
+\usepackage{caption}
+\usepackage{tabularx}
 
 \graphicspath{ {images/} }
 
@@ -24,7 +27,7 @@
 
 \vspace{10mm}
 
-{DATUM}
+{\large 2016-09-11}
 
 
 \normalsize{
@@ -55,35 +58,46 @@ Sedan implementeras styrning via en telefonapplikation som ska kunna kontrollera
 \section{Bakgrund}
 Sven Knutsson förklarar att för att kunna kontrollera en radiobil används en handkontroll(sändare) och en signalomvandlare(mottagare). Radiosignaler på en okänd frekvens skickas från sändaren och avkodas av mottagaren i radiobilen. Dessa omvandlas då till elektroniska signaler som antingen kontrollerar bilens hastighet eller riktning. Parallellt med detta styrs även bilens hastighet av motorns kraftutslag, medan riktningen beror på hjulens gradförskjutning. Genom en ytterligare signal kan bilens hastighet även reverseras. Bilens styrenhet omvandlar radiosignaler som sedan kontrollerar bilens rörelse.
 
-%Referera från projektdirektiv
 \subsection{Nya styrsignaler}
 Bilens styrsignaler kontrolleras av en kontrollenhet, MRX-242. Enheten fungerar simultant som radiomottagare och styrsignalgenerator, och generar signaler till båda motorerna I bilen via tre kablar. I mening att ersätta dessa med nya signaler finns även tillgång till ett ytterligare kopplingsblock. Blocket kopplas mellan MXR-242 och motorerna, och kommer initialt konfigureras att mäta signalerna från den ursprungliga kontrollenheten i bilen. När dessa är kända kommer blocket omkopplas för att generera nya anpassade styrsignaler~\cite{projektDir}. 
 
 \section{Systemöversikt}
+
+\begin{figure}[H]
+\includegraphics[width=\textwidth]{images/systemoversikt.jpg}
+\centering
+\captionsetup{justification=centering}
+\caption{\it En översikt över systemet i blockformat. Pilarna indikerar flödet av information, analog eller digital.}
+\end{figure} 
+
 \subsection{Ersättning sändare}
-Den nya konstruktionen omfattas till viss del av en sändare. Denna består av experimentkortet MD407, en bluetoothmodul samt ett gränssnitt som består av potentiometrar och knappar. I ett första steg kommer en radiolänk i 433 MHz-bandet att användas, detta på grund av en enklare implementering.
+Den nya konstruktionen omfattas till viss del av en sändare. Knutsson tydliggör att denna består av experimentkortet MD407, en bluetoothmodul samt ett gränssnitt som består av potentiometrar och knappar. I ett första steg kommer en radiolänk i 433 MHz-bandet att användas, detta på grund av en enklare implementering.
 
 \subsection{Ersättning mottagare}
-Som komplement till sändaren krävs också en ny mottagare. Även mottagaren består av ett MD407-kort och en bluetoothmodul. Detta MD407-kort genererar styrsignaler till befintlig elektronik i bilen som har hand om varvkontroll på elmotorn samt rattutslag.
-För att kunna utföra funktionen där bilen ställer sig mot en vägg kommer även mottagaren utrustas med en avståndsmätare. Denna använder sig av ultraljud och mäter tiden det tar för ljud att återvända efter att ha studsat mot väggen.
+Som komplement till sändaren krävs också en ny mottagare. Även mottagaren består av ett MD407-kort och en bluetoothmodul. Enligt Knutsson genererar detta MD407-kort styrsignaler till befintlig elektronik i bilen som har hand om varvkontroll på elmotorn samt rattutslag.
+Vidare förklarar han att det kommer krävas att mottagaren utrustas med en avståndsmätare för att kunna utföra funktionen där bilen ställer sig mot en vägg. Denna använder sig av ultraljud och mäter tiden det tar för ljud att återvända efter att ha studsat mot väggen.
 
 \subsection{Utökning Androidapplikation}
 Utöver grundsystemet så kommer även en applikation till Android att utvecklas. Tanken är att från en mobiltelefon kunna styra bilen på samma sätt som med fjärrkontrollen. Applikationen ska ha ett grafiskt gränssnitt med knappar för att köra bilen framåt, bakåt, svänga vänster samt svänga höger. Till detta tillkommer en knapp som initierar grundsystemets funktion för att ställa sig mot en vägg så under kortast möjliga tid. Det kommer också bli nödvändigt att ha möjligheten att avbryta processen, vilket kommer implementeras i programmet genom att en knapptryckning stoppas programmet för att undvika skador på bilen.
 
 \section{Resursplan}
-Kontaktinformation till samtliga medlemmar i projektgruppen och kontaktinformation till dessa finns anguvet nedan.
+Kontaktinformation till samtliga medlemmar i projektgruppen och kontaktinformation till dessa finns angivet i tabell 1.
 \vspace{5mm}
 
-\begin{tabular}{|l|l|l|}  \hline
+\begin{table}[H]
+\centerline{
+\begin{tabularx}{\textwidth}{|l|X|l|}  \hline
  \bf Namn                & \bf Mail                                  & \bf Ansvar                 \\ \hline \hline
- Joakim Junttila         & \url{jcb.​junttila@gmail.​com}              & Projektledare              \\ \hline
- Johanna Gudmandsen      & \url{Johanna.gudmandsen@gmail.com}        & Dokumentationsansvarig     \\ \hline
- Gustav Holst            & \url{holst.g@hotmail.se}                  & Systemintegrationsansvarig \\ \hline
- Henrik Klein Moberg     & \url{Ccx555@gmail.com}                    & Loggboksansvarig           \\ \hline
- Anders Berggren Sjöblom & \url{anders_berggren-sjoblom@hotmail.com} & Resursansvarig             \\ \hline
- Stanislaw Zwierzchowski & \url{staszw@openmailbox.org}              & Verifieringsansvarig       \\ \hline
- Carl Lundgren           & \url{carl.lundgren@hotmail.com}           & Granskningsansvarig        \\ \hline
-\end{tabular}
+ \footnotesize Joakim Junttila         & \url{jcb.​junttila@gmail.​com}              & \footnotesize Projektledare              \\ \hline
+ \footnotesize Johanna Gudmandsen      & \url{Johanna.Gudmandsen@gmail.com}        & \footnotesize Dokumentationsansvarig     \\ \hline
+ \footnotesize Gustav Holst            & \url{holst.g@hotmail.se}                  & \footnotesize Systemintegrationsansvarig \\ \hline
+ \footnotesize Henrik Klein Moberg     & \url{Ccx555@gmail.com}                    & \footnotesize Loggboksansvarig           \\ \hline
+ \footnotesize Anders Berggren Sjöblom & \url{anders_berggren-sjoblom@hotmail.com} & \footnotesize Resursansvarig             \\ \hline
+ \footnotesize Stanislaw Zwierzchowski & \url{staszw@openmailbox.org}              & \footnotesize Verifieringsansvarig       \\ \hline
+ \footnotesize Carl Lundgren           & \url{carl.lundgren@hotmail.com}           & \footnotesize Granskningsansvarig        \\ \hline
+\end{tabularx}}
+\caption{\it Projektgruppsmedlemmar samt kontaktuppgifter}
+\end{table}
 
 \vspace{5mm}
 \noindent Under projektet kommer tillgång till små laborationssalar med datorer att ordnas. Salarna för laborationer återfinns i EDIT-huset på Chalmers, vilka har utrustning med mera som kan komma att behövas i projektet. Gruppen kommer ha ett halvt skåp som kan användas till att förvara material. Bokning av andra salar till möten och skrivarbete kommer göras när detta blir nödvändigt, till detta danvänds grupprummen på Chalmers.
@@ -92,10 +106,13 @@ Vidare finns även en del hårdvara att tillgå. Från början av projektet ges 
  
 Vad gäller rapportskrivning samt programmerigskod finns det tillgång till ett dokumentationsprogram, Latex, och en versionshanterare, Git. 
 
+\newpage
 \section{Milstolpar}
-Milstolpar uppsatta för projektet visas nedan.
+Milstolpar uppsatta för projektet visas i tabell 2.
 \vspace{5mm}
 
+\begin{table}[H]
+\centerline{
 \begin{tabular}{|l|l|l|} \hline
 \bf Nr & \bf Beskrivning & \bf Datum \\ \hline \hline
 1 & Projektplan inlämnad & 2016-09-11 \\\hline
@@ -104,13 +121,16 @@ Milstolpar uppsatta för projektet visas nedan.
 4 & Androidapplikation klar & 2016-10-14 \\ \hline
 5 & Demonstrationsförberedelser klara & 2016-10-18 \\ \hline
 6 & Projektrapport inlämnad & 2016-10-23 \\ \hline
-
-\end{tabular}
+\end{tabular}}
+\caption{\it Milstolpar}
+\end{table}
 
 \section{Aktiviteter}
-Aktiviteter för projektet finns angiven nedan.
+Aktiviteter för projektet finns angivet i tabell 3.
 \vspace{5mm}
 
+\begin{table}[H]
+\centerline{
 \begin{tabular}{|l|l|l|} \hline
 \bf Nr & \bf Beskrivning                & \bf Tidsåtgång \\ \hline \hline
 1      & Projektrapportsskrivning       & 250 h \\ \hline
@@ -130,17 +150,25 @@ Aktiviteter för projektet finns angiven nedan.
 15     & Uppdatering loggbok            & 10  h \\ \hline
 16     & Oppositionsskrivning           & 9   h \\ \hline
 17     & Sriva dagordningar             & 6   h \\ \hline
-\end{tabular}
+\end{tabular}}
+\caption{\it Aktiviteter}
+\end{table}
 
+\newpage
 \section{Tidsplan}
-Hur tiden för projektet ska fördelas visas nedan.
+Hur tiden för projektet ska fördelas visas i figur 2.
 
+\begin{figure}[H]
 \includegraphics[width=\textwidth]{gantt.pdf}
+\caption{\it Tidsplan för projektet}
+\end{figure}
 
 \section{Mötesplan}
-Mötesplanen är agiven nedan.
+Mötesplanen är agiven i tabell 4.
 \vspace{5mm}
 
+\begin{table}[H]
+\centerline{
 \begin{tabular}{|l|l|l|} \hline
 \bf Vad           & \bf Datum  & \bf Var \\ \hline \hline
 Projektgruppsmöte & 2016-08-31 &    4207 \\ \hline
@@ -151,17 +179,20 @@ Projektgruppsmöte & 2016-09-28 &    4207 \\ \hline
 Projektgruppsmöte & 2016-10-05 &    4207 \\ \hline
 Projektgruppsmöte & 2016-10-12 &    4207 \\ \hline
 Projektgruppsmöte & 2016-10-19 &    4207 \\ \hline
-\end{tabular}
+\end{tabular}}
+\caption{\it Mötesplan}
+\end{table}
 
 \vspace{5mm}
 \noindent Behövs det extra mötestid med för kortare, mer specifika möten ordnas grupprum på Chalmers av resursansvarig.
 
-
-
+\newpage
 \section{Kommunikationsplan}
-Kommunikationen mellan projektgrupp samt lärare är angivet nedan.
+Kommunikationen mellan projektgrupp samt lärare är angivet i tabell 5.
 \vspace{5mm}
 
+\begin{table}[H]
+\centerline{
 \begin{tabular}{|l|l|l|l|} \hline
 \bf Vad                  & \bf När    & \bf Till  & \bf Hur               \\ \hline \hline
 Mötesprotokoll möte LV1  & 2016-08-31 & Alla      & PP loggbok   (text)  \\ \hline
@@ -183,13 +214,14 @@ Oppositionskommentar inl.& 2016-10-16 & Lärarteam & PP inlämning (LaTeX) \\ \h
 Dagordning möte LV8      & 2016-10-19 & Alla      & PP loggbok           \\ \hline
 Mötesprotokoll möte LV8  & 2016-10-20 & Alla      & PP loggbok   (text)  \\ \hline
 Projektrapport           & 2016-10-23 & Lärarteam & PP inlämning (LaTeX) \\ \hline
-
-\end{tabular}
+\end{tabular}}
+\caption{\it Kommunikationsplan}
+\end{table}
 
 \vspace{5mm}
 \noindent Kommunikation inom gruppen sker främst genom {\it slack}.
 
-
+\newpage
 \section{Kvalitetsplan}
 För att på ett bra sätt isolera eventuella problem samt verifiera funktion och kvalité kommer projektet utföras i flera steg där varje steg är en utökning av det förra som noggrant testas innan det påbörjas. 
 
