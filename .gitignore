@@ -204,3 +204,4 @@ TSWLatexianTemp*
 *.mk
 Makefile
 .txt
+/.codelite/*
