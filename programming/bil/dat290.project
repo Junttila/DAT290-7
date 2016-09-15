@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<CodeLite_Project Name="bil" InternalType="User templates">
+<CodeLite_Project Name="dat290" InternalType="User templates">
   <Plugins>
     <Plugin Name="qmake">
       <![CDATA[00010001N0005Debug000000000000]]>
@@ -24,22 +24,92 @@
   </VirtualDirectory>
   <VirtualDirectory Name="resources">
     <File Name="md407-ram.x"/>
-    <File Name="stm32f4xx.h"/>
+  </VirtualDirectory>
+  <VirtualDirectory Name="inc"/>
+  <VirtualDirectory Name="dat290">
+    <File Name="misc.c"/>
+    <File Name="misc.h"/>
+    <File Name="stm32f4xx_adc.c"/>
+    <File Name="stm32f4xx_adc.h"/>
+    <File Name="stm32f4xx_can.c"/>
+    <File Name="stm32f4xx_can.h"/>
+    <File Name="stm32f4xx_cec.c"/>
+    <File Name="stm32f4xx_cec.h"/>
+    <File Name="stm32f4xx_crc.c"/>
+    <File Name="stm32f4xx_crc.h"/>
+    <File Name="stm32f4xx_cryp.c"/>
+    <File Name="stm32f4xx_cryp.h"/>
+    <File Name="stm32f4xx_cryp_aes.c"/>
+    <File Name="stm32f4xx_cryp_des.c"/>
+    <File Name="stm32f4xx_cryp_tdes.c"/>
+    <File Name="stm32f4xx_dac.c"/>
+    <File Name="stm32f4xx_dac.h"/>
+    <File Name="stm32f4xx_dbgmcu.c"/>
+    <File Name="stm32f4xx_dbgmcu.h"/>
+    <File Name="stm32f4xx_dcmi.c"/>
+    <File Name="stm32f4xx_dcmi.h"/>
+    <File Name="stm32f4xx_dfsdm.c"/>
+    <File Name="stm32f4xx_dfsdm.h"/>
+    <File Name="stm32f4xx_dma.c"/>
+    <File Name="stm32f4xx_dma.h"/>
+    <File Name="stm32f4xx_dma2d.c"/>
+    <File Name="stm32f4xx_dma2d.h"/>
+    <File Name="stm32f4xx_dsi.c"/>
+    <File Name="stm32f4xx_dsi.h"/>
+    <File Name="stm32f4xx_exti.c"/>
+    <File Name="stm32f4xx_exti.h"/>
+    <File Name="stm32f4xx_flash.c"/>
+    <File Name="stm32f4xx_flash.h"/>
+    <File Name="stm32f4xx_flash_ramfunc.c"/>
+    <File Name="stm32f4xx_flash_ramfunc.h"/>
+    <File Name="stm32f4xx_fmc.c" ExcludeProjConfig="Debug"/>
+    <File Name="stm32f4xx_fmc.h" ExcludeProjConfig="Debug"/>
+    <File Name="stm32f4xx_fmpi2c.c"/>
+    <File Name="stm32f4xx_fmpi2c.h"/>
+    <File Name="stm32f4xx_fsmc.c"/>
+    <File Name="stm32f4xx_fsmc.h"/>
     <File Name="stm32f4xx_gpio.c"/>
     <File Name="stm32f4xx_gpio.h"/>
-    <File Name="stm32f4xx_usart.c"/>
-    <File Name="stm32f4xx_usart.h"/>
-    <File Name="system_stm32f4xx.h"/>
-    <File Name="core_cm4.h"/>
-    <File Name="core_cmInstr.h"/>
-    <File Name="core_cmFunc.h"/>
-    <File Name="core_cmSimd.h"/>
+    <File Name="stm32f4xx_hash.c"/>
+    <File Name="stm32f4xx_hash.h"/>
+    <File Name="stm32f4xx_hash_md5.c"/>
+    <File Name="stm32f4xx_hash_sha1.c"/>
+    <File Name="stm32f4xx_i2c.c"/>
+    <File Name="stm32f4xx_i2c.h"/>
+    <File Name="stm32f4xx_iwdg.c"/>
+    <File Name="stm32f4xx_iwdg.h"/>
+    <File Name="stm32f4xx_lptim.c"/>
+    <File Name="stm32f4xx_lptim.h"/>
+    <File Name="stm32f4xx_ltdc.c"/>
+    <File Name="stm32f4xx_ltdc.h"/>
+    <File Name="stm32f4xx_pwr.c"/>
+    <File Name="stm32f4xx_pwr.h"/>
+    <File Name="stm32f4xx_qspi.c"/>
+    <File Name="stm32f4xx_qspi.h"/>
     <File Name="stm32f4xx_rcc.c"/>
     <File Name="stm32f4xx_rcc.h"/>
+    <File Name="stm32f4xx_rng.c"/>
+    <File Name="stm32f4xx_rng.h"/>
+    <File Name="stm32f4xx_rtc.c"/>
+    <File Name="stm32f4xx_rtc.h"/>
+    <File Name="stm32f4xx_sai.c"/>
+    <File Name="stm32f4xx_sai.h"/>
+    <File Name="stm32f4xx_sdio.c"/>
+    <File Name="stm32f4xx_sdio.h"/>
+    <File Name="stm32f4xx_spdifrx.c"/>
+    <File Name="stm32f4xx_spdifrx.h"/>
+    <File Name="stm32f4xx_spi.c"/>
+    <File Name="stm32f4xx_spi.h"/>
+    <File Name="stm32f4xx_syscfg.c"/>
+    <File Name="stm32f4xx_syscfg.h"/>
     <File Name="stm32f4xx_tim.c"/>
     <File Name="stm32f4xx_tim.h"/>
-    <File Name="system_stm32f4xx.c"/>
-    <File Name="stm32f4xx_conf.h"/>
+    <File Name="stm32f4xx_usart.c"/>
+    <File Name="stm32f4xx_usart.h"/>
+    <File Name="stm32f4xx_wwdg.c"/>
+    <File Name="stm32f4xx_wwdg.h"/>
+    <File Name="system_stm32f4xx.h"/>
+    <File Name="stm32f4xx.h"/>
   </VirtualDirectory>
   <Settings Type="Executable">
     <GlobalSettings>
@@ -52,10 +122,15 @@
       <ResourceCompiler Options=""/>
     </GlobalSettings>
     <Configuration Name="Debug" CompilerType="Cross GCC ( arm-none-eabi )" DebuggerType="GNU gdb debugger" Type="Executable" BuildCmpWithGlobalSettings="append" BuildLnkWithGlobalSettings="append" BuildResWithGlobalSettings="append">
-      <Compiler Options="-g;-O0;-Wall" C_Options="-g;-O0;-std=c99;-Wall;-mthumb;-mcpu=cortex-m4;-mfloat-abi=hard;-mfpu=fpv4-sp-d16;-Wa,-adhln=test.s" Assembler="" Required="yes" PreCompiledHeader="" PCHInCommandLine="no" PCHFlags="" PCHFlagsPolicy="0">
+      <Compiler Options="-g;-O0;-Wall" C_Options="-Wa,-adhln=test.s;-g;-O0;-mthumb;-march=armv6-m;-mcpu=cortex-m4;-msoft-float;-std=c99;-Wall" Assembler="" Required="yes" PreCompiledHeader="" PCHInCommandLine="no" PCHFlags="" PCHFlagsPolicy="0">
         <IncludePath Value="."/>
       </Compiler>
-      <Linker Options="-nostartfiles -T$(ProjectPath)/md407-ram.x" Required="yes"/>
+      <Linker Options="-nostartfiles;-T$(ProjectPath)/md407-ram.x" Required="yes">
+        <LibraryPath Value="$(CodeLiteDir)/tools/gcc-arm/arm-none-eabi/lib/armv6-m"/>
+        <LibraryPath Value="$(CodeLiteDir)/tools/gcc-arm/lib/gcc/arm-none-eabi/5.4.1/armv6-m"/>
+        <Library Value="gcc"/>
+        <Library Value="c_nano"/>
+      </Linker>
       <ResourceCompiler Options="" Required="no"/>
       <General OutputFile="$(IntermediateDirectory)/$(ProjectName).elf" IntermediateDirectory="./Debug" Command="$(ProjectPath)/$(IntermediateDirectory)/$(ProjectName).elf" CommandArguments="" UseSeparateDebugArgs="no" DebugArguments="" WorkingDirectory="$(IntermediateDirectory)" PauseExecWhenProcTerminates="yes" IsGUIProgram="no" IsEnabled="yes"/>
       <BuildSystem Name="Default"/>
@@ -70,8 +145,7 @@ monitor restart</PostConnectCommands>
       </Debugger>
       <PreBuild/>
       <PostBuild>
-        <Command Enabled="yes">arm-none-eabi-objcopy -S -O srec  $(IntermediateDirectory)/$(ProjectName).elf $(IntermediateDirectory)/$(ProjectName).s19</Command>
-        <Command Enabled="yes"/>
+        <Command Enabled="yes">arm-none-eabi-objcopy -S -O srec $(IntermediateDirectory)/$(ProjectName).s19</Command>
       </PostBuild>
       <CustomBuild Enabled="no">
         <RebuildCommand/>
