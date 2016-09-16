@@ -7,6 +7,10 @@
 //#include "stm32f4xx_flash.h"
 #include "stm32f4xx_tim.h"
 
+typedef int bool;
+#define true 1
+#define false 0
+
 TIM_OCInitTypeDef  TIM_OCInitStructure;
 TIM_TimeBaseInitTypeDef TIM_TimeBaseStructure;
 //Motor, neutral
