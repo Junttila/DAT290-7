@@ -1,4 +1,4 @@
-#include "stdint.h"
+//#include "stdint.h"
 #include "stm32f4xx.h"
 #include "system_stm32f4xx.h"
 #include "stm32f4xx_rcc.h"
@@ -7,6 +7,8 @@
 //#include "stm32f4xx_flash.h"
 #include "stm32f4xx_tim.h"
 
+TIM_OCInitTypeDef  TIM_OCInitStructure;
+TIM_TimeBaseInitTypeDef TIM_TimeBaseStructure;
 //Motor, neutral
 uint16_t CCR3_val = 27925;
 //Styrning, neutral
@@ -68,7 +70,7 @@ void init_uart()
 	//Fyll i U(S)ART-strukturen
 	USART_InitStruct.USART_BaudRate = 38400; //38400 är default för bluetoothmodulen
 	USART_InitStruct.USART_HardwareFlowControl = USART_HardwareFlowControl_None;
-	USART_InitStruct.USART_Mode = USART_Mode_Tx;
+	USART_InitStruct.USART_Mode = USART_Mode_Rx;
 	USART_InitStruct.USART_Parity = USART_Parity_No;
 	USART_InitStruct.USART_StopBits = USART_StopBits_1;
 	USART_InitStruct.USART_WordLength = USART_WordLength_8b;
@@ -81,24 +83,21 @@ void init_uart()
 void init_pwm()
 {
 	GPIO_InitTypeDef GPIO_InitStruct;
-	TIM_OCInitTypeDef  TIM_OCInitStructure;
 	RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM2,ENABLE);
 	
-	GPIO_InitStruct.GPIO_Pin = GPIO_Pin_2 | GPIO_Pin_3; //TIM3 kanal 1 och 2
+	GPIO_InitStruct.GPIO_Pin = GPIO_Pin_2 | GPIO_Pin_3; //TIM2 kanal 1 och 2
 	GPIO_InitStruct.GPIO_Mode = GPIO_Mode_AF;
 	GPIO_InitStruct.GPIO_Speed = GPIO_Speed_100MHz;
 	GPIO_InitStruct.GPIO_OType = GPIO_OType_PP;
 	GPIO_InitStruct.GPIO_PuPd = GPIO_PuPd_UP;
-	GPIO_Init(GPIOA, &GPIO_InitStruct); //Funkar det att kalla den här funktionen vid två olika tillfällen? Ingen överskrivning? (init_uart())
+	GPIO_Init(GPIOA, &GPIO_InitStruct);
 	
 	GPIO_PinAFConfig(GPIOA, GPIO_PinSource2, GPIO_AF_TIM2);
 	GPIO_PinAFConfig(GPIOA, GPIO_PinSource3, GPIO_AF_TIM2);
 	
-	uint16_t PrescalerValue = (uint16_t)((168000000/2)/21000000)-1;  //Prescaler = ((SystemCoreClock /2) /21 MHz) - 1
-	
-	TIM_TimeBaseInitTypeDef TIM_TimeBaseStructure;
-	
-	TIM_TimeBaseStructure.TIM_Period = 291666;
+	uint16_t PrescalerValue = (uint16_t)((SystemCoreClock/2)/21000000)-1;  //Prescaler = ((SystemCoreClock /2) /21 MHz) - 1
+		
+	TIM_TimeBaseStructure.TIM_Period = 291666; //Måste möjligtvis ändras, TIM_Period verkar vara 16b
 	TIM_TimeBaseStructure.TIM_Prescaler = PrescalerValue;
 	TIM_TimeBaseStructure.TIM_ClockDivision = 0;
 	TIM_TimeBaseStructure.TIM_CounterMode = TIM_CounterMode_Up;
@@ -113,12 +112,25 @@ void init_pwm()
 	TIM_OC3PreloadConfig(TIM2, TIM_OCPreload_Enable);
 	
 	TIM_OCInitStructure.TIM_OutputState = TIM_OutputState_Enable;
-	TIM_OCInitStructure.TIM_Pulse = CCR3_val;
+	TIM_OCInitStructure.TIM_Pulse = CCR4_val;
 	
 	TIM_OC4Init(TIM2, &TIM_OCInitStructure);
 	TIM_OC4PreloadConfig(TIM2, TIM_OCPreload_Enable);
 	
 	TIM_Cmd(TIM2, ENABLE);
+}
+
+void change_duty_cycle(TIM_TypeDef* TIMx,bool change_engine, bool change_steering, float percent)
+{
+	uint32_t tmp = TIMx->ARR*(percent/100.00);
+	if(change_engine)
+	{
+		TIMx->CCR3 = tmp;
+	}
+	if(change_steering)
+	{
+		TIMx->CCR4 = tmp;
+	}
 }
 
 void init_app()
@@ -131,9 +143,7 @@ void init_app()
 int main()
 {
 	init_app();
-	//leta efter mottagare, loop
-	//Använda systick interrupt för att polla status och placera kommandon i en kö
-	//Loop som kollar kön, skickar kommandot om det finns
+
 	
 	while(1)
 	{
@@ -145,5 +155,7 @@ int main()
 /*
  * UART4_TX = PA0/PC10, Alternative function 8
  * UART4_RX = PA1/PC11, AF 8
+ * TIM2 Channel 3 = PA2
+ * TIM2 Channel 4 = PA3
  * UART4 = 0x4000 4C00 - 0x4000 4FFF 
  * */

@@ -52,7 +52,7 @@
       <ResourceCompiler Options=""/>
     </GlobalSettings>
     <Configuration Name="Debug" CompilerType="Cross GCC ( arm-none-eabi )" DebuggerType="GNU gdb debugger" Type="Executable" BuildCmpWithGlobalSettings="append" BuildLnkWithGlobalSettings="append" BuildResWithGlobalSettings="append">
-      <Compiler Options="-g;-O0;-Wall" C_Options="-g;-O0;-std=c99;-Wall;-mthumb;-mcpu=cortex-m4;-mfloat-abi=hard;-mfpu=fpv4-sp-d16;-Wa,-adhln=test.s" Assembler="" Required="yes" PreCompiledHeader="" PCHInCommandLine="no" PCHFlags="" PCHFlagsPolicy="0">
+      <Compiler Options="-g;-O0;-Wall" C_Options="-O;-Os;-fexpensive-optimizations;-W;-std=c99;-Wall;-mthumb;-mcpu=cortex-m4;-mfloat-abi=hard;-mfpu=fpv4-sp-d16;-Wa,-adhln=test.s" Assembler="" Required="yes" PreCompiledHeader="" PCHInCommandLine="no" PCHFlags="" PCHFlagsPolicy="0">
         <IncludePath Value="."/>
       </Compiler>
       <Linker Options="-nostartfiles -T$(ProjectPath)/md407-ram.x" Required="yes"/>
