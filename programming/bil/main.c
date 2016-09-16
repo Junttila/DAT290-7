@@ -13,12 +13,78 @@ typedef int bool;
 
 TIM_OCInitTypeDef  TIM_OCInitStructure;
 TIM_TimeBaseInitTypeDef TIM_TimeBaseStructure;
-//Motor, neutral
-uint16_t CCR3_val = 27925;
-//Styrning, neutral
-uint16_t CCR4_val = 30634;
+// Motor
+uint16_t CCR3_val = 10;
+// Styrning
+uint16_t CCR4_val = 0;
 
 void startup(void) __attribute__((naked)) __attribute__((section (".start_section")) );
+
+/*#define USART_DATA_REG	((unsigned short *) 0x40011004) 
+#define USART_SR_REG	((unsigned short *) 0x40011000) 
+
+void _outchar (char c) {  // write character to usart1  
+	*USART_DATA_REG = (unsigned short) c; 
+	while ((*USART_SR_REG & 0x80) == 0); 
+	if(c == '\n') { // line feed (0x0a)
+		_outchar('\r'); // carriage return (0x0d)
+	} 	
+}
+
+char _tstchar(void) { 
+	if((*USART_SR_REG & 0x20) == 0) {
+		return 0; 
+	} 
+	return (char) *USART_DATA_REG; 
+} 
+char _inchar(void) {
+	while(!_tstchar());
+	return (char) *USART_DATA_REG;
+}*/
+
+/*// A simple atoi() function
+int myAtoi(char *str)
+{
+    int res = 0; // Initialize result
+  
+    // Iterate through all characters of input string and
+    // update result
+    for (int i = 0; str[i] != '\0'; ++i)
+        res = res*10 + str[i] - '0';
+  
+    // return result.
+    return res;
+}*/
+
+#define SysTickCtrl (unsigned int *) 0xE000E010
+#define SysTickLoad (unsigned int *) 0xE000E014
+#define SysTickVal  (unsigned int *) 0xE000E018
+
+void delay250ns(void)
+{
+    *SysTickCtrl = 0;
+    *SysTickLoad = (168/4)-1;
+    *SysTickVal  = 0;
+    *SysTickCtrl = 5;
+    
+    while((*SysTickCtrl & 0x10000) == 0);
+    *SysTickCtrl = 0;
+}
+
+void delay_micro(unsigned us)
+{
+    while(us--) {
+        for(int i=0; i<4;i++){
+            delay250ns();
+        }
+    }
+}
+
+void delay_milli(unsigned ms)
+{
+    delay_micro(1000*ms);
+}
+
 
 void startup ( void )
 {
@@ -74,7 +140,7 @@ void init_uart()
 	//Fyll i U(S)ART-strukturen
 	USART_InitStruct.USART_BaudRate = 38400; //38400 är default för bluetoothmodulen
 	USART_InitStruct.USART_HardwareFlowControl = USART_HardwareFlowControl_None;
-	USART_InitStruct.USART_Mode = USART_Mode_Rx;
+	USART_InitStruct.USART_Mode = USART_Mode_Rx | USART_Mode_Tx;
 	USART_InitStruct.USART_Parity = USART_Parity_No;
 	USART_InitStruct.USART_StopBits = USART_StopBits_1;
 	USART_InitStruct.USART_WordLength = USART_WordLength_8b;
@@ -101,7 +167,7 @@ void init_pwm()
 	
 	uint16_t PrescalerValue = (uint16_t)((SystemCoreClock/2)/21000000)-1;  //Prescaler = ((SystemCoreClock /2) /21 MHz) - 1
 		
-	TIM_TimeBaseStructure.TIM_Period = 291666; //Måste möjligtvis ändras, TIM_Period verkar vara 16b
+	TIM_TimeBaseStructure.TIM_Period = 665; //Måste möjligtvis ändras, TIM_Period verkar vara 16b
 	TIM_TimeBaseStructure.TIM_Prescaler = PrescalerValue;
 	TIM_TimeBaseStructure.TIM_ClockDivision = 0;
 	TIM_TimeBaseStructure.TIM_CounterMode = TIM_CounterMode_Up;
@@ -120,13 +186,14 @@ void init_pwm()
 	
 	TIM_OC4Init(TIM2, &TIM_OCInitStructure);
 	TIM_OC4PreloadConfig(TIM2, TIM_OCPreload_Enable);
+    TIM_ARRPreloadConfig(TIM2, ENABLE);
 	
 	TIM_Cmd(TIM2, ENABLE);
 }
 
 void change_duty_cycle(TIM_TypeDef* TIMx,bool change_engine, bool change_steering, float percent)
 {
-	uint32_t tmp = TIMx->ARR*(percent/100.00);
+	uint32_t tmp = (uint32_t)TIMx->ARR*(percent/100.00);
 	if(change_engine)
 	{
 		TIMx->CCR3 = tmp;
@@ -147,12 +214,32 @@ void init_app()
 int main()
 {
 	init_app();
+    while(1) 
+    {
+        CCR4_val++;
+        init_pwm();
+        delay_milli(100);
+    }
 
-	
+	/*char data[10];
+    int index = 0;
 	while(1)
 	{
-		
-	}
+        char tmp = _inchar();
+        if(tmp!=0 && index < 10)
+        {
+            if (tmp == '\n')
+            {
+                data[index] = '\0';
+                CCR4_val = myAtoi(&data);
+                _outchar(CCR4_val);
+            }
+            else
+            {
+                data[index++] = (char)tmp;
+            }
+        }
+	}*/
 }
 
 
