@@ -6,6 +6,7 @@
 #include "stm32f4xx_usart.h"
 //#include "stm32f4xx_flash.h"
 #include "stm32f4xx_tim.h"
+#include "test.h"
 
 typedef int bool;
 #define true 1
@@ -13,78 +14,13 @@ typedef int bool;
 
 TIM_OCInitTypeDef  TIM_OCInitStructure;
 TIM_TimeBaseInitTypeDef TIM_TimeBaseStructure;
+
 // Motor
 uint16_t CCR3_val = 10;
 // Styrning
 uint16_t CCR4_val = 0;
 
 void startup(void) __attribute__((naked)) __attribute__((section (".start_section")) );
-
-/*#define USART_DATA_REG	((unsigned short *) 0x40011004) 
-#define USART_SR_REG	((unsigned short *) 0x40011000) 
-
-void _outchar (char c) {  // write character to usart1  
-	*USART_DATA_REG = (unsigned short) c; 
-	while ((*USART_SR_REG & 0x80) == 0); 
-	if(c == '\n') { // line feed (0x0a)
-		_outchar('\r'); // carriage return (0x0d)
-	} 	
-}
-
-char _tstchar(void) { 
-	if((*USART_SR_REG & 0x20) == 0) {
-		return 0; 
-	} 
-	return (char) *USART_DATA_REG; 
-} 
-char _inchar(void) {
-	while(!_tstchar());
-	return (char) *USART_DATA_REG;
-}*/
-
-/*// A simple atoi() function
-int myAtoi(char *str)
-{
-    int res = 0; // Initialize result
-  
-    // Iterate through all characters of input string and
-    // update result
-    for (int i = 0; str[i] != '\0'; ++i)
-        res = res*10 + str[i] - '0';
-  
-    // return result.
-    return res;
-}*/
-
-#define SysTickCtrl (unsigned int *) 0xE000E010
-#define SysTickLoad (unsigned int *) 0xE000E014
-#define SysTickVal  (unsigned int *) 0xE000E018
-
-void delay250ns(void)
-{
-    *SysTickCtrl = 0;
-    *SysTickLoad = (168/4)-1;
-    *SysTickVal  = 0;
-    *SysTickCtrl = 5;
-    
-    while((*SysTickCtrl & 0x10000) == 0);
-    *SysTickCtrl = 0;
-}
-
-void delay_micro(unsigned us)
-{
-    while(us--) {
-        for(int i=0; i<4;i++){
-            delay250ns();
-        }
-    }
-}
-
-void delay_milli(unsigned ms)
-{
-    delay_micro(1000*ms);
-}
-
 
 void startup ( void )
 {
