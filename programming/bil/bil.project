@@ -21,6 +21,8 @@
   <Dependencies/>
   <VirtualDirectory Name="src">
     <File Name="main.c"/>
+    <File Name="test.c"/>
+    <File Name="test.h"/>
   </VirtualDirectory>
   <VirtualDirectory Name="resources">
     <File Name="md407-ram.x"/>
