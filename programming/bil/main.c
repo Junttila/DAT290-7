@@ -35,7 +35,7 @@ __asm volatile(
 #ifdef USE_FULL_ASSERT
 void assert_failed(uint8_t* file, uint32_t line)
 {
-	while(1);
+	//while(1);
 	/* Use GDB to find out why we're here */
 }
 #endif
@@ -91,7 +91,7 @@ void init_pwm()
 	GPIO_InitTypeDef GPIO_InitStruct;
 	RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM2,ENABLE);
 	
-	GPIO_InitStruct.GPIO_Pin = GPIO_Pin_2 | GPIO_Pin_3; //TIM2 kanal 1 och 2
+	GPIO_InitStruct.GPIO_Pin = GPIO_Pin_2 | GPIO_Pin_3; //TIM2 kanal 3 och 4
 	GPIO_InitStruct.GPIO_Mode = GPIO_Mode_AF;
 	GPIO_InitStruct.GPIO_Speed = GPIO_Speed_100MHz;
 	GPIO_InitStruct.GPIO_OType = GPIO_OType_PP;
@@ -101,14 +101,15 @@ void init_pwm()
 	GPIO_PinAFConfig(GPIOA, GPIO_PinSource2, GPIO_AF_TIM2);
 	GPIO_PinAFConfig(GPIOA, GPIO_PinSource3, GPIO_AF_TIM2);
 	
-	uint16_t PrescalerValue = (uint16_t)((SystemCoreClock/2)/21000000)-1;  //Prescaler = ((SystemCoreClock /2) /21 MHz) - 1
+	uint16_t PrescalerValue = ((SystemCoreClock/2)/60000000)-1;  //Prescaler = ((SystemCoreClock /2) /21 MHz) - 1
 		
-	TIM_TimeBaseStructure.TIM_Period = 665; //Måste möjligtvis ändras, TIM_Period verkar vara 16b
-	TIM_TimeBaseStructure.TIM_Prescaler = PrescalerValue;
+	TIM_TimeBaseStructure.TIM_Period = 65535; //Måste möjligtvis ändras, TIM_Period verkar vara 16b
+	TIM_TimeBaseStructure.TIM_Prescaler = 0;
 	TIM_TimeBaseStructure.TIM_ClockDivision = 0;
 	TIM_TimeBaseStructure.TIM_CounterMode = TIM_CounterMode_Up;
 	
 	TIM_TimeBaseInit(TIM2, &TIM_TimeBaseStructure);
+	TIM_PrescalerConfig(TIM2, PrescalerValue,TIM_PSCReloadMode_Immediate);
 	TIM_OCInitStructure.TIM_OCMode = TIM_OCMode_PWM1;
 	TIM_OCInitStructure.TIM_OutputState = TIM_OutputState_Enable;
 	TIM_OCInitStructure.TIM_Pulse = CCR3_val;
@@ -127,16 +128,20 @@ void init_pwm()
 	TIM_Cmd(TIM2, ENABLE);
 }
 
+#define TIM2_ARR ((unsigned int*) TIM2_BASE + 0x2C)
+#define TIM2_CCR3 ((unsigned int*) TIM2_BASE + 0x3C)
+#define TIM2_CCR4 ((unsigned int*) TIM2_BASE + 0x40)
+
 void change_duty_cycle(TIM_TypeDef* TIMx,bool change_engine, bool change_steering, float percent)
 {
 	uint32_t tmp = (uint32_t)TIMx->ARR*(percent/100.00);
 	if(change_engine)
 	{
-		TIMx->CCR3 = tmp;
+		*TIM2_CCR3 = tmp;
 	}
 	if(change_steering)
 	{
-		TIMx->CCR4 = tmp;
+		*TIM2_CCR4 = tmp;
 	}
 }
 
@@ -153,7 +158,7 @@ int main()
     while(1) 
     {
         CCR4_val++;
-        init_pwm();
+		*TIM2_CCR4 = CCR4_val;
         delay_milli(100);
     }
 
