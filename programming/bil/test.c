@@ -55,8 +55,9 @@ void delay250ns(void)
 
 void delay_micro(unsigned us)
 {
+    int i;
     while(us--) {
-        for(int i=0; i<4;i++){
+        for(i=0; i<4;i++){
             delay250ns();
         }
     }
@@ -66,3 +67,23 @@ void delay_milli(unsigned ms)
 {
     delay_micro(1000*ms);
 }
+
+	/*char data[10];
+    int index = 0;
+	while(1)
+	{
+        char tmp = _inchar();
+        if(tmp!=0 && index < 10)
+        {
+            if (tmp == '\n')
+            {
+                data[index] = '\0';
+                CCR4_val = myAtoi(&data);
+                _outchar(CCR4_val);
+            }
+            else
+            {
+                data[index++] = (char)tmp;
+            }
+        }
+	}*/

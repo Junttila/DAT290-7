@@ -18,7 +18,7 @@ TIM_TimeBaseInitTypeDef TIM_TimeBaseStructure;
 // Motor
 uint16_t CCR3_val = 10;
 // Styrning
-uint16_t CCR4_val = 0;
+uint16_t CCR4_val = 40000;
 
 void startup(void) __attribute__((naked)) __attribute__((section (".start_section")) );
 
@@ -103,7 +103,7 @@ void init_pwm()
 	
 	uint16_t PrescalerValue = ((SystemCoreClock/2)/60000000)-1;  //Prescaler = ((SystemCoreClock /2) /21 MHz) - 1
 		
-	TIM_TimeBaseStructure.TIM_Period = 65535; //Måste möjligtvis ändras, TIM_Period verkar vara 16b
+	TIM_TimeBaseStructure.TIM_Period = 0xFFFF; //Måste möjligtvis ändras, TIM_Period verkar vara 16b
 	TIM_TimeBaseStructure.TIM_Prescaler = 0;
 	TIM_TimeBaseStructure.TIM_ClockDivision = 0;
 	TIM_TimeBaseStructure.TIM_CounterMode = TIM_CounterMode_Up;
@@ -157,30 +157,32 @@ int main()
 	init_app();
     while(1) 
     {
-        CCR4_val++;
-		*TIM2_CCR4 = CCR4_val;
-        delay_milli(100);
-    }
-
-	/*char data[10];
-    int index = 0;
-	while(1)
-	{
-        char tmp = _inchar();
-        if(tmp!=0 && index < 10)
+        unsigned long i;
+        for (i=0;i<200000; i++)
+        {}
+        
+        /*if (CCR4_val > 10000)
         {
-            if (tmp == '\n')
-            {
-                data[index] = '\0';
-                CCR4_val = myAtoi(&data);
-                _outchar(CCR4_val);
-            }
-            else
-            {
-                data[index++] = (char)tmp;
-            }
+            CCR4_val = 2000;
+        }*/
+        
+        CCR4_val += 100;        
+		//TIM2_CCR4 = CCR4_val;        
+        TIM_OCInitStructure.TIM_Pulse = CCR4_val;
+        TIM_OC4Init(TIM2, &TIM_OCInitStructure);
+        TIM_OC4PreloadConfig(TIM2, ENABLE); 
+   /*
+        if (CCR3_val > 10000)
+        {
+            CCR3_val = 2000;
         }
-	}*/
+        
+        CCR3_val += 100;        
+		//TIM2_CCR3 = CCR3_val;        
+        TIM_OCInitStructure.TIM_Pulse = CCR3_val;
+        TIM_OC3Init(TIM2, &TIM_OCInitStructure);
+        TIM_OC3PreloadConfig(TIM2, ENABLE);   */ 
+    }
 }
 
 
