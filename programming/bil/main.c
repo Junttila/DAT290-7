@@ -18,7 +18,7 @@ TIM_TimeBaseInitTypeDef TIM_TimeBaseStructure;
 // Motor
 uint16_t CCR3_val = 102;
 // Styrning
-uint16_t CCR4_val = 102; //Om allt stämmer, motsvarar 250mV cycle mean = fullt utslag åt vänster
+uint16_t CCR4_val = 45; //Om allt stämmer, motsvarar 250mV cycle mean = fullt utslag åt vänster
 
 void startup(void) __attribute__((naked)) __attribute__((section (".start_section")) );
 
@@ -103,7 +103,7 @@ void init_pwm()
 	
 	uint16_t PrescalerValue = ((SystemCoreClock/2)/100000)-1;  //Prescaler = ((SystemCoreClock /2) / frekvens) - 1
 		
-	TIM_TimeBaseStructure.TIM_Period = 1388;
+	TIM_TimeBaseStructure.TIM_Period = 440;
 	TIM_TimeBaseStructure.TIM_Prescaler = PrescalerValue;
 	TIM_TimeBaseStructure.TIM_ClockDivision = 0;
 	TIM_TimeBaseStructure.TIM_CounterMode = TIM_CounterMode_Up;
@@ -155,23 +155,39 @@ void init_app()
 
 int main()
 {
+    int dir = -1;
+    
 	init_app();
+    unsigned long j;
+    unsigned long i;
+    unsigned long k;
+    for (j=0;j<2000000000;j++)
+    {}
     while(1) 
     {
-        unsigned long i;
-        for (i=0;i<200000; i++)
+        for (i=0;i<6000000; i++)
         {}
         
-        /*if (CCR4_val > 10000)
-        {
-            CCR4_val = 2000;
-        }*/
         
-        CCR4_val += 100;        
-		//TIM2_CCR4 = CCR4_val;        
+        
+        if (CCR4_val > 55)
+        {
+            dir = -1;
+        }
+        
+        if (CCR4_val < 35)
+        {
+            dir = 1;
+        }
+        
+        CCR4_val += dir;
+        
+		//*TIM2_CCR4 = CCR4_val;        
         TIM_OCInitStructure.TIM_Pulse = CCR4_val;
         TIM_OC4Init(TIM2, &TIM_OCInitStructure);
-        TIM_OC4PreloadConfig(TIM2, ENABLE); 
+        TIM_OC4PreloadConfig(TIM2, ENABLE);
+
+        
    /*
         if (CCR3_val > 10000)
         {
