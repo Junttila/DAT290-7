@@ -16,9 +16,9 @@ TIM_OCInitTypeDef  TIM_OCInitStructure;
 TIM_TimeBaseInitTypeDef TIM_TimeBaseStructure;
 
 // Motor
-uint16_t CCR3_val = 10;
+uint16_t CCR3_val = 102;
 // Styrning
-uint16_t CCR4_val = 40000;
+uint16_t CCR4_val = 102; //Om allt stämmer, motsvarar 250mV cycle mean = fullt utslag åt vänster
 
 void startup(void) __attribute__((naked)) __attribute__((section (".start_section")) );
 
@@ -101,15 +101,16 @@ void init_pwm()
 	GPIO_PinAFConfig(GPIOA, GPIO_PinSource2, GPIO_AF_TIM2);
 	GPIO_PinAFConfig(GPIOA, GPIO_PinSource3, GPIO_AF_TIM2);
 	
-	uint16_t PrescalerValue = ((SystemCoreClock/2)/60000000)-1;  //Prescaler = ((SystemCoreClock /2) /21 MHz) - 1
+	uint16_t PrescalerValue = ((SystemCoreClock/2)/100000)-1;  //Prescaler = ((SystemCoreClock /2) / frekvens) - 1
 		
-	TIM_TimeBaseStructure.TIM_Period = 0xFFFF; //Måste möjligtvis ändras, TIM_Period verkar vara 16b
-	TIM_TimeBaseStructure.TIM_Prescaler = 0;
+	TIM_TimeBaseStructure.TIM_Period = 1388;
+	TIM_TimeBaseStructure.TIM_Prescaler = PrescalerValue;
 	TIM_TimeBaseStructure.TIM_ClockDivision = 0;
 	TIM_TimeBaseStructure.TIM_CounterMode = TIM_CounterMode_Up;
 	
 	TIM_TimeBaseInit(TIM2, &TIM_TimeBaseStructure);
-	TIM_PrescalerConfig(TIM2, PrescalerValue,TIM_PSCReloadMode_Immediate);
+	//TIM_PrescalerConfig(TIM2, PrescalerValue,TIM_PSCReloadMode_Immediate);
+	
 	TIM_OCInitStructure.TIM_OCMode = TIM_OCMode_PWM1;
 	TIM_OCInitStructure.TIM_OutputState = TIM_OutputState_Enable;
 	TIM_OCInitStructure.TIM_Pulse = CCR3_val;
