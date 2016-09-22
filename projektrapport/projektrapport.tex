@@ -1,3 +1,4 @@
+%Git-rapport
 \documentclass[a4paper]{article}
 
 \usepackage[swedish]{babel}
@@ -48,20 +49,21 @@ Syftet med detta projekt är att uppdatera den klassiska radiostyrda bilen med h
 
 \subsection{Mål}
 
-Projektet går ut på att ersätta en del av elektroniken i en radiostyrd bil. Det utgår från en bil där mottagare och sändare i den befintliga styrelektroniken byts ut mot ARM-baserade system. Vidare ska en kontrollapplikation implementeras med hjälp av ett antal avståndsmätare, därefter ska bilen självständigt kunna köra rakt fram i högsta möjliga takt och på ett avstånd av maximalt 1 cm från en vägg bromsa in helt utan att kollidera med väggen. Dessa uppgraderingar ska båda använda sig av Bluetooth. 
+Projektet går ut på att ersätta en del av elektroniken i en radiostyrd bil. Sändaren samt mottagaren som finns i handkontrollens respektive bilens elektronik ska bytas ut mot ARM-baserade system. Vidare ska en kontrollapplikation implementeras med hjälp av ett antal avståndsmätare, därefter ska bilen självständigt kunna köra rakt fram i högsta möjliga takt och på ett avstånd av maximalt 1 cm från en vägg bromsa in helt utan att kollidera med väggen. Dessa uppgraderingar ska båda använda sig av Bluetooth. 
 
 Sedan implementeras styrning via en telefonapplikation som ska kunna kontrollera bilen genom ett Androidsystem. Även denna uppgradering ska använda sig av Bluetooth.
 
 \subsection{Arbetsmetod}
 
-% hur vi har genomfört projecktet
-
-% hur vi mätte signalerna 
-% parallel arbete (delat upp projektet i olika grupper löser olika uppgifter så att alla har någott att göra)
+Utbytet av mottagare samt sändare har skett i två steg. Styrsignalerna har först uppmätts med hjälp av oscilloskåp. Resultatet av detta användes i utvecklandet av ett program som själv kunnat generera samma slags signaler genom en ARM-processor kopplad till bilen. Programmet är skrivet i C i utvecklingsmiljön CodeLite. Vidare (INFO OM HUR HANDKONTROLLEN BYTS UT)
 
 \section{Teknisk beskrivning}
 
 \subsection{Teknisk bakgrund}
+För att kunna kontrollera en radiobil används en sändare och en mottagare~\cite{RCTechnique}. Radiosignaler på en okänd frekvens skickas från sändaren, handkontrollen, och avkodas av mottagaren, signalomvandlaren, i radiobilen. Dessa omvandlas då till elektroniska signaler som antingen kontrollerar bilens hastighet eller riktning. Parallellt med detta styrs även bilens hastighet av motorns kraftutslag, medan riktningen även beror på hjulens gradförskjutning. Genom en ytterligare signal kan bilens hastighet även reverseras. Bilens styrenhet omvandlar radiosignaler som sedan kontrollerar bilens rörelse.
+
+\subsubsection{Nya styrsignaler}
+Bilens styrsignaler kontrolleras av en kontrollenhet, MRX-242. Enheten fungerar simultant som radiomottagare och styrsignalgenerator, och generar signaler till båda motorerna i bilen via tre kablar. I mening att ersätta dessa med nya signaler finns även tillgång till ett ytterligare kopplingsblock. Blocket kopplas mellan MRX-242 och motorerna, och kommer initialt konfigureras att mäta signalerna från den ursprungliga kontrollenheten i bilen. När dessa är kända kommer blocket omkopplas för att generera nya anpassade styrsignaler~\cite{projektDir}. 
 
 
 \subsection{Systemöversikt}
