@@ -1,8 +1,12 @@
-
-/*
- *  Startup.
- *  I SimServer kopplar du upp port PE0-7 mot en dipswitch och port PD0-7 mot en Bargraph. 
-*/
+//#include "stdint.h"
+#include "stm32f4xx.h"
+#include "system_stm32f4xx.h"
+#include "stm32f4xx_rcc.h"
+#include "stm32f4xx_gpio.h"
+#include "stm32f4xx_usart.h"
+//#include "stm32f4xx_flash.h"
+#include "stm32f4xx_tim.h"
+#include "USART.h"
 
 void startup(void) __attribute__((naked)) __attribute__((section(".start_section")));
 void startup (void)
@@ -18,15 +22,26 @@ __asm volatile(
 
 void appInit(void)
 {
-    *((unsigned int*) 0x40020c00) = 0x00005555;    
+	//init_SCI(USART1, 96000, USART_WordLength_8b, USART_StopBits_1, USART_Parity_No, USART_Mode_Tx | USART_Mode_Rx, USART_HardwareFlowControl_None);
 }
+
+#ifdef USE_FULL_ASSERT
+void assert_failed(uint8_t* file, uint32_t line)
+{
+
+}
+#endif
 
 void main(void)
 {
-    unsigned char c;
     appInit();
-    while(1) {
-        c = *((unsigned char*) 0x40021010);
-        *((unsigned char*) 0x40020c14) = c;
-    }
+	uint16_t t = 'Q';
+	while(1)
+	{
+		t = read_SCI(USART1);
+		if (t != 0)
+		{
+			write_SCI(USART1, t);
+		}
+	}
 }
