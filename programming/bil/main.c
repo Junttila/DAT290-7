@@ -6,6 +6,7 @@
 #include "stm32f4xx_usart.h"
 //#include "stm32f4xx_flash.h"
 #include "stm32f4xx_tim.h"
+#include "USART.h"
 #include "test.h"
 
 typedef int bool;
@@ -15,10 +16,10 @@ typedef int bool;
 TIM_OCInitTypeDef  TIM_OCInitStructure;
 TIM_TimeBaseInitTypeDef TIM_TimeBaseStructure;
 
-// Motor
-uint16_t CCR3_val = 102;
 // Styrning
-uint16_t CCR4_val = 45; //Om allt stämmer, motsvarar 250mV cycle mean = fullt utslag åt vänster
+uint16_t CCR3_val = 45;
+// Motor
+uint16_t CCR4_val = 45;
 
 void startup(void) __attribute__((naked)) __attribute__((section (".start_section")) );
 
@@ -76,7 +77,7 @@ void init_uart()
 	//Fyll i U(S)ART-strukturen
 	USART_InitStruct.USART_BaudRate = 38400; //38400 är default för bluetoothmodulen
 	USART_InitStruct.USART_HardwareFlowControl = USART_HardwareFlowControl_None;
-	USART_InitStruct.USART_Mode = USART_Mode_Rx | USART_Mode_Tx;
+	USART_InitStruct.USART_Mode = USART_Mode_Rx;
 	USART_InitStruct.USART_Parity = USART_Parity_No;
 	USART_InitStruct.USART_StopBits = USART_StopBits_1;
 	USART_InitStruct.USART_WordLength = USART_WordLength_8b;
@@ -146,16 +147,64 @@ void change_duty_cycle(TIM_TypeDef* TIMx,bool change_engine, bool change_steerin
 	}
 }
 
+
 void init_app()
 {
 	init_system();
-	init_uart();
 	init_pwm();
+    init_uart();
+    //init_SCI(UART4, 38400, USART_WordLength_8b, USART_StopBits_1, USART_Parity_No, USART_Mode_Rx, USART_HardwareFlowControl_None);
+ /*   init_SCI(USART1, 9600, USART_WordLength_8b, USART_StopBits_1, USART_Parity_No, USART_Mode_Tx, USART_HardwareFlowControl_None);*/
 }
 
 int main()
 {
-    int dir = -1;
+    init_app();
+    uint8_t t = 0;
+    uint16_t i;
+    while(1)
+    {
+        t = USART_ReceiveData(UART4);
+        if(t!=0)
+        {
+            switch(t>>6)
+            {
+                case 1:
+                CCR4_val = t & 0b00111111;
+                break;
+                case 2:
+                CCR3_val = t & 0b00111111;
+                break;
+                case 3:
+                
+                break;
+                default:
+                CCR3_val = 45;
+                CCR4_val = 45;
+            }
+        }
+        else
+        {
+            
+        }
+        TIM_OCInitStructure.TIM_Pulse = CCR4_val;
+        TIM_OC4Init(TIM2, &TIM_OCInitStructure);
+        TIM_OC4PreloadConfig(TIM2, ENABLE);
+        TIM_OCInitStructure.TIM_Pulse = CCR3_val;
+        TIM_OC3Init(TIM2, &TIM_OCInitStructure);
+        TIM_OC3PreloadConfig(TIM2, ENABLE);
+        
+        write_value_SCI(USART1,t);
+        
+        for(i=0;i<20000000;i++)
+        {}
+    }
+    
+    /*
+     * 
+     
+     */
+    /*int dir = -1;
     
 	init_app();
     unsigned long j;
@@ -198,8 +247,9 @@ int main()
 		//TIM2_CCR3 = CCR3_val;        
         TIM_OCInitStructure.TIM_Pulse = CCR3_val;
         TIM_OC3Init(TIM2, &TIM_OCInitStructure);
-        TIM_OC3PreloadConfig(TIM2, ENABLE);   */ 
-    }
+        TIM_OC3PreloadConfig(TIM2, ENABLE);   */ /*
+    } */
+    
 }
 
 

@@ -42,6 +42,8 @@
     <File Name="stm32f4xx_tim.h"/>
     <File Name="system_stm32f4xx.c"/>
     <File Name="stm32f4xx_conf.h"/>
+    <File Name="USART.c"/>
+    <File Name="USART.h"/>
   </VirtualDirectory>
   <Settings Type="Executable">
     <GlobalSettings>
