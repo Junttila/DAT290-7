@@ -112,6 +112,7 @@ monitor restart</PostConnectCommands>
   </Settings>
   <VirtualDirectory Name="src">
     <File Name="main.c"/>
+    <File Name="main.h"/>
   </VirtualDirectory>
   <VirtualDirectory Name="resources">
     <File Name="md407-ram.x"/>
@@ -121,8 +122,8 @@ monitor restart</PostConnectCommands>
     <File Name="core_cmSimd.h"/>
     <File Name="stm32f4xx.h"/>
     <File Name="stm32f4xx_conf.h"/>
-    <File Name="stm32f4xx_exti.c"/>
-    <File Name="stm32f4xx_exti.h"/>
+    <File Name="stm32f4xx_exti.c" ExcludeProjConfig=""/>
+    <File Name="stm32f4xx_exti.h" ExcludeProjConfig=""/>
     <File Name="stm32f4xx_gpio.c"/>
     <File Name="stm32f4xx_gpio.h"/>
     <File Name="stm32f4xx_rcc.c"/>
@@ -131,9 +132,11 @@ monitor restart</PostConnectCommands>
     <File Name="stm32f4xx_tim.h"/>
     <File Name="stm32f4xx_usart.c"/>
     <File Name="stm32f4xx_usart.h"/>
-    <File Name="stm324x7i_eval.c"/>
-    <File Name="stm324x7i_eval.h"/>
     <File Name="system_stm32f4xx.c"/>
     <File Name="system_stm32f4xx.h"/>
+    <File Name="USART.h"/>
+    <File Name="misc.h"/>
+    <File Name="misc.c"/>
+    <File Name="USART.c"/>
   </VirtualDirectory>
 </CodeLite_Project>
