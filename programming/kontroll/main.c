@@ -87,7 +87,7 @@ void init_uart()
 	RCC_APB1PeriphClockCmd(RCC_APB1Periph_UART4,ENABLE);
 	
 	//Fyll i U(S)ART-strukturen
-	USART_InitStruct.USART_BaudRate = 38400; //38400 är default för bluetoothmodulen
+	USART_InitStruct.USART_BaudRate = 300; //38400 är default för bluetoothmodulen
 	USART_InitStruct.USART_HardwareFlowControl = USART_HardwareFlowControl_None;
 	USART_InitStruct.USART_Mode = USART_Mode_Rx | USART_Mode_Tx;
 	USART_InitStruct.USART_Parity = USART_Parity_No;
@@ -115,7 +115,7 @@ void send_cmd(uint8_t cmd, uint8_t val)
 void debug_delay()
 {
 	long int i = 0;
-	for (i = 0; i < 20000000; i++)
+	for (i = 0; i < 10000000; i++)
 	{
 		
 	}
@@ -127,6 +127,7 @@ void main(void)
     //appInit();
 	uint8_t t = 1;
 	uint8_t dir = 1;
+	int offset = 110;
 	
 	debug_delay();
 	
@@ -134,12 +135,12 @@ void main(void)
 	{
 		t += dir;
 		
-		if (t == 55)
+		if (t == (173 - offset))
 		{
 			dir = -1;
 		}
 		
-		if (t == 35)
+		if (t == (110 - offset))
 		{
 			dir = 1;
 		}

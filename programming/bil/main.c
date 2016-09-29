@@ -7,47 +7,27 @@
 //#include "stm32f4xx_flash.h"
 #include "stm32f4xx_tim.h"
 #include "USART.h"
-#include "test.h"
-
-typedef int bool;
-#define true 1
-#define false 0
 
 TIM_OCInitTypeDef  TIM_OCInitStructure;
 TIM_TimeBaseInitTypeDef TIM_TimeBaseStructure;
 
 // Styrning
-uint16_t CCR3_val = 45;
+uint16_t CCR3_val = 142; //Neutralt = 142 [110,173]
 // Motor
-uint16_t CCR4_val = 45;
+uint16_t CCR4_val = 142;
 
-void startup(void) __attribute__((naked)) __attribute__((section (".start_section")) );
-
-void startup ( void )
+void startup(void) __attribute__((naked)) __attribute__((section(".start_section")));
+void startup (void)
 {
-__asm volatile(
-	" LDR R0,=0x2001C000\n"		/* set stack */
-	" MOV SP,R0\n"
-	" BL main\n"				/* call main */
-	".L1: B .L1\n"				/* never return */
-	) ;
+__asm volatile(   
+    " mov r0, #0xc000\n"        /* set stack */
+    " movt r0, #0x2001\n"
+    " mov sp, r0\n"
+    " bl main\n"                /* call main */   
+    ".l1: b .l1\n"              /* never return */
+    ) ;    
 }
 
-#ifdef USE_FULL_ASSERT
-void assert_failed(uint8_t* file, uint32_t line)
-{
-	//while(1);
-	/* Use GDB to find out why we're here */
-}
-#endif
-
-void init_system ()
-{
-	SystemInit();
-	//kopiera datasegmentet till ram här
-	//Fyll BSS med nollor
-	SystemCoreClockUpdate();
-}
 
 void init_uart()
 {
@@ -55,36 +35,37 @@ void init_uart()
 	USART_InitTypeDef USART_InitStruct;
 	
 	//Aktivera klockan till GPIO port A
-	RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOA,ENABLE);
+	RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOB,ENABLE);
 	
 	//Sätt alternativ funktion på på PA0 och PA1
-	GPIO_PinAFConfig(GPIOA, GPIO_PinSource0,GPIO_AF_UART4);
-	GPIO_PinAFConfig(GPIOA, GPIO_PinSource1,GPIO_AF_UART4);
+	GPIO_PinAFConfig(GPIOB, GPIO_PinSource10,GPIO_AF_USART3);
+	GPIO_PinAFConfig(GPIOB, GPIO_PinSource11,GPIO_AF_USART3);
 	
 	//Fyll i GPIO-strukturen
-	GPIO_initStruct.GPIO_Pin = GPIO_Pin_0 | GPIO_Pin_1;
+	GPIO_initStruct.GPIO_Pin = GPIO_Pin_10 | GPIO_Pin_11;
 	GPIO_initStruct.GPIO_Mode = GPIO_Mode_AF;
 	GPIO_initStruct.GPIO_OType = GPIO_OType_PP;
 	GPIO_initStruct.GPIO_PuPd = GPIO_PuPd_UP;
 	GPIO_initStruct.GPIO_Speed = GPIO_Speed_100MHz;
 	
 	//Initiera GPIO port A
-	GPIO_Init(GPIOA,&GPIO_initStruct);
+	GPIO_Init(GPIOB,&GPIO_initStruct);
 	
-	//Aktivera klockan till UART4
-	RCC_APB1PeriphClockCmd(RCC_APB1Periph_UART4,ENABLE);
+	//Aktivera klockan till USART3
+	RCC_APB1PeriphClockCmd(RCC_APB1Periph_USART3,ENABLE);
 	
 	//Fyll i U(S)ART-strukturen
-	USART_InitStruct.USART_BaudRate = 38400; //38400 är default för bluetoothmodulen
+	USART_InitStruct.USART_BaudRate = 300; //38400 är default för bluetoothmodulen
 	USART_InitStruct.USART_HardwareFlowControl = USART_HardwareFlowControl_None;
-	USART_InitStruct.USART_Mode = USART_Mode_Rx;
+	USART_InitStruct.USART_Mode = USART_Mode_Rx | USART_Mode_Tx;
 	USART_InitStruct.USART_Parity = USART_Parity_No;
 	USART_InitStruct.USART_StopBits = USART_StopBits_1;
 	USART_InitStruct.USART_WordLength = USART_WordLength_8b;
+    
 	
-	//Initiera UART4
-	USART_Init(UART4,&USART_InitStruct);
-	USART_Cmd(UART4,ENABLE);
+	//Initiera USART3
+	USART_Init(USART3,&USART_InitStruct);
+	USART_Cmd(USART3,ENABLE);
 }
 
 void init_pwm()
@@ -104,7 +85,7 @@ void init_pwm()
 	
 	uint16_t PrescalerValue = ((SystemCoreClock/2)/100000)-1;  //Prescaler = ((SystemCoreClock /2) / frekvens) - 1
 		
-	TIM_TimeBaseStructure.TIM_Period = 440;
+	TIM_TimeBaseStructure.TIM_Period = 1388;
 	TIM_TimeBaseStructure.TIM_Prescaler = PrescalerValue;
 	TIM_TimeBaseStructure.TIM_ClockDivision = 0;
 	TIM_TimeBaseStructure.TIM_CounterMode = TIM_CounterMode_Up;
@@ -130,62 +111,61 @@ void init_pwm()
 	TIM_Cmd(TIM2, ENABLE);
 }
 
-#define TIM2_ARR ((unsigned int*) TIM2_BASE + 0x2C)
-#define TIM2_CCR3 ((unsigned int*) TIM2_BASE + 0x3C)
-#define TIM2_CCR4 ((unsigned int*) TIM2_BASE + 0x40)
-
-void change_duty_cycle(TIM_TypeDef* TIMx,bool change_engine, bool change_steering, float percent)
+#ifdef USE_FULL_ASSERT
+void assert_failed(uint8_t* file, uint32_t line)
 {
-	uint32_t tmp = (uint32_t)TIMx->ARR*(percent/100.00);
-	if(change_engine)
+
+}
+#endif
+
+void send_cmd(uint8_t cmd, uint8_t val)
+{
+	uint8_t msg = (cmd << 6) | (val & 0b00111111);
+	USART_SendData(USART3, msg);
+}
+
+void debug_delay()
+{
+	long int i = 0;
+	for (i = 0; i < 1000000; i++)
 	{
-		*TIM2_CCR3 = tmp;
-	}
-	if(change_steering)
-	{
-		*TIM2_CCR4 = tmp;
+		
 	}
 }
 
-
-void init_app()
+void main(void)
 {
-	init_system();
-	init_pwm();
-    init_uart();
-    //init_SCI(UART4, 38400, USART_WordLength_8b, USART_StopBits_1, USART_Parity_No, USART_Mode_Rx, USART_HardwareFlowControl_None);
- /*   init_SCI(USART1, 9600, USART_WordLength_8b, USART_StopBits_1, USART_Parity_No, USART_Mode_Tx, USART_HardwareFlowControl_None);*/
-}
-
-int main()
-{
-    init_app();
+	init_uart();
+    write_SCI(USART1,'i');
+    init_pwm();
+    write_SCI(USART1,'p');
     uint8_t t = 0;
-    uint16_t i;
-    while(1)
+    uint16_t offset = 110;
+    //appInit();
+	
+	
+	while(1)
     {
-        t = USART_ReceiveData(UART4);
+        t = USART_ReceiveData(USART3);
         if(t!=0)
         {
             switch(t>>6)
             {
                 case 1:
-                CCR4_val = t & 0b00111111;
+                CCR4_val = (t & 0b00111111) + offset;
                 break;
                 case 2:
-                CCR3_val = t & 0b00111111;
+                CCR3_val = (t & 0b00111111) + offset;
                 break;
                 case 3:
                 
                 break;
                 default:
-                CCR3_val = 45;
-                CCR4_val = 45;
+                CCR3_val = 142;
+                CCR4_val = 142;
             }
-        }
-        else
-        {
-            
+            write_value_SCI(USART1,t & 0b00111111);
+            write_value_SCI(USART1,' ');
         }
         TIM_OCInitStructure.TIM_Pulse = CCR4_val;
         TIM_OC4Init(TIM2, &TIM_OCInitStructure);
@@ -193,70 +173,6 @@ int main()
         TIM_OCInitStructure.TIM_Pulse = CCR3_val;
         TIM_OC3Init(TIM2, &TIM_OCInitStructure);
         TIM_OC3PreloadConfig(TIM2, ENABLE);
-        
-        write_value_SCI(USART1,t);
-        
-        for(i=0;i<20000000;i++)
-        {}
+        debug_delay();
     }
-    
-    /*
-     * 
-     
-     */
-    /*int dir = -1;
-    
-	init_app();
-    unsigned long j;
-    unsigned long i;
-    unsigned long k;
-    for (j=0;j<2000000000;j++)
-    {}
-    while(1) 
-    {
-        for (i=0;i<6000000; i++)
-        {}
-        
-        
-        
-        if (CCR4_val > 55)
-        {
-            dir = -1;
-        }
-        
-        if (CCR4_val < 35)
-        {
-            dir = 1;
-        }
-        
-        CCR4_val += dir;
-        
-		//*TIM2_CCR4 = CCR4_val;        
-        TIM_OCInitStructure.TIM_Pulse = CCR4_val;
-        TIM_OC4Init(TIM2, &TIM_OCInitStructure);
-        TIM_OC4PreloadConfig(TIM2, ENABLE);
-
-        
-   /*
-        if (CCR3_val > 10000)
-        {
-            CCR3_val = 2000;
-        }
-        
-        CCR3_val += 100;        
-		//TIM2_CCR3 = CCR3_val;        
-        TIM_OCInitStructure.TIM_Pulse = CCR3_val;
-        TIM_OC3Init(TIM2, &TIM_OCInitStructure);
-        TIM_OC3PreloadConfig(TIM2, ENABLE);   */ /*
-    } */
-    
 }
-
-
-/*
- * UART4_TX = PA0/PC10, Alternative function 8
- * UART4_RX = PA1/PC11, AF 8
- * TIM2 Channel 3 = PA2
- * TIM2 Channel 4 = PA3
- * UART4 = 0x4000 4C00 - 0x4000 4FFF 
- * */
