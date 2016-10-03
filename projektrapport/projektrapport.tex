@@ -51,11 +51,19 @@ Syftet med detta projekt är att uppdatera den klassiska radiostyrda bilen med h
 
 Projektet går ut på att ersätta en del av elektroniken i en radiostyrd bil. Sändaren samt mottagaren som finns i handkontrollens respektive bilens elektronik ska bytas ut mot ARM-baserade system. Vidare ska en kontrollapplikation implementeras med hjälp av ett antal avståndsmätare, därefter ska bilen självständigt kunna köra rakt fram i högsta möjliga takt och på ett avstånd av maximalt 1 cm från en vägg bromsa in helt utan att kollidera med väggen. Dessa uppgraderingar ska båda använda sig av Bluetooth. 
 
+\vspace{5mm}
 Sedan implementeras styrning via en telefonapplikation som ska kunna kontrollera bilen genom ett Androidsystem. Även denna uppgradering ska använda sig av Bluetooth.
 
 \subsection{Arbetsmetod}
 
-Utbytet av mottagare samt sändare har skett i två steg. Styrsignalerna har först uppmätts med hjälp av oscilloskåp. Resultatet av detta användes i utvecklandet av ett program som själv kunnat generera samma slags signaler genom en ARM-processor kopplad till bilen. Programmet är skrivet i C i utvecklingsmiljön CodeLite. Vidare (INFO OM HUR HANDKONTROLLEN BYTS UT)
+Utbytet av mottagare samt sändare har skett i två steg. Styrsignalerna har först uppmätts med hjälp av oscilloskop. Resultatet av detta användes i utvecklandet av ett program som själv kunnat generera samma slags signaler genom en ARM-processor kopplad till bilen. Programmet som ska göra detta är skrivet i C i utvecklingsmiljön CodeLite.
+
+%Lägg till referens på "motorernas respons på signalerna är..." samt "STMicroelectronics" BYTA TILL SYSTEMÖVERSIKT, LITE AV DENNA
+\vspace{5mm}
+Signalerna som ska avläsas och sedan genereras är av typen PWM (Pulse Width Modulation. Med detta menas att det som ska avläsas på oscilloskopet är hur mycket av signalen som är på maxspänning jämfört med en hel period av radiovågorna. Det som möjliggör att avläsningen av signalerna går att göra samtidigt som det går att se motorernas respons på signalerna är ett kretskort som delar på signalerna. Efter avläsningen replikeras dessa signaler i vår datorenhet, MD407, för att sedan kunna skickas från datorn direkt till mottagaren i bilen varpå bilen ska ge samma respons som med den ursprungliga sändaren. Detta arbete har förenklats med hjälp av kodbibliotek från STMicroelectronics som innehåller funktioner för att initiera PWM-genererande. 
+
+\vspace{5mm}
+Mestadels av arbetet har utförts i designerade laborationssalar. Tillgång till ett skåp med elektroniskt kodlås för förvaring av material, vilket också varit tillgängligt för samtliga i projektledningen.
 
 \section{Teknisk beskrivning}
 
@@ -67,6 +75,7 @@ Bilens styrsignaler kontrolleras av en kontrollenhet, MRX-242. Enheten fungerar 
 
 
 \subsection{Systemöversikt}
+Androidapplikationen agerar som handkontroll. Av denna krävs endast att skicka bytes seriellt till bilens dator med en Bluetooth-länk för att få trådlöshet. Detta följer protokoll som bestämts av projektledningen där de två mest signifikanta bitarna i en byte bestämmer vilken sorts signal som ska ändras, till exempel styrning, drivmotor eller initiera kontrollapplikationen. Mobilapplikationen har på skärmen virtuella reglage som ska emulera ordinarie handkontrollend analoga funktion så att exempelvis hastighetsövergången är så jämn som möjligt.
 
 
 \subsection{Delsystem}
