@@ -75,8 +75,16 @@ Bilens styrsignaler kontrolleras av en kontrollenhet, MRX-242. Enheten fungerar 
 
 
 \subsection{Systemöversikt}
-Androidapplikationen agerar som handkontroll. Av denna krävs endast att skicka bytes seriellt till bilens dator med en Bluetooth-länk för att få trådlöshet. Detta följer protokoll som bestämts av projektledningen där de två mest signifikanta bitarna i en byte bestämmer vilken sorts signal som ska ändras, till exempel styrning, drivmotor eller initiera kontrollapplikationen. Mobilapplikationen har på skärmen virtuella reglage som ska emulera ordinarie handkontrollend analoga funktion så att exempelvis hastighetsövergången är så jämn som möjligt.
+Systemet har två huvuddelar, Androidapplikationen som agerar handkontroll och bildatorn som generarar signaler till motorerna
 
+\subsubsection{Androidapplikation}
+Androidapplikationen agerar som handkontroll. Av denna krävs endast att skicka bytes seriellt till bilens dator med en Bluetooth-länk för att få trådlöshet. Detta följer protokoll som bestämts av projektledningen där de två mest signifikanta bitarna i en byte bestämmer vilken sorts signal som ska ändras, till exempel styrning, drivmotor eller initiera kontrollapplikationen. Mobilapplikationen har på skärmen virtuella reglage som ska emulera ordinarie handkontrollens analoga funktion så att exempelvis hastighetsövergången är så jämn som möjligt.
+
+\subsubsection{Bildator}
+Signalerna som skickas från Androidapplikationen tas emot av en generisk Bluetooth-modul som är kopplad till en USART-port på bildatorn. När programmet på bildatorn startas måste datorn först skicka PWM-signaler som motsvarar neutralt läge för drivmotorn i en kortstund innan andra signaler kan skickas. Bildatorn tar emot kommando från Bluetoothlänken och ser vad det är för sorts kommando på de två kommandobitarna. PWM-signalerna ändras sedan efter värdet på kommandot (de sex minst signifikanta bitarna) eller startar kontrollapplikationen för demonstration. Motorerna tar emot PWM-signalerna och ger utslag beroende på PWM-signalens medelspänning.
+
+\subsubsection{PWM-signaler}
+PWM eller Pulse Width Modulation är en moduleringsteknik och används mest för att styra mängden elektrisk ström som förs till till exempel en motor. I varje period i en PWM-signal kan spänningen antingen vara 0 eller hög och det som mottagaren svarar på är hur stor del av perioden som signalen var på högspänning. I detta projekt är maxspänningen ca 3,4V och motorerna svarar på en medelspänning mellan 250-450mV alltså ungefär 8-12\% av perioden är högspänning. Dessa medelvärden, eller dutycycles, styrs i bildatorn med hjälp av en av datorns timers och standardbibliotek för dessa
 
 \subsection{Delsystem}
 
