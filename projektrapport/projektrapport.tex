@@ -44,69 +44,96 @@
 
 \tableofcontents
 
+\newpage
+\section{Ordlista}
+PWM-signaler(KÄLLA) - PWM eller Pulse Width Modulation är en moduleringsteknik och används mest för att styra mängden elektrisk ström som förs till, exempelvis, en motor.
+%NÖDVÄNDIGT???? I varje period i en PWM-signal kan spänningen antingen vara 0, låg, eller 1, hög, och det som mottagaren svarar på är hur stor del av perioden som signalen var på högspänning. I detta projekt är maxspänningen ca 3, 4V, och motorerna svarar på en medelspänning mellan 250-450mV. Alltså är perioden på högspänning ungefär 8-12\% av tiden. Dessa medelvärden, eller dutycycles, styrs i bildatorn med hjälp av en av datorns timers och standardbibliotek för dessa
+
+STMicroelectronics
+
+Android Studio
+ 
+MRX-242
 
 \newpage
 \section{Introduktion}
 
-Radiostyrda bilar kontrollerandes av handkontroller började produceras på mitten av 60-talet~\cite{RCHistory}. Under åren har de både tävlats med samt varit en väletablerad leksak till barn. Trots att den genomgått mindre justeringar har den radiostyrda bilens uppbyggnad i det stora hela förblivit densamma.
+Radiostyrda bilar började produceras på mitten av 60-talet~\cite{RCHistory}. Under åren har de både tävlats med samt varit en väletablerad leksak till barn. Trots att den genomgått mindre justeringar har den radiostyrda bilens uppbyggnad i det stora hela förblivit densamma.
 
 \subsection{Syfte}
 
-Syftet med detta projekt är att uppdatera den klassiska radiostyrda bilen med hjälp av ny teknik och följaktligen erhålla en mer modern teknisk produkt.
+Syftet med detta projekt är att uppdatera den klassiska radiostyrda bilen genom att ersätta befintlig sändare samt mottagare i en radiostyrd bil med nya datorer samt även möjliggöra styrning från en Andriodtelefon. Intentionen är även att implementera en kontrollapplikation som ska kunna stoppa bilen från att kollidera.
+
+
+%Syftet med detta projekt är att uppdatera den klassiska radiostyrda bilen och följaktligen erhålla en mer modern teknisk produkt. 
+
 
 \subsection{Mål}
+Målen nedan beskriver konkret vad som ska uppnås med projektet.
 
-Projektet går ut på att ersätta en del av elektroniken i en radiostyrd bil. Sändaren samt mottagaren som finns i handkontrollens respektive bilens elektronik ska bytas ut mot ARM-baserade system. Vidare ska en kontrollapplikation implementeras med hjälp av ett antal avståndsmätare, därefter ska bilen självständigt kunna köra rakt fram i högsta möjliga takt och på ett avstånd av maximalt 1 cm från en vägg bromsa in helt utan att kollidera med väggen. Dessa uppgraderingar ska båda använda sig av Bluetooth. 
+\begin{itemize}
+\item Den befintliga sändaren samt mottagaren som finns i handkontrollen respektive bilens elektronik ska bytas ut mot ARM-baserade system. Dessa ska vid färdig produkt kontrolleras via Bluetooth.
+\item En kontrollapplikation ska implementeras. Med hjälp av ett antal (HUR MÅNGA)avståndsmätare är avsikten att bilen självständigt ska kunna köra rakt fram i högsta möjliga hastighet och på ett avstånd av maximalt 1 cm från en vägg bromsa in helt utan att kollidera. Kontrollapplikationen styrs via Bluetooth.
+\item Styrning via mobilapplikation implementeras. Bilen ska då kunna manövreras genom ett Andriodsystem via Bluetooth.
+\end{itemize}
 
-\vspace{5mm} \noindent
-Sedan implementeras styrning via en telefonapplikation som ska kunna kontrollera bilen genom ett Androidsystem. Även denna uppgradering ska använda sig av Bluetooth.
+
+%Projektet går ut på att ersätta en del av elektroniken i en radiostyrd bil. Sändaren samt mottagaren som finns i handkontrollens respektive bilens elektronik ska bytas ut mot ARM-baserade system. Vidare ska en kontrollapplikation implementeras med hjälp av ett antal avståndsmätare, därefter ska bilen självständigt kunna köra rakt fram i högsta möjliga takt och på ett avstånd av maximalt 1 cm från en vägg bromsa in helt utan att kollidera med väggen. Dessa uppgraderingar ska båda använda sig av Bluetooth. 
+
+%\vspace{5mm} \noindent
+%Sedan implementeras styrning via en telefonapplikation som ska kunna kontrollera bilen genom ett Androidsystem. Även denna uppgradering ska använda sig av Bluetooth.
 
 \subsection{Arbetsmetod}
+\subsubsection{Utbyte av mottagare och sändare}
+%Förklara hur de genererats
+Projektet inleddes med att generera styrsignaler. Ett kretskort (VILKET), som har funktionen att dela på mottagarens signaler, har kopplats samman med bilens kontrollenhet, MRX-242. Denna enhet har initialt konfigurerats till att mäta signalerna från den ursprungliga kontrollenheten i bilen med hjälp av ett oscilloskop. Dessa signaler är av typen PWM och har sedan kunnat replikerats till vår datorenhet MD407 som då kunnat skicka signalerna direkt från datorenheten till mottagaren i bilen. Följdaktligen gav bilen samma respons på kommandon som med den ursprungliga sändaren. Detta arbete har använt sig av kodbibliotek från STMicroelectronics som innehåller funktioner för att initiera PWM-signaler. 
 
-Utbytet av mottagare samt sändare har skett i två steg. Styrsignalerna har först uppmätts med hjälp av oscilloskop. Resultatet av detta användes i utvecklandet av ett program som själv kunnat generera samma slags signaler genom en ARM-processor kopplad till bilen. Programmet är skrivet i C i utvecklingsmiljön CodeLite.
+
+%Förklara mer ingående. Mycket mer ingående
+\vspace{5mm} \noindent
+Resultatet av detta användes i utvecklandet av ett program som själv kunnat generera samma slags signaler genom en ARM-processor kopplad till bilen. Programmet är skrivet i C i utvecklingsmiljön CodeLite.
 
 %Lägg till referens på "motorernas respons på signalerna är..." samt "STMicroelectronics" BYTA TILL SYSTEMÖVERSIKT, LITE AV DENNA
-\vspace{5mm} \noindent
-Signalerna som ska avläsas och sedan genereras är av typen PWM (Pulse Width Modulation. Med detta menas att det som ska avläsas på oscilloskopet är hur mycket av signalen som är på maxspänning jämfört med en hel period av radiovågorna. Det som möjliggör avläsningen av signalerna samtidigt som det går att se motorernas respons på signalerna är ett kretskort som delar på signalerna. Efter avläsningen replikeras dessa signaler i vår datorenhet, MD407, för att sedan kunna skickas från datorn direkt till mottagaren i bilen varpå bilen ska ge samma respons som med den ursprungliga sändaren. Detta arbete har förenklats med hjälp av kodbibliotek från STMicroelectronics som innehåller funktioner för att initiera PWM-genererande. 
+%\vspace{5mm} \noindent
+%Signalerna som ska avläsas och sedan genereras är av typen PWM (Pulse Width Modulation. Med detta menas att det som ska avläsas på oscilloskopet är hur mycket av signalen som är på maxspänning jämfört med en hel period av radiovågorna. Det som möjliggör avläsningen av signalerna samtidigt som det går att se motorernas respons på signalerna är ett kretskort som delar på signalerna. Efter avläsningen replikeras dessa signaler i vår datorenhet, MD407, för att sedan kunna skickas från datorn direkt till mottagaren i bilen varpå bilen ska ge samma respons som med den ursprungliga sändaren. Detta arbete har förenklats med hjälp av kodbibliotek från STMicroelectronics som innehåller funktioner för att initiera PWM-genererande. 
 
 \vspace{5mm} \noindent
-Arbetet med mobilapplikationen inleddes genom att studera bilens ultraljudssensor. Trovärdiga källor som beskrev dess användning hittades, och en grundläggande preliminär planering för sensorns användning ritades upp. Sedan inleddes arbetet på en Androidapplikation med Bluetooth-funktionalitet.
-Två appar konstruerades separat; en GUI med olika reglage för att styra hastighet och riktning, och en applikation som kontrollerar Bluetooth. Dessa skrevs i Java genom Eclipse och importerades till Android Studio.
+Mobilapplikationen ska vara funktionell på en Andriodtelefon och kopplas till den radiostyrda bilen via Bluetooth. Arbetet inleddes genom att studera bilens ultraljudssensor varpå en planering för sensorns användning har skrivits(?????). Två applikationer konstruerades separat; en GUI med olika reglage för att styra hastighet och riktning, samt en applikation som kontrollerar Bluetooth. Dessa skrevs i Java genom Eclipse och importerades till Android Studio.
 
-\vspace{5mm} \noindent
-Mestadels av arbetet har utförts i designerade laborationssalar. Tillgång till ett skåp med elektroniskt kodlås för förvaring av material har funnits, vilket också varit tillgängligt för samtliga i projektledningen.
-
+\newpage
 \section{Teknisk beskrivning}
 
 \subsection{Teknisk bakgrund}
-För att kunna kontrollera en radiobil används en sändare och en mottagare~\cite{RCTechnique}. Radiosignaler på en okänd frekvens skickas från sändaren, handkontrollen, och avkodas av mottagaren, signalomvandlaren, i radiobilen. Dessa omvandlas då till elektroniska signaler som antingen kontrollerar bilens hastighet eller riktning. Parallellt med detta styrs även bilens hastighet av motorns kraftutslag, medan riktningen även beror på hjulens gradförskjutning. Genom en ytterligare signal kan bilens hastighet även reverseras. Bilens styrenhet omvandlar radiosignaler som sedan kontrollerar bilens rörelse.
+För att kunna kontrollera en radiobil används en sändare och en mottagare~\cite{RCTechnique}. Radiosignaler på en okänd frekvens skickas från sändaren och avkodas av mottagaren i radiobilen. Dessa omvandlas då till elektroniska signaler som antingen kontrollerar bilens hastighet eller riktning. Parallellt med detta styrs även bilens hastighet av motorns kraftutslag, medan riktningen även beror på hjulens gradförskjutning(BEROR RIKTNINGEN PÅ KRAFTUTSLAG OCH GRADFÖRSKJUTNING?). Genom en ytterligare signal kan bilens hastighet även reverseras. Bilens styrenhet omvandlar radiosignaler som sedan kontrollerar bilens rörelse.
 
 \subsubsection{Nya styrsignaler}
-Bilens styrsignaler kontrolleras av en kontrollenhet, MRX-242. Enheten fungerar simultant som radiomottagare och styrsignalgenerator, och generar signaler till båda motorerna i bilen via tre kablar. I mening att ersätta dessa med nya signaler finns även tillgång till ett ytterligare kopplingsblock. Blocket kopplas mellan MRX-242 och motorerna, och kommer initialt konfigureras att mäta signalerna från den ursprungliga kontrollenheten i bilen. När dessa är kända kommer blocket omkopplas för att generera nya anpassade styrsignaler~\cite{projektDir}. 
+Bilens styrsignaler kontrolleras av en kontrollenhet~\cite{projektDir}. Enheten fungerar simultant som radiomottagare och styrsignalgenerator. Utöver detta generar den signaler till båda motorerna i bilen via tre kablar. I mening att ersätta dessa med nya signaler finns även tillgång till ett ytterligare kopplingsblock. 
 
 
 \subsection{Systemöversikt}
-Systemet har två huvuddelar, Androidapplikationen som agerar handkontroll och bildatorn som genererar signaler till motorerna.
-
+Systemet har två huvuddelar, en MD407-enhet samt en Androidapplikationen som båda  kan agera handkontroll och bildatorn som genererar signaler till motorerna.
 
 
 \subsection{Delsystem}
-\subsubsection{Androidapplikation}
-Androidapplikationen agerar som handkontroll. Av denna krävs endast att skicka bytes seriellt till bilens dator med en Bluetooth-länk för att få trådlöshet. Detta följer protokoll som bestämts av projektledningen där de två mest signifikanta bitarna i varje byte bestämmer vilken sorts signal som ska ändras, till exempel styrning, drivmotor eller initiera kontrollapplikationen. Mobilapplikationen har på skärmen virtuella reglage som ska emulera ordinarie handkontrollens analoga funktion så att exempelvis hastighetsövergången är så jämn som möjligt. 
+\subsubsection{Sändare: Androidapplikation}
+Androidapplikationen agerar som en handkontroll. Av denna krävs att skicka bytes seriellt till bilens dator med en Bluetooth-länk för att därmed erhålla den sökta trådlösheten(källa??? behövs det???). Detta följer protokoll som bestämts av projektspecifikationer(SOM STÅR VAR?) där de två mest signifikanta bitarna i varje byte bestämmer vilken sorts signal som ska ändras, till exempel styrning, drivmotor eller initiera kontrollapplikationen. Mobilapplikationen har på skärmen virtuella reglage som ska emulera ordinarie handkontrollens analoga funktion så att exempelvis hastighetsövergången är så jämn som möjligt. 
 
-\subsubsection{Bildator}
-Signalerna som skickas från Androidapplikationen tas emot av en generisk Bluetooth-modul som är kopplad till en USART-port på bildatorn. När programmet på denna dator startas måste datorn först skicka PWM-signaler som motsvarar neutralt läge för drivmotorn i en kort stund innan andra signaler kan skickas. Bildatorn tar emot ett kommando från Bluetoothlänken och analyserar detta i mening att ta reda på vilket kommando de två kommandobitarna syftar på ska utföras. PWM-signalerna ändras sedan efter värdet på kommandot, de sex minst signifikanta bitarna, eller påbörjar kontrollapplikationen för demonstration. Motorerna tar emot PWM-signalerna och ger utslag beroende på deras medelspänning.
+\subsubsection{Sändare: MD407-enhet}
 
-\subsubsection{PWM-signaler}
-PWM eller Pulse Width Modulation är en moduleringsteknik och används mest för att styra mängden elektrisk ström som förs till, exempelvis, en motor. I varje period i en PWM-signal kan spänningen antingen vara 0, låg, eller 1, hög, och det som mottagaren svarar på är hur stor del av perioden som signalen var på högspänning. I detta projekt är maxspänningen ca 3, 4V, och motorerna svarar på en medelspänning mellan 250-450mV. Alltså är perioden på högspänning ungefär 8-12\% av tiden. Dessa medelvärden, eller dutycycles, styrs i bildatorn med hjälp av en av datorns timers och standardbibliotek för dessa
-
+\subsubsection{Mottagare: MD407-enhet}
+Signalerna som skickas från Androidapplikationen tas emot av en generisk Bluetooth-modul som är kopplad till en USART-port(VILKEN) på bildatorn. När programmet på denna dator startas måste datorn initialt skicka PWM-signaler som motsvarar neutralt läge för drivmotorn i en kort stund innan övriga signaler kan sändas. Datorn i bilen tar då emot ett kommandokod från Bluetooth-länken och analyserar detta i mening att specificera vilket kommando de två bitarna syftar på ska utföras. PWM-signalerna ändras sedan efter värdet på kommandot, de sex minst signifikanta bitarna, eller påbörjar kontrollapplikationen för demonstration. Motorerna tar emot PWM-signalerna och ger utslag beroende på deras medelspänning.
 
 
+
+
+
+
+\newpage
 \section{Resultat}
 
 
 
-
+\newpage
 \section{Slutsats}
 
 
