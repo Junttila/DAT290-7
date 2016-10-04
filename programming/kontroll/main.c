@@ -7,6 +7,8 @@
 //#include "stm32f4xx_flash.h"
 #include "stm32f4xx_tim.h"
 #include "USART.h"
+#include "ADC.h"
+#include "stm32f4xx_adc.h"
 
 void startup(void) __attribute__((naked)) __attribute__((section(".start_section")));
 void startup (void)
@@ -87,11 +89,11 @@ void init_uart()
 	RCC_APB1PeriphClockCmd(RCC_APB1Periph_UART4,ENABLE);
 	
 	//Fyll i U(S)ART-strukturen
-	USART_InitStruct.USART_BaudRate = 300; //38400 är default för bluetoothmodulen
+	USART_InitStruct.USART_BaudRate = 9600; //38400 är default för bluetoothmodulen
 	USART_InitStruct.USART_HardwareFlowControl = USART_HardwareFlowControl_None;
 	USART_InitStruct.USART_Mode = USART_Mode_Rx | USART_Mode_Tx;
 	USART_InitStruct.USART_Parity = USART_Parity_No;
-	USART_InitStruct.USART_StopBits = USART_StopBits_1;
+	USART_InitStruct.USART_StopBits = USART_StopBits_2;
 	USART_InitStruct.USART_WordLength = USART_WordLength_8b;
 	
 	//Initiera UART4
@@ -115,21 +117,51 @@ void send_cmd(uint8_t cmd, uint8_t val)
 void debug_delay()
 {
 	long int i = 0;
-	for (i = 0; i < 10000000; i++)
+	for (i = 0; i < 10000000/100; i++)
 	{
 		
 	}
 }
 
+void init_adc()
+{
+	GPIO_InitTypeDef GPIO_initStruct;
+	
+	RCC_AHB1PeriphClockCmd(ADC_Channel_11,ENABLE);
+	RCC_APB2PeriphClockCmd(ADC1_BASE,ENABLE);
+	
+	GPIO_initStruct.GPIO_Pin = GPIO_Pin_1;
+	GPIO_initStruct.GPIO_Mode = GPIO_Mode_AN;
+	GPIO_initStruct.GPIO_OType = GPIO_OType_OD;
+	GPIO_initStruct.GPIO_PuPd = GPIO_PuPd_NOPULL;
+	GPIO_initStruct.GPIO_Speed = GPIO_Speed_100MHz;
+	
+	GPIO_Init(GPIOA,&GPIO_initStruct);
+	
+	initCommon_ADC(ADC_Mode_Independent, ADC_Prescaler_Div2, ADC_DMAAccessMode_Disabled, ADC_TwoSamplingDelay_10Cycles);
+	init_ADC(ADC_Resolution_6b, DISABLE, ENABLE, ADC_ExternalTrigConvEdge_None, ADC_ExternalTrigConv_T1_CC1, ADC_DataAlign_Right, 1);
+}
+
 void main(void)
 {
 	init_uart();
-    //appInit();
+	init_adc();
+	write_string_SCI(USART1, "\nInit\n");
 	uint8_t t = 1;
 	uint8_t dir = 1;
 	int offset = 110;
 	
 	debug_delay();
+	
+	uint16_t adc = 0;
+	while(1)
+	{
+		write_string_SCI(USART1, "Value: ");
+		adc = read_ADC(ADC1);
+		write_value_SCI(USART1, adc);
+		write_SCI(USART1,  '\n');
+		debug_delay();
+	}
 	
 	while(1)
 	{
@@ -145,8 +177,10 @@ void main(void)
 			dir = 1;
 		}
 		
+	
 		write_SCI(USART1, t);
 		send_cmd(1, t);
+			
 		debug_delay();
 	}
 }
