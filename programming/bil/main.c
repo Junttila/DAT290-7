@@ -38,11 +38,10 @@ void init_uart()
 	RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOB,ENABLE);
 	
 	//Sätt alternativ funktion på på PA0 och PA1
-	GPIO_PinAFConfig(GPIOB, GPIO_PinSource10,GPIO_AF_USART3);
 	GPIO_PinAFConfig(GPIOB, GPIO_PinSource11,GPIO_AF_USART3);
 	
 	//Fyll i GPIO-strukturen
-	GPIO_initStruct.GPIO_Pin = GPIO_Pin_10 | GPIO_Pin_11;
+	GPIO_initStruct.GPIO_Pin = GPIO_Pin_11 | GPIO_Pin_10;
 	GPIO_initStruct.GPIO_Mode = GPIO_Mode_AF;
 	GPIO_initStruct.GPIO_OType = GPIO_OType_PP;
 	GPIO_initStruct.GPIO_PuPd = GPIO_PuPd_UP;
@@ -55,11 +54,11 @@ void init_uart()
 	RCC_APB1PeriphClockCmd(RCC_APB1Periph_USART3,ENABLE);
 	
 	//Fyll i U(S)ART-strukturen
-	USART_InitStruct.USART_BaudRate = 300; //38400 är default för bluetoothmodulen
+	USART_InitStruct.USART_BaudRate = 9600; //38400 är default för bluetoothmodulen
 	USART_InitStruct.USART_HardwareFlowControl = USART_HardwareFlowControl_None;
 	USART_InitStruct.USART_Mode = USART_Mode_Rx | USART_Mode_Tx;
 	USART_InitStruct.USART_Parity = USART_Parity_No;
-	USART_InitStruct.USART_StopBits = USART_StopBits_1;
+	USART_InitStruct.USART_StopBits = USART_StopBits_2;
 	USART_InitStruct.USART_WordLength = USART_WordLength_8b;
     
 	
@@ -127,7 +126,7 @@ void send_cmd(uint8_t cmd, uint8_t val)
 void debug_delay()
 {
 	long int i = 0;
-	for (i = 0; i < 1000000; i++)
+	for (i = 0; i < 10000000/100; i++)
 	{
 		
 	}
@@ -146,7 +145,7 @@ void main(void)
 	
 	while(1)
     {
-        t = USART_ReceiveData(USART3);
+        t = read_SCI(USART3);
         if(t!=0)
         {
             switch(t>>6)
@@ -164,8 +163,12 @@ void main(void)
                 CCR3_val = 142;
                 CCR4_val = 142;
             }
-            write_value_SCI(USART1,t & 0b00111111);
-            write_value_SCI(USART1,' ');
+            write_SCI(USART1,t & 0b00111111);
+            //write_SCI(USART1,' ');
+        }
+        else
+        {
+            //write_SCI(USART1,'n');
         }
         TIM_OCInitStructure.TIM_Pulse = CCR4_val;
         TIM_OC4Init(TIM2, &TIM_OCInitStructure);
