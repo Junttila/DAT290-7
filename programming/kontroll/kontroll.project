@@ -142,5 +142,11 @@ monitor restart</PostConnectCommands>
     <File Name="ADC.h"/>
     <File Name="stm32f4xx_adc.c"/>
     <File Name="stm32f4xx_adc.h"/>
+    <File Name="stm32f4xx_dma.c"/>
+    <File Name="stm32f4xx_dma.h"/>
+    <File Name="GPIO.c"/>
+    <File Name="GPIO.h"/>
+    <File Name="RCC.c"/>
+    <File Name="RCC.h"/>
   </VirtualDirectory>
 </CodeLite_Project>

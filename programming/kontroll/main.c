@@ -9,6 +9,11 @@
 #include "USART.h"
 #include "ADC.h"
 #include "stm32f4xx_adc.h"
+#include "stm32f4xx_dma.h"
+#include "GPIO.h"
+
+	__IO uint16_t uhADC1ConvertedValue = 0;
+	__IO uint32_t uwADC1ConvertedVoltage = 0;
 
 void startup(void) __attribute__((naked)) __attribute__((section(".start_section")));
 void startup (void)
@@ -123,63 +128,114 @@ void debug_delay()
 	}
 }
 
-void init_adc()
+	__IO uint16_t uhADCDualConvertedValue;
+
+
+void init_adc_ex()
 {
-	GPIO_InitTypeDef GPIO_initStruct;
-	
-	RCC_AHB1PeriphClockCmd(ADC_Channel_11,ENABLE);
-	RCC_APB2PeriphClockCmd(ADC1_BASE,ENABLE);
-	
-	GPIO_initStruct.GPIO_Pin = GPIO_Pin_1;
-	GPIO_initStruct.GPIO_Mode = GPIO_Mode_AN;
-	GPIO_initStruct.GPIO_OType = GPIO_OType_OD;
-	GPIO_initStruct.GPIO_PuPd = GPIO_PuPd_NOPULL;
-	GPIO_initStruct.GPIO_Speed = GPIO_Speed_100MHz;
-	
-	GPIO_Init(GPIOA,&GPIO_initStruct);
-	
-	initCommon_ADC(ADC_Mode_Independent, ADC_Prescaler_Div2, ADC_DMAAccessMode_Disabled, ADC_TwoSamplingDelay_10Cycles);
-	init_ADC(ADC_Resolution_6b, DISABLE, ENABLE, ADC_ExternalTrigConvEdge_None, ADC_ExternalTrigConv_T1_CC1, ADC_DataAlign_Right, 1);
+	RCC_APB2PeriphClockCmd(RCC_APB2Periph_ADC1 | RCC_APB2Periph_ADC2 | 
+		RCC_APB2Periph_ADC3 , ENABLE);
+	init_GPIO(GPIOC, GPIO_Pin_1, GPIO_Mode_AF, GPIO_Speed_2MHz, GPIO_OType_OD, 
+		GPIO_PuPd_NOPULL);
+	initCommon_ADC(ADC_Mode_Independent, ADC_Prescaler_Div2, ADC_DMAAccessMode_Disabled, 
+		ADC_TwoSamplingDelay_5Cycles);
+	init_ADC(ADC_Resolution_12b, DISABLE, DISABLE, ADC_ExternalTrigConvEdge_None, 
+		ADC_ExternalTrigConv_T1_CC1, ADC_DataAlign_Right, 0);
+	ADC_RegularChannelConfig(ADC1, ADC_Channel_11, 1, ADC_SampleTime_3Cycles);
+
 }
+
+
+uint16_t ADC_Val; //Stores the calculated ADC value
+ADC_InitTypeDef       ADC_InitStructure;
+ADC_CommonInitTypeDef ADC_CommonInitStructure;
+GPIO_InitTypeDef      GPIO_InitStructure;
+ 
+void init_adc(void)
+{
+
+	RCC_APB2PeriphClockCmd(RCC_APB2Periph_ADC1 | RCC_APB2Periph_ADC2 | RCC_APB2Periph_ADC3 , ENABLE);
+	RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOC, ENABLE);  
+	
+	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_0 | GPIO_Pin_1 | GPIO_Pin_2;
+	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AN;
+	GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_NOPULL ;
+	GPIO_Init(GPIOC, &GPIO_InitStructure);
+	
+	ADC_CommonInitStructure.ADC_Mode = ADC_Mode_Independent;
+	ADC_CommonInit(&ADC_CommonInitStructure);
+	
+	ADC_InitStructure.ADC_Resolution = ADC_Resolution_6b;
+	ADC_InitStructure.ADC_ScanConvMode = DISABLE;
+	ADC_InitStructure.ADC_ContinuousConvMode = DISABLE;
+	ADC_InitStructure.ADC_ExternalTrigConvEdge = ADC_ExternalTrigConvEdge_None;
+	ADC_InitStructure.ADC_DataAlign = ADC_DataAlign_Right;
+	ADC_Init(ADC1, &ADC_InitStructure);
+	ADC_Init(ADC2, &ADC_InitStructure);
+	ADC_Init(ADC3, &ADC_InitStructure);
+	
+	ADC_RegularChannelConfig(ADC1, ADC_Channel_10, 1, ADC_SampleTime_3Cycles);
+	ADC_RegularChannelConfig(ADC2, ADC_Channel_11, 1, ADC_SampleTime_3Cycles);
+	ADC_RegularChannelConfig(ADC3, ADC_Channel_12, 1, ADC_SampleTime_3Cycles);
+	
+	ADC_Cmd(ADC1, ENABLE);
+	ADC_Cmd(ADC2, ENABLE);
+	ADC_Cmd(ADC3, ENABLE);
+	
+}//end ADC_Configuration
+ 
+uint16_t adc_get_val(uint8_t Channel)
+{
+    switch(Channel)
+    {
+        case 10:
+            ADC_SoftwareStartConv(ADC1);
+            while(ADC_GetSoftwareStartConvStatus(ADC1) != RESET){ADC_Val = 0;}
+            ADC_Val = ADC_GetConversionValue(ADC1);
+            break;
+        case 11:
+            ADC_SoftwareStartConv(ADC2);
+            while(ADC_GetSoftwareStartConvStatus(ADC2) != RESET){ADC_Val = 0;}
+            ADC_Val = ADC_GetConversionValue(ADC2);
+            break;
+        case 12:
+            ADC_SoftwareStartConv(ADC3);
+            while(ADC_GetSoftwareStartConvStatus(ADC3) != RESET){ADC_Val = 0;}
+            ADC_Val = ADC_GetConversionValue(ADC3);
+            break;
+        default:
+            ADC_Val = 0;
+            break;
+    }
+    return ADC_Val;
+}
+
 
 void main(void)
 {
-	init_uart();
+ 	init_uart();
 	init_adc();
 	write_string_SCI(USART1, "\nInit\n");
-	uint8_t t = 1;
-	uint8_t dir = 1;
-	int offset = 110;
+	uint8_t d = 0;
+	uint8_t s = 0;
 	
 	debug_delay();
 	
-	uint16_t adc = 0;
 	while(1)
 	{
-		write_string_SCI(USART1, "Value: ");
-		adc = read_ADC(ADC1);
-		write_value_SCI(USART1, adc);
-		write_SCI(USART1,  '\n');
+		d = adc_get_val(11);
+		s = adc_get_val(12);
+		
+		write_value_SCI(USART1, d);
+		write_SCI(USART1, ',');
+		write_value_SCI(USART1, s);
+		write_SCI(USART1, '\n');
+		
+		send_cmd(1, d);
+		
 		debug_delay();
-	}
-	
-	while(1)
-	{
-		t += dir;
 		
-		if (t == (173 - offset))
-		{
-			dir = -1;
-		}
-		
-		if (t == (110 - offset))
-		{
-			dir = 1;
-		}
-		
-	
-		write_SCI(USART1, t);
-		send_cmd(1, t);
+		send_cmd(2, s);
 			
 		debug_delay();
 	}
