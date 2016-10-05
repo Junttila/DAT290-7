@@ -152,9 +152,13 @@ void main(void)
             {
                 case 1:
                 CCR4_val = (t & 0b00111111) + offset;
+                write_string_SCI(USART1,"d:");
+                write_value_SCI(USART1,CCR4_val);
                 break;
                 case 2:
                 CCR3_val = (t & 0b00111111) + offset;
+                write_string_SCI(USART1,"s:");
+                write_value_SCI(USART1,CCR3_val);
                 break;
                 case 3:
                 
@@ -163,7 +167,6 @@ void main(void)
                 CCR3_val = 142;
                 CCR4_val = 142;
             }
-            write_SCI(USART1,t & 0b00111111);
             //write_SCI(USART1,' ');
         }
         else
