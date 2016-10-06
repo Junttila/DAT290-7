@@ -7,13 +7,8 @@
 //#include "stm32f4xx_flash.h"
 #include "stm32f4xx_tim.h"
 #include "USART.h"
-#include "ADC.h"
 #include "stm32f4xx_adc.h"
 #include "stm32f4xx_dma.h"
-#include "GPIO.h"
-
-	__IO uint16_t uhADC1ConvertedValue = 0;
-	__IO uint32_t uwADC1ConvertedVoltage = 0;
 
 void startup(void) __attribute__((naked)) __attribute__((section(".start_section")));
 void startup (void)
@@ -25,47 +20,6 @@ __asm volatile(
     " bl main\n"                /* call main */   
     ".l1: b .l1\n"              /* never return */
     ) ;    
-}
-
-void appInit(void)
-{
-	GPIO_InitTypeDef GPIO_InitStructure;
-
-	//Initiera UART	
-	SystemInit();
-	SystemCoreClockUpdate();
-		
-	if (SysTick_Config(SystemCoreClock / 100))
-	{
-		//write_SCI(USART1, '3');
-
-		//while (1);
-	}
-	
-	
-	
-	//GPIO clock
-	RCC_AHB1PeriphClockCmd(RCC_APB1Periph_USART2, ENABLE);
-	
-	//Initiera GPIO
-	GPIO_PinAFConfig(UART4, GPIO_PinSource11, GPIO_AF_USART2);
-	GPIO_PinAFConfig(UART4, GPIO_PinSource10, GPIO_AF_USART2);
-
-	
-	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF;
-	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_100MHz;
-	GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
-	GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_UP;
-	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_10;
-	GPIO_Init(GPIOB, &GPIO_InitStructure);
-	
-	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_11;
-	GPIO_Init(GPIOB, &GPIO_InitStructure);
-	
-	//USART_OverSampling8Cmd(USART2, ENABLE);
-	
-	init_SCI(USART2, 38400, USART_WordLength_8b, USART_StopBits_1, USART_Parity_No, USART_Mode_Tx, USART_HardwareFlowControl_None);
-
 }
 
 void init_uart()
@@ -128,31 +82,14 @@ void debug_delay()
 	}
 }
 
-	__IO uint16_t uhADCDualConvertedValue;
-
-
-void init_adc_ex()
-{
-	RCC_APB2PeriphClockCmd(RCC_APB2Periph_ADC1 | RCC_APB2Periph_ADC2 | 
-		RCC_APB2Periph_ADC3 , ENABLE);
-	init_GPIO(GPIOC, GPIO_Pin_1, GPIO_Mode_AF, GPIO_Speed_2MHz, GPIO_OType_OD, 
-		GPIO_PuPd_NOPULL);
-	initCommon_ADC(ADC_Mode_Independent, ADC_Prescaler_Div2, ADC_DMAAccessMode_Disabled, 
-		ADC_TwoSamplingDelay_5Cycles);
-	init_ADC(ADC_Resolution_12b, DISABLE, DISABLE, ADC_ExternalTrigConvEdge_None, 
-		ADC_ExternalTrigConv_T1_CC1, ADC_DataAlign_Right, 0);
-	ADC_RegularChannelConfig(ADC1, ADC_Channel_11, 1, ADC_SampleTime_3Cycles);
-
-}
-
-
 uint16_t ADC_Val; //Stores the calculated ADC value
-ADC_InitTypeDef       ADC_InitStructure;
-ADC_CommonInitTypeDef ADC_CommonInitStructure;
-GPIO_InitTypeDef      GPIO_InitStructure;
  
 void init_adc(void)
 {
+
+	ADC_InitTypeDef       ADC_InitStructure;
+	ADC_CommonInitTypeDef ADC_CommonInitStructure;
+	GPIO_InitTypeDef      GPIO_InitStructure;
 
 	RCC_APB2PeriphClockCmd(RCC_APB2Periph_ADC1 | RCC_APB2Periph_ADC2 | RCC_APB2Periph_ADC3 , ENABLE);
 	RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOC, ENABLE);  
