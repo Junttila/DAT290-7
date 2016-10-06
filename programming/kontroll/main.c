@@ -147,6 +147,16 @@ uint16_t adc_get_val(uint8_t Channel)
     return ADC_Val;
 }
 
+void bt_config()
+{
+	write_string_SCI(USART1, "BT config\n");
+	while(1)
+	{
+		USART_SendData(UART4, 1337);
+		debug_delay();
+	}
+}
+
 
 void main(void)
 {
@@ -157,6 +167,8 @@ void main(void)
 	uint8_t s = 0;
 	
 	debug_delay();
+	
+	bt_config();
 	
 	while(1)
 	{
