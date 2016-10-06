@@ -123,13 +123,30 @@ void send_cmd(uint8_t cmd, uint8_t val)
 	USART_SendData(USART3, msg);
 }
 
+long int i = 0;
 void debug_delay()
 {
-	long int i = 0;
 	for (i = 0; i < 10000000/100; i++)
 	{
 		
 	}
+}
+
+void debug_delay_long(void)
+{
+    for(i = 0;i<100;i++)
+    {
+        debug_delay();
+    }
+}
+
+void bt_config(void)
+{
+    while(1)
+    {
+        write_SCI(USART1, read_SCI(USART3));
+        debug_delay();
+    }
 }
 
 void main(void)
@@ -141,8 +158,10 @@ void main(void)
     uint8_t t = 0;
     uint16_t offset = 110;
     //appInit();
+    bt_config();
 	
-	
+	double temp = 0;
+    
 	while(1)
     {
         t = read_SCI(USART3);
@@ -151,12 +170,21 @@ void main(void)
             switch(t>>6)
             {
                 case 1:
-                CCR4_val = (t & 0b00111111) + offset;
+                CCR4_val = (t & 0b00111111) + offset + 10;
+                if(CCR4_val >= 151 && CCR4_val <= 159)
+                {
+                    CCR4_val = 152;
+                }
                 write_string_SCI(USART1,"d:");
                 write_value_SCI(USART1,CCR4_val);
                 break;
                 case 2:
                 CCR3_val = (t & 0b00111111) + offset;
+                if(CCR3_val >= 129 && CCR3_val <= 149)
+                {
+                    CCR3_val = 149;
+                    debug_delay_long();
+                }
                 write_string_SCI(USART1,"s:");
                 write_value_SCI(USART1,CCR3_val);
                 break;
