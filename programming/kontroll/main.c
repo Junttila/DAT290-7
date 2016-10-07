@@ -52,7 +52,7 @@ void init_uart()
 	USART_InitStruct.USART_HardwareFlowControl = USART_HardwareFlowControl_None;
 	USART_InitStruct.USART_Mode = USART_Mode_Rx | USART_Mode_Tx;
 	USART_InitStruct.USART_Parity = USART_Parity_No;
-	USART_InitStruct.USART_StopBits = USART_StopBits_2;
+	USART_InitStruct.USART_StopBits = USART_StopBits_1; //2
 	USART_InitStruct.USART_WordLength = USART_WordLength_8b;
 	
 	//Initiera UART4
@@ -149,11 +149,26 @@ uint16_t adc_get_val(uint8_t Channel)
 
 void bt_config()
 {
+	uint16_t in = 0;
 	write_string_SCI(USART1, "BT config\n");
 	while(1)
 	{
-		USART_SendData(UART4, 1337);
-		debug_delay();
+		in = read_SCI(USART1);
+		write_SCI(USART1, in);
+		if (in == '<')
+		{
+			//write_string_SCI(UART4, "AT+CMODE=0\r\n");
+			USART_SendData(UART4, '\r');
+			//debug_delay();
+			USART_SendData(UART4, '\n');
+			write_SCI(USART1, '\n');
+
+		}
+		else
+		{
+			USART_SendData(UART4, in);
+		}
+		//debug_delay();
 	}
 }
 
