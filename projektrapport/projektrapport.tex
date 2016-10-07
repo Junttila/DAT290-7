@@ -58,6 +58,7 @@ MD407
 ADC
 Avståndsmätare
 Potentiometer
+RF-enheter
 
 
 \newpage
@@ -67,7 +68,7 @@ Radiostyrda bilar började produceras på mitten av 60-talet~\cite{RCHistory}. U
 
 \subsection{Syfte}
 
-Syftet med detta projekt är att uppdatera den klassiska radiostyrda bilen genom att ersätta befintlig sändare samt mottagare i en radiostyrd bil med nya datorer samt även möjliggöra styrning från en Andriodtelefon. Intentionen är även att implementera en kontrollapplikation som ska kunna stoppa bilen från att kollidera.
+Syftet med detta projekt är att uppdatera den klassiska radiostyrda bilen genom att ersätta befintlig sändare samt mottagare i en radiostyrd bil med nya datorer samt även möjliggöra styrning från en Andriodtelefon. Intentionen är även att implementera en kontrollapplikation som ska kunna stoppa bilen från att kollidera. Följden av detta blir en produkt mer anpassat till aktuell teknik och det erhålls på så sätt en mer modern teknisk produkt.
 
 
 %Syftet med detta projekt är att uppdatera den klassiska radiostyrda bilen med hjälp av ny teknik som bluetooth. För att följaktligen erhålla en mer modern teknisk produkt.
@@ -78,7 +79,7 @@ Målen nedan beskriver konkret vad som ska uppnås med projektet.
 \begin{itemize}
 \item Den befintliga sändaren samt mottagaren som finns i handkontrollen respektive bilens elektronik ska bytas ut mot ARM-baserade system(se Figur 1). Dessa ska vid färdig produkt kontrolleras via Bluetooth.
 \item En kontrollapplikation ska implementeras. Med hjälp av enn avståndsmätare(se Figur 1) är avsikten att bilen självständigt ska kunna köra rakt fram i högsta möjliga hastighet och på ett avstånd av maximalt 1 cm från en vägg bromsa in helt utan att kollidera. Kontrollapplikationen styrs via Bluetooth.
-\item Styrning via mobilapplikation implementeras. Bilen ska då kunna manövreras genom ett Andriodsystem via Bluetooth.
+\item Styrning via mobilapplikation ska realiseras. Bilen ska då kunna manövreras genom ett Andriodsystem via Bluetooth.
 \end{itemize}
 
 \begin{figure}[H]
@@ -94,31 +95,46 @@ Målen nedan beskriver konkret vad som ska uppnås med projektet.
 \subsection{Arbetsmetod}
 \subsubsection{Uppmätning av styrsignaler}
 %Förklara hur de genererats
-Projektet inleddes med att mäta upp befintliga styrsignaler. För att kunna replikera signalerna som ursprungligen skickas från mottagare till bilens styrelektronik kopplas ett kretskort(VILKET) till bilens egna kontrollenhet, MRX242. Kretskortet har möjlighet att dela på mottagarens signaler och kopplat till ett oscilloskop kan specifika signaler tydligt mätas upp. Signalerna är av typen PWM och uppmäts i Volt. 
+Projektet inleds med att mäta upp befintliga styrsignaler. För att kunna replikera signalerna som skickas från den ursprungliga mottagaren till bilens styrelektronik kopplas ett kretskort(VILKET) till bilens egna kontrollenhet, MRX242. Kretskortet har möjlighet att dela på mottagarens signaler och kopplat till ett oscilloskop går det att urskilja specifika signaler så de tydligt kan mätas upp. Signalerna är av typen PWM och uppmäts i Volt. 
 
 
 \subsubsection{Konfiguration av ny sändare}
 \vspace{5mm} \noindent
-Datorenheten MD407 ersätter sändaren. Enheten kopplas till en potentiometer genom en bred sladd från datorenheten till potentiometerns tio vänstra pinnar(se Figur 2). På potentiometerns mellersta pinnar finns tre kolumner. Ström till de vridbara kontakterna erhålls genom enligt Figur 2 koppla korta sladdar mellan kolumn 2 och de övriga kolumnerna. Följt av detta kopplas en sladd från en pinne på den övriga kolumnen i samma rad som den korta sladden till PC1-porten och PC2-porten på MD407. De styr motorn och servot i den angivna ordningen. Koden till detta har är skriven i C med utvecklingsmiljön Codelite.
+Datorenheten MD407 ersätter sändaren. Enheten kopplas till en potentiometer genom en flatsladd(se Figur 2) och potetiometern kopplas enligt anvisningar från Figur 2. Sladdarna som ska kopplas till datorenheten sätts på PC1-porten och PC2-porten på MD407 i angiven ordning från figuren. De styr motorn respektive servot. 
+
+%Koden till detta skrivs i C med utvecklingsmiljön Codelite.
 
 
 
 \begin{figure}[H]
-\includegraphics[scale=0.05]{Potentiometer.jpg}
+\includegraphics[scale=0.05]{PotentiometerMedRitning.jpg}
 \centering
-\caption{\it Potentiometer.}
+\caption{\it En potentiometer. A, B och C representerar kolumner. B leder ström och kopplas till A respektive C med kort sladd såsom bilden visar. För att få värden till datorenheten kopplas även en sladd från A, rad 1, och C, rad 4, till MD407}
 \end{figure} 
 
 \subsubsection{Hur sändare och mottagare kopplas samman}
 \vspace{5mm} \noindent
-Båda datorenheterna kopplas sedan samman. Med hjälp av programmet ETERM kan USART genom USB koppla två bärbara datorer till sändare och mottagare för att aktivt kunna använda C-koden till att utföra operationer. PA0-porten på sändaren kopplas till kretskortet UART4 som i sin tur kopplas till en radiofrekvenssändare, en identisk procedur görs på mottagaren men på PB11-porten med kretskortet UART4 och en radiofrekvensmottagare. Radioenheterna benämns som RF-mottagare och RF-sändare. Stöd från hjälpfunktioner i biblioteket(NAMN) möjliggör för att kunna skriva till PA0-porten och läsa från PB11-porten. Koden är även här utvecklad i Codelite.
-
-%TILL DELSYSTEM
+Båda datorenheterna kopplas sedan samman. Med hjälp av programmet ETERM kan USART genom USB koppla två bärbara datorer till sändare och mottagare för att aktivt kunna använda en kod skriven i C till att utföra operationer. PA0-porten på sändaren kopplas till kretskortet UART4 som i sin tur kopplas till en RF-sändare, en identisk procedur görs på mottagaren men på PB11-porten med kretskortet UART3 och en RF-mottagare. Kodens specifikationer ska nu följa att seriellt skicka bytes med information från sändarens potentiometer till mottagarens enhet för avläsning. Viktigt är att koden initierar bytes att skickas ungefär 100 gånger i sekunden för att minska störningar och för att få värdesövergångarna att bli så jämna som möjligt. Stöd från hjälpfunktioner i biblioteket(NAMN) möjliggör för att kunna skriva till PA0-porten och läsa från PB11-porten. Koden är utvecklad i Codelite.
 
 
 \subsubsection{Konfiguration av ny mottagare}
 \vspace{5mm} \noindent
-En ytterligare datorenhet, MD407, ersätter mottagaren i bilen. Portarna CH3 och CH4 på kretskortet TIM2 kopplas till PA2 respektive PA3(se Figur 1) på den nya mottagaren. Koden, skriven i C med utvecklingsmiljön Codelite, initierar CH3 till att reglera motorstyrningen och CH4 till att kontrollera rattutslagen. När RF-mottagaren tar emot ett meddelande startas en funktion. Denna funktion undersöker vilket kommando som ska utföras samt till vilken grad detta skall göras. Exempelvis, erhåller mottagaren kommandot att bilen ska ändra motorhastigheten beror hastigheten på storleken av värdet. Mottagaren är kopplad direkt till bilens styrelektronik, en sladd till motorn och en till styrservot. När värdet på meddelandet från sändaren erhållits skickas en PWM-signal till den önskade styrelektroniken i bilen som fångar upp dessa under en period, uppfattar värdet och agerar.
+En ytterligare datorenhet, MD407, ersätter mottagaren i bilen. Portarna CH3 och CH4 på det integrerade kretskortet TIM2 kopplas till PA2 respektive PA3 i C-koden på den nya mottagaren. Koden, utvecklad i Codelite, initierar CH3 till att reglera motorstyrningen och CH4 till att kontrollera rattutslagen. När RF-mottagaren tar emot ett meddelande triggas en funktion i koden. Denna ska undersöka vilket kommando som ska utföras samt till vilken grad detta skall göras enligt bitarnas anvisningar i Figur 3. Värdet 1 eller 2 leder bilens motor eller styrservo önskas påverkas i respektive ordning. Exempelvis, erhåller mottagaren kommandot att bilen ska ändra motorhastigheten beror hastigheten på storleken av värdet. Mottagaren är kopplad direkt till bilens styrelektronik, en sladd till motorn och en till styrservot. När värdet på meddelandet från sändaren erhållits skickas en PWM-signal till den begärda styrelektroniken i bilen som fångar upp dessa under en period(se exempel i Figur 4), uppfattar värdet och agerar. Observera att bilen endast svarar på värden i intervallet 110-173(ENHET). Värdet kan anta 64 värden, utifrån 6 bitar, och behöver därför en offset av 110 innan det kan skickas till styrelektroniken för att möjliggöra för korrekt avläsning.
+
+
+
+\begin{figure}[H]
+\includegraphics[scale=1]{aByteComVal.jpg}
+\centering
+\caption{\it Specifikationer av byten som seriellt skickas från sändare till mottagare}
+\end{figure} 
+
+
+\begin{figure}[H]
+\includegraphics[scale=1]{PWMsignals.jpg}
+\centering
+\caption{\it Exempel på möjliga PWM-signaler. Om byten indikerar att motorn ska påverkas kommer den i fall A och B köra i högsta takt baklänges resspektive framlänges. I fall C hamnar bilen i neutralt läge och står då stilla. Signalen i fall D tolkas ej av bilens styrelektronik då det ligger utanför dess avläsningsintervall.}
+\end{figure} 
 
 %TILL RESULTAT
 %För att informationsutbytet ska fungera utan att störningar kommer emellan meddelandena skickas signaler ungefär 100 gånger per sekund och de tas emot med samma hastighet
@@ -156,19 +172,36 @@ Systemet har två huvuddelar, en MD407-enhet samt en Androidapplikationen som b�
 
 \subsection{Delsystem}
 \subsubsection{Specifikation av nya styrsignaler}
-Styrsignalerna uppmättes med hjälp av oscilloskop. Cykelmedelvärdet för mV vid styrning när rattutslaget är maximalt åt vänster respektive höger gick från 250mV till 450mV. Samma värde på hastigheten angav att full hastighet bakåt är av storleken 265mV, bilen är i neutralt läge vid 410mV och de maximala hastigheten nås vid 530mV. Genom att dividera dessa värden enskilt med den maximala volten(3.4V) som kan skickas från pinnarna på datorenheten, MD407, och multiplicera med perioden erhålls det värde bilens styrelektronik läser av. Detta resulterar i att bilen lyssnar på värden mellan 110-173(ENHET) under perioden av 1388(ENHET).
+Styrsignalerna uppmättes med hjälp av oscilloskop. Cykelmedelvärdet för mV vid styrning när rattutslaget är maximalt åt vänster respektive höger gick från en medelspänning av 250mV till 450mV. Samma värde på hastigheten angav att full hastighet bakåt är av medelspänningen 265mV, bilen är i neutralt läge vid medelspänningen 410mV och de maximala hastigheten nås vid medelspänningen 530mV. Genom att dividera dessa värden enskilt med den maximala volten(3.4V) som kan skickas från pinnarna på datorenheten, MD407, och multiplicera med perioden erhålls det värde bilens styrelektronik läser av. Detta resulterar i att bilen lyssnar på värden mellan 110-173(ENHET) under perioden av 1388(ENHET).
 
 \subsubsection{Specifikation av PWM-signaler}
-PWM-signalerna är specificerade att upptäckas på specifika värden. I varje period i en PWM-signal kan spänningen antingen vara 0, låg, eller 1, hög, och det som mottagaren svarar på är hur stor del av perioden som signalen var på högspänning. Maxspänningen pinnarna i MD407 skickar är ungefär 3.4V och elektroniken i bilen svarar på en medelspänning mellan 250-450mV. Dessa medelvärden, eller dutycycles, styrs i bildatorn med hjälp av en av datorns timers och standardbibliotek för dessa
+%SE ÖVER HUR DETTA FUNKAR, 265Mv/110 NÅGONTING, vad är det
+PWM-signalerna är specificerade att upptäckas på specifika värden som nämnt i tidigare specifikation av nya styrsignaler. I varje period under en PWM-signal kan spänningen antingen vara 0, låg, eller 1, hög, och det som mottagaren svarar på är hur stor del av perioden som signalen var på högspänning(se Figur 4). Den maximala spänningen pinnarna i MD407 skickar är ungefär 3.4V och elektroniken i bilen svarar på en medelspänning mellan 250-450mV. Dessa medelvärden, eller dutycycles, styrs i bildatorn med hjälp av en av datorns tidsmekanismer och dess standardbibliotek.
 
 \subsubsection{Sändare: Androidapplikation}
 Androidapplikationen agerar som en handkontroll. Av denna krävs att skicka bytes seriellt till bilens dator med en Bluetooth-länk för att därmed erhålla den sökta trådlösheten(källa??? behövs det???). Detta följer protokoll som bestämts av projektspecifikationer(SOM STÅR VAR?) där de två mest signifikanta bitarna i varje byte bestämmer vilken sorts signal som ska ändras, till exempel styrning, drivmotor eller initiera kontrollapplikationen. Mobilapplikationen har på skärmen virtuella reglage som ska emulera ordinarie handkontrollens analoga funktion så att exempelvis hastighetsövergången är så jämn som möjligt.
 
 \subsubsection{Sändare: MD407-enhet via RF}
-Datorenheten MD407 kopplas till potentiometer för att ge den ström. De trekolumnerna av pinnar som finns i mitten på potentiometern(se Figur 2) använts till olika ändamål. Den mittersta kolumnen möjliggör för ström, därav får de vridbara kontakterna på potentiometern ström genom de korta sladdarna mellan strömkolumen till respektive vridkontakt. Sladden från den sista kolumnen på samma rad kopplat till MD407 ger värden konstant till datorenheten. På denna enhet finns en integrerad ADC. Denna tar emot värdena från portarna PC1 samt PC2 och översätter det till digitala värden. Genom RF-enheter kan de nya datorenheterna kommunicera. Resultatet skickas från sändarens RF-enhet en byte åt gången 100 gånger i sekunden till mottagarens RF-enhet. Specifikationerna som följs är att de första 2 bitarna indikerar kommandot och de resterande 6 bitarna med vilket värde kommandot ska utföras. 
+Datorenheten MD407 är kopplad till en potentiometer för att ge den ström. MD407 läser konstant av PC1-porten och PC2-porten som i metoden nämndes vara kopplade till potentiometerns utmatningar. På datorenheten finns en integrerad ADC, vilket tar emot värdena från potentiometerns utmatningar och översätter dessa till digitala värden. Resultatet skickas seriellt i bytes från sändarens RF-enhet och avläses i mottagarens RF-enhet varpå mottagardatorn svarar direkt till styrelektroniken såsom byten specificerar.
+
+
+%De tre kolumnerna av pinnar som finns i mitten på potentiometern(se Figur 2) använts till olika ändamål. Den mittersta kolumnen möjliggör för ström, därav får de vridbara kontakterna på potentiometern ström genom de korta sladdarna mellan strömkolumen till respektive vridkontakt. Sladden från den sista kolumnen på samma rad kopplat till MD407 ger värden konstant till datorenheten. På denna enhet finns en integrerad ADC. Denna tar emot värdena från portarna PC1 samt PC2 och översätter det till digitala värden. Genom RF-enheter kan de nya datorenheterna kommunicera. Resultatet skickas från sändarens RF-enhet en byte åt gången 100 gånger i sekunden till mottagarens RF-enhet. Specifikationerna som följs är att de första 2 bitarna indikerar kommandot och de resterande 6 bitarna med vilket värde kommandot ska utföras. 
 
 \subsubsection{Mottagare: MD407-enhet}
-Signalerna som skickas från sändaren tas emot av en RF-mottagare((((generisk Bluetooth-modul))) som är kopplad till USART1-porten på mottagaren i bilen, en MD407-enhet. När programmet på denna dator startas måste datorn initialt skicka PWM-signaler som motsvarar neutralt läge för drivmotorn i en kort stund innan övriga signaler kan sändas. Efter detta kan mottagaren ta emot bytes från sändaren samt skicka PWM-signaler till bilens styrelektronik. De 2 mest signifakanta bitarna av byten mottagaren erhålligt har syftar på vilket kommando ska utföras. Detta värdet analyseras då i mening att skicka en PWM-signal till korrekt del i bilens styrelektronik. Värdet 1 eller 2 leder till att PWM-signalen skickas via en sladd från MD407 till bilens motor respektive styrservo. De 6 minst signifikanta bitarna har ett värde mellan 0-63 när mottagaren får de. Till detta adderas en offset av 110 vilket gör att värdet istället kommer befinna sig i intervallet 110-173. Detta värde skickas via sladden till den berörda styrelektroniken och uppfattas av bilen som svarar med korrekt funktionalitet. Syftar kommandot på motorn kommer bilen åka i högsta möjliga takt bakåt vid värdet 110. Farten minskar sen vid högre värden och bilen når neutralt värde vid 142. Värden över detta upp till 173 får bilen att öka i acceleration. Värden utanför detta intervall uppfattas inte av bilens elektronik. Värden till motorn inom intervallet omvandlas och får en medelspänning mellan 256-530mV som den direkt svarar på. En identisk procedur sker för värden till styrning där de som ligger i intervallet omvandlas och får en medelspänning mellan 250-450mV(RÄTTA EXAKTA VÄRDEN). Omvandlingen sker genom att dividera värdet från mottagaren med periodens längd, 1388, och multiplcera med maxspänningen, 3.4. Utöver detta kan en kontrollapplikation påbörjas(FORTSÄTT VID MER INFO). 
+Signalerna som skickas från sändaren tas emot av en RF-mottagare((((generisk Bluetooth-modul som är kopplad till USART1-porten))) på mottagaren i bilen, en MD407-enhet. När programmet på denna dator påbörjas måste datorn initialt skicka PWM-signaler som motsvarar neutralt läge för drivmotorn i en kort stund innan övriga signaler kan sändas. Efter detta kan mottagaren ta emot bytes från sändaren samt skicka PWM-signaler till bilens styrelektronik. De 2 mest signifikanta bitarna av byten mottagaren erhålligt syftar på vilket kommando ska utföras(se Figur 3). Detta värdet analyseras då i mening att skicka en PWM-signal till korrekt del i bilens styrelektronik.  De 6 minst signifikanta bitarna har ett värde mellan 0-63 när mottagaren får de. Till detta adderas en offset av 110 vilket gör att värdet istället kommer befinna sig i intervallet 110-173. Detta värde skickas till den berörda styrelektroniken och uppfattas av bilen som svarar med korrekt funktionalitet. Syftar kommandot på motorn(se Figur 5) kommer bilen åka i högsta möjliga takt bakåt vid värdet 110. Farten minskar sen vid högre värden och bilen når neutralt värde vid 142. Värden över detta upp till 173 får bilen att öka i acceleration. Värden utanför detta intervall uppfattas inte av bilens elektronik. Värdena omvandlas i bilens styrelektronik och får en medelspänning mellan 256V-530mV(motsvarande intervallsvärdena) som den direkt svarar på. En identisk procedur sker för värden till styrning där de som ligger i intervallet omvandlas och får en medelspänning mellan 250-450mV(RÄTTA EXAKTA VÄRDEN). %
+
+%SE ÖVER OM DETTA SKA VARA MED
+%Omvandlingen sker genom att dividera värdet från mottagaren med periodens längd, 1388, och multiplcera med maxspänningen, 3.4. 
+
+Utöver detta kan en kontrollapplikation påbörjas(FORTSÄTT VID MER INFO). 
+
+\begin{figure}[H]
+\includegraphics[scale=1]{110-173Car.jpg}
+\centering
+%SE ÖVER CAPTION, DENNA TEXT ÄR NÄMND I TEXTEN OVAN, ONDIG DÅ KANSKE
+\caption{\it Bilen uppnår maximal fart bakåt vid 110 och minskar hastigheten tills den når stillastående läge, 142. Sedan börjar den accelerera tills den når sin maximala hastighet framåt vid 173.}
+\end{figure} 
+
 
 
 %Datorn i bilen tar då emot ett kommandokod från Bluetooth-länken och analyserar detta i mening att specificera vilket kommando de två bitarna syftar på ska utföras. PWM-signalerna ändras sedan efter värdet på kommandot, de sex minst signifikanta bitarna, eller påbörjar kontrollapplikationen för demonstration. Motorerna tar emot PWM-signalerna och ger utslag beroende på deras medelspänning.
@@ -187,7 +220,7 @@ Signalerna som skickas från sändaren tas emot av en RF-mottagare((((generisk B
 
 
 \newpage
-\section{Slutsats}
+\section{Slutsats och diskussion}
 
 
 
