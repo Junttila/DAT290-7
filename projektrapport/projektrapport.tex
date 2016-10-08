@@ -57,7 +57,7 @@ Godkänd  & NAMN     & DATUM         \\ \hline
 % I varje period i en PWM-signal kan spänningen antingen vara 0, låg, eller 1, hög, och det som mottagaren svarar på är hur stor del av perioden som signalen var på högspänning. I detta projekt är maxspänningen ca 3, 4V, och motorerna svarar på en medelspänning mellan 250-450mV. Dessa medelvärden, eller dutycycles, styrs i bildatorn med hjälp av en av datorns timers och standardbibliotek för dessa
 
 \vspace{5mm} \noindent
-{\bf Potentiometer} - En elektrisk komponent som mäter resistans~\cite{Potentiometer}.
+{\bf Potentiometer} - En elektrisk komponent som med hjälp av ett variabelt motstånd kan begränsa spänning~\cite{Potentiometer}.
 
 \vspace{5mm} \noindent
 {\bf ADC} - Analog to digital converter, översätter analoga värden i enheten Volt till digitala värden~\cite{ADC}.
@@ -77,7 +77,7 @@ Radiostyrda bilar började produceras på mitten av 60-talet~\cite{RCHistory}. U
 
 \subsection{Syfte}
 
-Syftet med detta projekt är att uppdatera den klassiska radiostyrda bilen genom att ersätta befintlig sändare samt mottagare i en radiostyrd bil med nya datorer och även möjliggöra styrning från en Andriodtelefon. Intentionen är även att implementera en kontrollapplikation som ska kunna stoppa bilen från att kollidera. Följden av detta blir en produkt mer anpassad till aktuell teknik och det erhålls på så sätt en mer modern teknisk produkt.
+Syftet med detta projekt är att uppdatera den klassiska radiostyrda bilen genom att ersätta befintlig sändare samt mottagare i en radiostyrd bil med nya datorer och även möjliggöra styrning från en Androidtelefon. Avsikten är även att implementera en kontrollapplikation som ska kunna stoppa bilen från att kollidera. Följden av detta blir en produkt mer anpassad till aktuell teknik och det erhålls på så sätt en mer modern teknisk produkt.
 
 
 %Syftet med detta projekt är att uppdatera den klassiska radiostyrda bilen med hjälp av ny teknik som bluetooth. För att följaktligen erhålla en mer modern teknisk produkt.
@@ -104,33 +104,13 @@ Målen nedan beskriver konkret vad som uppnås med projektet.
 \subsection{Arbetsmetod}
 \subsubsection{Uppmätning av styrsignaler}
 %VILKET KRETSKORT
-Projektet inleds med att mäta upp befintliga styrsignaler. För att kunna replikera signalerna som skickas från den ursprungliga mottagaren till bilens styrelektronik kopplas ett kretskort till bilens egna kontrollenhet, MRX242. Kretskortet har möjlighet att dela på mottagarens signaler och kopplat till ett oscilloskop går det att urskilja specifika signaler så de tydligt kan mätas upp. Signalerna är av typen PWM och uppmäts i Volt. 
-
-
-\subsubsection{Konfiguration av ny sändare}
-\vspace{5mm} \noindent
-Datorenheten MD407 ersätter sändaren. Potentiometern kopplas enligt anvisningar från Figur 2 och även sedan till MD407 via en flatsladd enligt tidigare nämnd figur. Sladdarna som ska kopplas till datorenheten sätts på PC1-porten och PC2-porten på MD407 i angiven ordning från figuren. De styr motorn respektive servot. 
-
-%Koden till detta skrivs i C med utvecklingsmiljön Codelite.
-
-
-
-\begin{figure}[H]
-\includegraphics[scale=0.05]{PotentiometerMedRitning.jpg}
-\centering
-\caption{\it En potentiometer. A, B och C representerar kolumner. B leder ström och kopplas till A respektive C med kort sladd såsom bilden visar. För att få värden till datorenheten kopplas även en sladd från A, rad 1, och C, rad 4, till MD407}
-\end{figure} 
-
-\subsubsection{Sändare och mottagare kopplas samman}
-%NÄMN VILKET BIBLIOTEK HJLPFUNKTIONERNA KOMMER IFRÅN
-\vspace{5mm} \noindent
-Båda datorenheterna kopplas sedan samman. Med hjälp av programmet ETERM kan USART genom USB koppla två bärbara datorer till sändare och mottagare för att aktivt kunna använda en kod skriven i C till att utföra operationer. PA0-porten på sändaren kopplas till kretskortet UART4 som i sin tur kopplas till en RF-sändare, en identisk procedur görs på mottagaren men på PB11-porten med kretskortet UART3 och en RF-mottagare. Kodens specifikationer ska nu följa att seriellt skicka bytes med information från sändarens potentiometer till mottagarens enhet för avläsning. Viktigt är att koden initierar bytes att skickas ungefär 100 gånger i sekunden för att minska störningar och för att få värdeövergångarna att bli så jämna som möjligt. Stöd från hjälpfunktioner i bibliotek möjliggör för att kunna skriva till PA0-porten och läsa från PB11-porten. Koden är utvecklad i Codelite.
+Projektet inleds med att mäta upp befintliga styrsignaler. För att kunna återskapa signalerna som skickas från den ursprungliga mottagaren till bilens styrelektronik kopplas ett kretskort, Adapter Maverick, till bilens egna kontrollenhet, MRX242. Kretskortet har möjlighet att dela på mottagarens signaler och kopplat till ett oscilloskop går det att urskilja specifika signaler så de tydligt kan mätas upp. Signalerna är av typen PWM och uppmäts i Volt. 
 
 
 \subsubsection{Konfiguration av ny mottagare}
 %ENHET TILL 110-173
 \vspace{5mm} \noindent
-En ytterligare MD407-enhet ersätter mottagaren i bilen. Portarna CH3 och CH4 på det integrerade kretskortet TIM2 kopplas till PA2 respektive PA3 i C-koden på den nya mottagaren. Koden, utvecklad i Codelite, initierar CH3 till att reglera motorstyrningen och CH4 till att kontrollera rattutslagen. När RF-mottagaren tar emot ett meddelande triggas en funktion i koden. Denna ska undersöka vilket kommando som ska utföras samt till vilken grad detta skall göras enligt bitarnas anvisningar i Figur 3. Värdet 1 eller 2 på kommandobitarna leder till att bilens motor eller styrservo påverkas i respektive ordning. Exempelvis, erhåller mottagaren kommandot att bilen ska ändra motorhastigheten beror hastigheten på storleken av värdet. Mottagaren är kopplad direkt till bilens styrelektronik, en sladd till motorn och en till styrservot. När värdet på meddelandet från sändaren erhållts skickas en PWM-signal till den begärda styrelektroniken i bilen som fångar upp dessa under en period(se exempel i Figur 4), uppfattar värdet och agerar. Detta arbete har förenklats med hjälp av kodbibliotek från STMicroelectronics som innehåller funktioner för att initiera PWM-genererande. Observera att bilen endast svarar på värden i intervallet 110-173 under PWM-signalsperioden. Värdet kan anta 64 värden, utifrån 6 bitar, och behöver därför en offset av 110 innan det kan skickas till styrelektroniken för att möjliggöra för korrekt avläsning.
+En MD407-enhet ersätter mottagaren i bilen. Kanalerna CH3 och CH4 på det integrerade kretskortet TIM2 konfigureras för att hanteras av PA2 respektive PA3 i C-koden för den nya mottagaren. Koden, utvecklad i Codelite, initierar CH3 till att reglera motorstyrningen och CH4 till att kontrollera rattutslagen. Följden av detta blir att portarna PA2 och PA3 i den ersättande mottagaren kopplas direkt till bilens styrelektronik, en sladd till motorn och en till styrservot. När RF-mottagaren tar emot ett meddelande triggas en funktion i koden. Denna ska undersöka vilket kommando som ska utföras samt till vilken grad detta skall göras enligt bitarnas anvisningar i Figur 3. Värdet 1 eller 2 på kommandobitarna leder till att bilens motor eller styrservo påverkas i respektive ordning. Exempelvis, erhåller mottagaren kommandot att bilen ska ändra motorhastigheten beror hastigheten på storleken av värdet. När värdet på meddelandet från sändaren erhållts skickas en PWM-signal till den begärda styrelektroniken i bilen som fångar upp dessa under en period(se exempel i Figur 4), uppfattar värdet och agerar. Detta arbete har förenklats med hjälp av kodbibliotek från STMicroelectronics som innehåller funktioner för att initiera PWM-genererande. Observera att bilen endast svarar på värden i intervallet 110-173 under PWM-signalsperioden. Värden kan antas från 0-63, utifrån 6 bitar, och TIM2 konfigureras därför till att addera en offset av 110 innan det kan skickas till styrelektroniken för att möjliggöra för korrekt avläsning.
 
 
 
@@ -146,6 +126,29 @@ En ytterligare MD407-enhet ersätter mottagaren i bilen. Portarna CH3 och CH4 p�
 \centering
 \caption{\it Exempel på möjliga PWM-signaler. Om byten indikerar att motorn ska påverkas kommer den i fall A och B köra i högsta takt baklänges resspektive framlänges. I fall C hamnar bilen i neutralt läge och står då stilla. Signalen i fall D tolkas ej av bilens styrelektronik då det ligger utanför dess avläsningsintervall.}
 \end{figure} 
+
+
+
+\subsubsection{Konfiguration av ny sändare}
+\vspace{5mm} \noindent
+En datorenhet, MD407, ersätter sändaren. Potentiometern kopplas enligt anvisningar från Figur 2 och även sedan till MD407 via en flatsladd enligt tidigare nämnd figur. Sladdarna som ska kopplas till datorenheten sätts på PC1-porten och PC2-porten på MD407 i angiven ordning från figuren. De styr motorn respektive servot. 
+
+%Koden till detta skrivs i C med utvecklingsmiljön Codelite.
+
+
+
+\begin{figure}[H]
+\includegraphics[scale=0.05]{PotentiometerMedRitning.jpg}
+\centering
+\caption{\it En potentiometer. A, B och C representerar kolumner. B leder ström och kopplas till A respektive C med kort sladd såsom bilden visar. För att få värden till datorenheten kopplas även en sladd från A, rad 1, och C, rad 4, till MD407}
+\end{figure} 
+
+\subsubsection{Sändare och mottagare kopplas samman}
+%NÄMN VILKET BIBLIOTEK HJLPFUNKTIONERNA KOMMER IFRÅN
+\vspace{5mm} \noindent
+Båda datorenheterna kopplas sedan samman. Med hjälp av programmet ETERM kan USART genom USB koppla två bärbara datorer till sändare och mottagare för att i MD407 spara kod skriven i C som sedan kan utföra operationer. PA0-porten på sändaren initieras till kretskortet UART4 som i sin tur kopplas till en RF-sändare, UART4 kan då skicka data via PA0 till RF-modulen. En identisk procedur görs på mottagaren men på PB11-porten med kretskortet USART3 och en RF-mottagare. Koden påbörjar att seriellt skicka bytes med information från sändarens potentiometer till mottagarens enhet för avläsning. Viktigt är att koden initierar bytes att skickas ungefär 100 gånger i sekunden för att minska störningar och för att få värdeövergångarna att bli så jämna som möjligt. Stöd från hjälpfunktioner i bibliotek möjliggör för att kunna skriva till PA0-porten och läsa från PB11-porten. Koden är utvecklad i Codelite.
+
+
 
 %TILL RESULTAT
 %För att informationsutbytet ska fungera utan att störningar kommer emellan meddelandena skickas signaler ungefär 100 gånger per sekund och de tas emot med samma hastighet
