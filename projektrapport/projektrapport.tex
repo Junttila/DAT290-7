@@ -79,7 +79,7 @@ Godkänd  & NAMN     & DATUM         \\ \hline
 \newpage
 \section{Introduktion}
 
-Radiostyrda bilar började produceras på mitten av 60-talet~\cite{RCHistory}. Under åren har de både tävlats med samt varit en väletablerad leksak. Trots att den genomgått mindre justeringar har den radiostyrda bilens uppbyggnad i det stora hela förblivit densamma.
+Radiostyrda bilar började produceras på mitten av 60-talet~\cite{RCHistory}. Under åren har den både tävlats med samt varit en väletablerad leksak. Trots att den genomgått mindre justeringar, har den radiostyrda bilens uppbyggnad i det stora hela förblivit densamma.
 
 \subsection{Syfte}
 
@@ -110,7 +110,7 @@ Målen nedan beskriver konkret vad som uppnås med projektet.
 \subsection{Arbetsmetod}
 \subsubsection{Uppmätning av styrsignaler}
 %VILKET KRETSKORT
-Projektet inleds med att mäta upp befintliga styrsignaler. För att kunna återskapa signalerna som skickas från den ursprungliga mottagaren till bilens styrelektronik kopplas ett kretskort, Adapter Maverick, till bilens egna kontrollenhet, MRX-242. Kretskortet har möjlighet att separera mottagarens signaler och kopplat till ett oscilloskop går det att urskilja specifika signaler så de tydligt kan mätas upp. Signalerna är av typen PWM och deras värde bestäms av medelspänningen. 
+Projektet inleds med att mäta upp befintliga styrsignaler. För att kunna återskapa signalerna som skickas från den ursprungliga mottagaren till bilens styrelektronik kopplas ett kretskort, Adapter Maverick, till bilens egen kontrollenhet, MRX-242. Kretskortet har möjlighet att separera mottagarens signaler och med hjälp av samman koppling till ett oscilloskop går det att urskilja specifika signaler så de tydligt kan mätas upp. Signalerna är av typen PWM och deras värde bestäms av medelspänningen.
 
 
 \subsubsection{Konfiguration av ny mottagare}
@@ -147,7 +147,7 @@ En datorenhet, MD407, ersätter sändaren. Potentiometern kopplas enligt anvisni
 \end{figure} 
 
 \subsubsection{Sändare och mottagare kopplas samman}
-Båda datorenheterna kopplas samman. Med hjälp av programmet ETERM kan USART genom USB koppla två bärbara datorer till sändare och mottagare för att ladda upp kompilerad C-kod till MD407-enheterna som då kan utföra operationer utifrån koden. PA0-porten på sändaren initieras till kretskortet UART4 som i sin tur kopplas till en RF-sändare på DATA-pinnen. UART4 kan då skicka data via PA0 till RF-modulen. En identisk procedur görs på mottagaren men på PB11-porten med kretskortet USART3 och en RF-mottagare. Resterande inkopplingar av RF-modulerna görs enligt Figur 5. Koden påbörjar därefter att seriellt skicka bytes med information från sändarens potentiometer till mottagarens enhet för avläsning. Viktigt är att koden initierar bytes att skickas från sändaren ungefär 100 gånger i sekunden för att minska störningar och få värdeövergångarna att bli så jämna som möjligt. Stöd från hjälpfunktioner i bibliotek möjliggör för att kunna skriva till PA0-porten och läsa från PB11-porten. Koden är utvecklad i Codelite.
+åda datorenheterna kopplas samman med hjälp av programmet ETERM. ETERM kan USART genom USB koppla två bärbara datorer till sändare samt mottagare. Kompilerad C-kod laddas upp till MD407-enheterna, som då kan utföra operationer utifrån koden. PA0-porten på sändaren initieras till kretskortet UART4, som i sin tur kopplas till en RF-sändare på DATA-pinnen. UART4 kan då skicka data via PA0 till RF-modulen. En identisk procedur görs på mottagaren men på PB11-porten med kretskortet USART3 och en RF-mottagare. Resterande inkopplingar av RF-modulerna görs enligt Figur 5. Koden påbörjar därefter att seriellt skicka bytes med information från sändarens potentiometer till mottagarens enhet för avläsning. Viktigt är att koden initierar bytes att skickas från sändaren ungefär 100 gånger i sekunden för att minska störningar och få värdeövergångarna att bli så jämna som möjligt. Stöd från hjälpfunktioner i bibliotek möjliggör för att kunna skriva till PA0-porten och läsa från PB11-porten. Koden är utvecklad i Codelite.
 
 \begin{figure}[H]
 \includegraphics[scale=0.06]{RF-transmitter.jpg}
@@ -158,7 +158,7 @@ Båda datorenheterna kopplas samman. Med hjälp av programmet ETERM kan USART ge
 
 
 \subsubsection{Komplettering med applikation som sändare}
-Mobilapplikationen ska vara funktionell på en Androidtelefon och kopplas till den radiostyrda bilen via Bluetooth. Två applikationer konstrueras separat; en GUI, grafiskt användargränssnitt, med olika reglage för att styra hastighet och riktning, samt en applikation som kontrollerar Bluetooth. Dessa skrivs i Java genom Eclipse och importeras till Android Studio, en utvecklingsmiljö för Andriodapplikationer. Sedan sammanställs dessa till en applikation för att genom den kunna koppla sin Bluetooth-modul med MD407-mottagaren och på så vis skicka värden till bilen.
+Mobilapplikationen ska vara funktionell på en Androidtelefon och kopplas till den radiostyrda bilen via Bluetooth. Två applikationer konstrueras separat, en GUI, grafiskt användargränssnitt, med olika reglage för att styra hastighet och riktning. Andra är en applikation som kontrollerar Bluetooth. Dessa skrivs i Java genom Eclipse och importeras till Android Studio, en utvecklingsmiljö för Andriodapplikationer. Sedan sammanställs dessa till en applikation vars uppgift att kunna koppla en Bluetooth-modul med MD407-mottagaren och på så vis skicka värden till bilen.
 
 \newpage
 \section{Teknisk beskrivning}
@@ -199,8 +199,6 @@ Figur 7 visar en sammanfattning över systemet med en applikation som sändare. 
 Bilen uppfattar PWM-signaler 72 gånger i sekunden. De ursprungliga signalerna skickas på en frekvens av 72Hz, i mening att replikera dessa ges TIM2s räknare en frekvens av 100kHz. Ett antal klockcykler divideras med denna frekvens och kvoten ska då hamna nära 1/72. Antalet klockcykler är således bestämda till 1388. Resultatet av detta är att de nya PWM-signalerna skickas 72 gånger i sekunden till bilen som styrelektroniken läser av.
 
 \vspace{5mm} \noindent
-PWM-signalerna kan endast avläsas korrekt av styrelektroniken på specifika värden. I varje period under en PWM-signal kan spänningen antingen vara 0, låg, eller 1, hög. Det som bilens styrelektronik svarar på är hur stor del av perioden signalen är hög (se Figur 3),  alternativt hur stor del av signalen som sänder 3.4V. Medelspänningen vid styrning och hastighet när styrningen är maximalt åt vänster respektive höger och hastigheten är maximalt bakåt respektive framåt går från 269mV till 423mV. Bilen når således högsta möjliga vänsterlutning samt fart bakåt vid 269mV, neutralt läge vid 348mV och maximal högerlutning samt fart framåt vid 423mV. Genom att dividera dessa värden enskilt med den maximala spänningen, som kan skickas från pinnarna på MD407, och sedan multiplicera med perioden, erhålls det värde bilens styrelektronik läser av. Detta resulterar i att bilen lyssnar på värden mellan 110-173 klockcykler under en period av 1388 klockcykler, det vill säga en andel av ungefär 8\%-12.4\% av hög signal. Detta styrs i bilen med hjälp av datorenhetens tidsmekanismer och dess standardbibliotek.
-
 \subsubsection{Sändare: Androidapplikation}
 Androidapplikationen agerar som en handkontroll. Denna skickar bytes seriellt till bilens dator via en Bluetooth-länk. Detta följer samma protokoll som tidigare nämnts där de 2 mest signifikanta bitarna i varje byte bestämmer vilken sorts signal som ska ändras och de resterande bitarna bestämmer med vilket värde detta ska ske. Mobilapplikationen har på skärmen virtuella reglage (se Figur 8) som ska emulera ordinarie handkontrollens analoga funktion så att exempelvis hastighetsövergången är så jämn som möjligt.
 
