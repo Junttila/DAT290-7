@@ -48,7 +48,8 @@ void init_uart()
 	RCC_APB1PeriphClockCmd(RCC_APB1Periph_UART4,ENABLE);
 	
 	//Fyll i U(S)ART-strukturen
-	USART_InitStruct.USART_BaudRate = 9600; //38400 är default för bluetoothmodulen
+	USART_InitStruct.USART_BaudRate = 38400*3; //38400 är default för bluetoothmodulen
+	//Baudrate ska vara tre gånger högre än värdet man vill ha
 	USART_InitStruct.USART_HardwareFlowControl = USART_HardwareFlowControl_None;
 	USART_InitStruct.USART_Mode = USART_Mode_Rx | USART_Mode_Tx;
 	USART_InitStruct.USART_Parity = USART_Parity_No;
@@ -147,6 +148,8 @@ uint16_t adc_get_val(uint8_t Channel)
     return ADC_Val;
 }
 
+
+
 void bt_config()
 {
 	uint16_t in = 0;
@@ -154,21 +157,26 @@ void bt_config()
 	while(1)
 	{
 		in = read_SCI(USART1);
-		write_SCI(USART1, in);
 		if (in == '<')
 		{
 			//write_string_SCI(UART4, "AT+CMODE=0\r\n");
-			USART_SendData(UART4, '\r');
+			write_SCI(UART4, '\r');
 			//debug_delay();
-			USART_SendData(UART4, '\n');
+			write_SCI(UART4, '\n');
+			write_SCI(USART1, '\r');
 			write_SCI(USART1, '\n');
 
 		}
+		else if (in == '*')
+		{
+			write_string_SCI(UART4, "AT\r\n");
+			write_string_SCI(USART1, "AT\r\n");
+		}
 		else
 		{
-			USART_SendData(UART4, in);
+			write_SCI(USART1, in);
+			write_SCI(UART4, in);
 		}
-		//debug_delay();
 	}
 }
 
@@ -183,7 +191,8 @@ void main(void)
 	
 	debug_delay();
 	
-	bt_config();
+	//bt_config();
+	write_string_SCI(USART1, "Controller mode\n");
 	
 	while(1)
 	{
