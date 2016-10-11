@@ -7,6 +7,7 @@
 //#include "stm32f4xx_flash.h"
 #include "stm32f4xx_tim.h"
 #include "USART.h"
+#include "NVIC.h"
 
 TIM_OCInitTypeDef  TIM_OCInitStructure;
 TIM_TimeBaseInitTypeDef TIM_TimeBaseStructure;
@@ -54,11 +55,11 @@ void init_uart()
 	RCC_APB1PeriphClockCmd(RCC_APB1Periph_USART3,ENABLE);
 	
 	//Fyll i U(S)ART-strukturen
-	USART_InitStruct.USART_BaudRate = 9600; //38400 är default för bluetoothmodulen
+	USART_InitStruct.USART_BaudRate = 115200; //38400 är default för bluetoothmodulen
 	USART_InitStruct.USART_HardwareFlowControl = USART_HardwareFlowControl_None;
 	USART_InitStruct.USART_Mode = USART_Mode_Rx | USART_Mode_Tx;
 	USART_InitStruct.USART_Parity = USART_Parity_No;
-	USART_InitStruct.USART_StopBits = USART_StopBits_2;
+	USART_InitStruct.USART_StopBits = USART_StopBits_1;
 	USART_InitStruct.USART_WordLength = USART_WordLength_8b;
     
 	
@@ -110,6 +111,50 @@ void init_pwm()
 	TIM_Cmd(TIM2, ENABLE);
 }
 
+void IC_init()
+{
+	GPIO_InitTypeDef GPIO_InitStruct;
+    
+    GPIO_InitStruct.GPIO_Pin = GPIO_Pin_1; //TIM2 kanal 2
+	GPIO_InitStruct.GPIO_Mode = GPIO_Mode_AF;
+	GPIO_InitStruct.GPIO_Speed = GPIO_Speed_100MHz;
+	GPIO_InitStruct.GPIO_OType = GPIO_OType_PP;
+	GPIO_InitStruct.GPIO_PuPd = GPIO_PuPd_UP;
+	GPIO_Init(GPIOA, &GPIO_InitStruct);
+	
+	GPIO_PinAFConfig(GPIOA, GPIO_PinSource1, GPIO_AF_TIM2);
+    
+    TIM_ICInitTypeDef IC_InitStruct;
+    IC_InitStruct.TIM_Channel = TIM_Channel_2;
+    IC_InitStruct.TIM_ICPolarity = TIM_ICPolarity_BothEdge;
+    IC_InitStruct.TIM_ICSelection = TIM_ICSelection_DirectTI;
+    IC_InitStruct.TIM_ICFilter = 0;
+    IC_InitStruct.TIM_ICPrescaler = TIM_ICPSC_DIV1;
+    TIM_ICInit(TIM2,&IC_InitStruct);
+}
+
+void pulse_init()
+{
+    TIM_OCInitTypeDef OP_InitStruct;
+    
+    OP_InitStruct.TIM_OCMode = TIM_OCMode_PWM2;
+    OP_InitStruct.TIM_OutputState = TIM_OutputState_Enable;
+    OP_InitStruct.TIM_Pulse = 16383;
+    OP_InitStruct.TIM_OCPolarity = TIM_OCPolarity_High;
+    TIM_OC1Init(TIM2,&OP_InitStruct);
+    
+	GPIO_InitTypeDef GPIO_InitStruct;
+    
+    GPIO_InitStruct.GPIO_Pin = GPIO_Pin_0; //TIM2 kanal 2
+	GPIO_InitStruct.GPIO_Mode = GPIO_Mode_AF;
+	GPIO_InitStruct.GPIO_Speed = GPIO_Speed_100MHz;
+	GPIO_InitStruct.GPIO_OType = GPIO_OType_PP;
+	GPIO_InitStruct.GPIO_PuPd = GPIO_PuPd_NOPULL;
+	GPIO_Init(GPIOA, &GPIO_InitStruct);
+    GPIO_PinAFConfig(GPIOA,GPIO_PinSource0,GPIO_AF_TIM2);
+    TIM_SelectOnePulseMode(TIM2,TIM_OPMode_Repetitive);
+}
+
 #ifdef USE_FULL_ASSERT
 void assert_failed(uint8_t* file, uint32_t line)
 {
@@ -142,10 +187,25 @@ void debug_delay_long(void)
 
 void bt_config(void)
 {
+    write_string_SCI(USART1,"\nBT Init start\n");
     while(1)
     {
         write_SCI(USART1, read_SCI(USART3));
         debug_delay();
+    }
+    write_string_SCI(USART1,"\nBT Init done\n");
+}
+
+volatile uint32_t current = 0;
+
+void delay_us(uint32_t d)
+{
+    current = TIM_GetCounter(TIM2);
+    write_value_SCI(USART1,TIM_GetCounter(TIM2));
+    write_SCI(USART1,'d');
+    while ((TIM_GetCounter(TIM2) - current)<d)
+    {
+        
     }
 }
 
@@ -157,9 +217,18 @@ void main(void)
     write_SCI(USART1,'p');
     uint8_t t = 0;
     uint16_t offset = 110;
+    pulse_init();
     //appInit();
-    bt_config();
-	
+    //bt_config();
+    
+    
+    while(1)
+    {
+        write_SCI(USART1,'b');
+        delay_s(1);
+        //delay_us(100000000);
+        write_SCI(USART1,'a');
+	}
 	double temp = 0;
     
 	while(1)
