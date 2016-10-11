@@ -44,6 +44,10 @@
     <File Name="stm32f4xx_conf.h"/>
     <File Name="USART.c"/>
     <File Name="USART.h"/>
+    <File Name="misc.c"/>
+    <File Name="misc.h"/>
+    <File Name="NVIC.c"/>
+    <File Name="NVIC.h"/>
   </VirtualDirectory>
   <Settings Type="Executable">
     <GlobalSettings>

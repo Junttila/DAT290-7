@@ -8,7 +8,6 @@
 #include "stm32f4xx_tim.h"
 #include "USART.h"
 #include "stm32f4xx_adc.h"
-#include "stm32f4xx_dma.h"
 
 void startup(void) __attribute__((naked)) __attribute__((section(".start_section")));
 void startup (void)

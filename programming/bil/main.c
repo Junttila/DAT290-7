@@ -135,24 +135,15 @@ void IC_init()
 
 void pulse_init()
 {
-    TIM_OCInitTypeDef OP_InitStruct;
-    
-    OP_InitStruct.TIM_OCMode = TIM_OCMode_PWM2;
-    OP_InitStruct.TIM_OutputState = TIM_OutputState_Enable;
-    OP_InitStruct.TIM_Pulse = 16383;
-    OP_InitStruct.TIM_OCPolarity = TIM_OCPolarity_High;
-    TIM_OC1Init(TIM2,&OP_InitStruct);
-    
+	RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOC,ENABLE);
 	GPIO_InitTypeDef GPIO_InitStruct;
     
-    GPIO_InitStruct.GPIO_Pin = GPIO_Pin_0; //TIM2 kanal 2
-	GPIO_InitStruct.GPIO_Mode = GPIO_Mode_AF;
+    GPIO_InitStruct.GPIO_Pin = GPIO_Pin_8;
+	GPIO_InitStruct.GPIO_Mode = GPIO_Mode_OUT;
 	GPIO_InitStruct.GPIO_Speed = GPIO_Speed_100MHz;
 	GPIO_InitStruct.GPIO_OType = GPIO_OType_PP;
 	GPIO_InitStruct.GPIO_PuPd = GPIO_PuPd_NOPULL;
-	GPIO_Init(GPIOA, &GPIO_InitStruct);
-    GPIO_PinAFConfig(GPIOA,GPIO_PinSource0,GPIO_AF_TIM2);
-    TIM_SelectOnePulseMode(TIM2,TIM_OPMode_Repetitive);
+	GPIO_Init(GPIOC, &GPIO_InitStruct);
 }
 
 #ifdef USE_FULL_ASSERT
@@ -198,7 +189,7 @@ void bt_config(void)
 
 volatile uint32_t current = 0;
 
-void delay_us(uint32_t d)
+void delay_us2(uint32_t d)
 {
     current = TIM_GetCounter(TIM2);
     write_value_SCI(USART1,TIM_GetCounter(TIM2));
@@ -224,10 +215,11 @@ void main(void)
     
     while(1)
     {
-        write_SCI(USART1,'b');
-        delay_s(1);
+        GPIO_Write(GPIOC,0xffff);
+        delay_us(10);
+        GPIO_Write(GPIOC,0x0);
+        delay_ms(100);
         //delay_us(100000000);
-        write_SCI(USART1,'a');
 	}
 	double temp = 0;
     
