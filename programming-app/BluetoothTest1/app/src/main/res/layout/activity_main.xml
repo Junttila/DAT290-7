@@ -1,0 +1,96 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+   xmlns:tools="http://schemas.android.com/tools"
+   android:layout_width="match_parent"
+   android:layout_height="match_parent"
+   tools:context=".MainActivity">
+<RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+  <TextView
+       android:id="@+id/text"
+       android:layout_width="wrap_content"
+       android:layout_height="wrap_content"
+       android:textAppearance="?android:attr/textAppearanceLarge"
+       android:text="@string/Text" />
+     
+   <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:orientation="horizontal"
+      android:layout_marginTop="30dp" >
+
+   <Button
+      android:id="@+id/turnOn"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:text="@string/on" />
+
+   <Button
+      android:id="@+id/turnOff"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:text="@string/off" />
+
+   </LinearLayout>
+   
+   
+   <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:orientation="vertical"
+      android:layout_marginTop="80dp" >
+   
+	   <Button
+	      android:id="@+id/paired"
+	      android:layout_width="wrap_content"
+	      android:layout_height="wrap_content"
+	      android:text="@string/List" />
+	     
+	   <Button
+	      android:id="@+id/search"
+	      android:layout_width="wrap_content"
+	      android:layout_height="wrap_content"
+	      android:text="@string/Find" />
+
+	   <ListView
+	       android:id="@+id/listView1"
+	       android:layout_width="fill_parent"
+	       android:layout_height="200dp" >
+	
+	   </ListView>
+       <Button
+           android:id="@+id/Control"
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           android:text="@string/control" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="80dp" >
+
+	   <Button
+		   android:id="@+id/Send0"
+		   android:layout_width="wrap_content"
+		   android:layout_height="wrap_content"
+		   android:text="@string/send0" />
+	   <Button
+		   android:id="@+id/Send10000000"
+		   android:layout_width="wrap_content"
+		   android:layout_height="wrap_content"
+		   android:text="@string/send10000000" />
+       <Button
+           android:id="@+id/Send00111111"
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           android:text="@string/send00111111" />
+       <Button
+           android:id="@+id/Send10111111"
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           android:text="@string/send10111111" />
+    </LinearLayout>
+
+   </LinearLayout>
+</RelativeLayout>
+</ScrollView>
