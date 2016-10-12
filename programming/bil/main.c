@@ -115,22 +115,13 @@ void IC_init()
 {
 	GPIO_InitTypeDef GPIO_InitStruct;
     
-    GPIO_InitStruct.GPIO_Pin = GPIO_Pin_1; //TIM2 kanal 2
-	GPIO_InitStruct.GPIO_Mode = GPIO_Mode_AF;
+    GPIO_InitStruct.GPIO_Pin = GPIO_Pin_6; //TIM2 kanal 2
+	GPIO_InitStruct.GPIO_Mode = GPIO_Mode_IN;
 	GPIO_InitStruct.GPIO_Speed = GPIO_Speed_100MHz;
 	GPIO_InitStruct.GPIO_OType = GPIO_OType_PP;
 	GPIO_InitStruct.GPIO_PuPd = GPIO_PuPd_UP;
 	GPIO_Init(GPIOA, &GPIO_InitStruct);
-	
-	GPIO_PinAFConfig(GPIOA, GPIO_PinSource1, GPIO_AF_TIM2);
-    
-    TIM_ICInitTypeDef IC_InitStruct;
-    IC_InitStruct.TIM_Channel = TIM_Channel_2;
-    IC_InitStruct.TIM_ICPolarity = TIM_ICPolarity_BothEdge;
-    IC_InitStruct.TIM_ICSelection = TIM_ICSelection_DirectTI;
-    IC_InitStruct.TIM_ICFilter = 0;
-    IC_InitStruct.TIM_ICPrescaler = TIM_ICPSC_DIV1;
-    TIM_ICInit(TIM2,&IC_InitStruct);
+	   
 }
 
 void pulse_init()
@@ -142,7 +133,7 @@ void pulse_init()
 	GPIO_InitStruct.GPIO_Mode = GPIO_Mode_OUT;
 	GPIO_InitStruct.GPIO_Speed = GPIO_Speed_100MHz;
 	GPIO_InitStruct.GPIO_OType = GPIO_OType_PP;
-	GPIO_InitStruct.GPIO_PuPd = GPIO_PuPd_NOPULL;
+	GPIO_InitStruct.GPIO_PuPd = GPIO_PuPd_DOWN;
 	GPIO_Init(GPIOC, &GPIO_InitStruct);
 }
 
@@ -187,14 +178,60 @@ void bt_config(void)
     write_string_SCI(USART1,"\nBT Init done\n");
 }
 
-volatile uint32_t current = 0;
-
-void delay_us2(uint32_t d)
+void send_pulse()
 {
-    current = TIM_GetCounter(TIM2);
-    write_value_SCI(USART1,TIM_GetCounter(TIM2));
-    write_SCI(USART1,'d');
-    while ((TIM_GetCounter(TIM2) - current)<d)
+    GPIO_Write(GPIOC,0x0);
+    delay_us(2);
+    GPIO_Write(GPIOC,0xffff);
+    delay_us(10);
+    GPIO_Write(GPIOC,0x0);
+}
+
+uint16_t distance_read()
+{
+    uint32_t time = 0;
+    send_pulse();
+    while(GPIO_ReadInputDataBit(GPIOA,GPIO_Pin_6)==0)
+    {}
+    while(GPIO_ReadInputDataBit(GPIOA,GPIO_Pin_6)!=0)
+    {
+        time++;
+        delay_us(1);
+    }
+    write_value_SCI(USART1, time);
+    return time;
+}
+
+void CCR4_update(uint8_t val)
+{
+    CCR4_val = val;
+    TIM_OCInitStructure.TIM_Pulse = CCR4_val;
+    TIM_OC4Init(TIM2, &TIM_OCInitStructure);
+    TIM_OC4PreloadConfig(TIM2, ENABLE);    
+}
+void CCR3_update(uint8_t val)
+{
+    CCR3_val = val;
+    TIM_OCInitStructure.TIM_Pulse = CCR3_val;
+    TIM_OC4Init(TIM2, &TIM_OCInitStructure);
+    TIM_OC4PreloadConfig(TIM2, ENABLE);    
+}
+
+void break_test()
+{
+    CCR3_update(152);
+    CCR4_update(142);
+    delay_s(3);
+    CCR4_update(173);
+    write_SCI(USART1,'s');
+    while(distance_read()>1000)
+    {
+        delay_ms(100);
+    }
+    CCR4_update(110);
+    delay_s(5);
+    CCR4_update(142);
+    while(1)
     {
         
     }
@@ -209,18 +246,11 @@ void main(void)
     uint8_t t = 0;
     uint16_t offset = 110;
     pulse_init();
+    IC_init();
+    break_test();
     //appInit();
     //bt_config();
     
-    
-    while(1)
-    {
-        GPIO_Write(GPIOC,0xffff);
-        delay_us(10);
-        GPIO_Write(GPIOC,0x0);
-        delay_ms(100);
-        //delay_us(100000000);
-	}
 	double temp = 0;
     
 	while(1)
