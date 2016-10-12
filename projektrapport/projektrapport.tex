@@ -12,7 +12,6 @@
 \graphicspath{ {Figures/} }
 \captionsetup{justification=centering}
 
-
 \begin{document}
 
 \begin{titlepage}
@@ -25,7 +24,7 @@
 
 \vspace{20mm}
 
-{\Large \itshape{Joakim Junttila, Johanna Gudmandsen, Gustav Holst,\\Henrik Klein Moberg, Anders Berggren Sjöblom, \\[1mm] Stanisław Zwierzchowski, Carl Lundgren}}
+{\Large \itshape{Anders Berggren Sjöblom, Johanna Gudmandsen, Gustav Holst, Joakim Junttila, Henrik Klein Moberg, Carl Lundgren, Stanisław Zwierzchowski}}
 
 \vspace{10mm}
 
@@ -49,27 +48,6 @@ Godkänd  & NAMN     & DATUM         \\ \hline
 \newpage
 \noindent {\Large \bf Ordlista}
 
-\vspace{5mm} \noindent
-{\bf Potentiometer} - En elektrisk komponent som med hjälp av ett variabelt motstånd kan begränsa spänning~\cite{Potentiometer}.
-
-\vspace{5mm} \noindent
-{\bf RF-moduler} - Radiofrekvensmoduler. Är antingen sändare eller mottagare och möjliggör för radiofrekvensiell överföring~\cite{RFModule}.
-
-\vspace{5mm} \noindent
-{\bf Bluetooth-moduler} - Är antingen sändare eller mottagare och möjliggör för radiofrekvensiell överföring genom parning mellan moduler~\cite{Bluetooth}. Modul som används i detta projekt är HC-05.
-
-
-\vspace{5mm} \noindent
-{\bf Avståndsmätare} - Mäter avstånd från ett objekt med hjälp av ultraljud och dess eko~\cite{DistMeasure}. Modul som används i detta projekt är HC-SR04.
-
-\vspace{5mm} \noindent
-{\bf Oscilloskop} - Instrument som används till att mäta elektriska signaler under en viss tid~\cite{oscilloscope}.
-
-
-\vspace{5mm} \noindent
-{\bf PWM-signaler} - PWM eller Pulse Width Modulation är en moduleringsteknik som mest används för att styra mängden elektrisk ström som förs till exempelvis en motor~\cite{PWM}.
-
-
 
 \vspace{5mm} \noindent
 {\bf ADC} - Analog to digital converter, översätter analoga värden i enheten Volt till digitala värden~\cite{ADC}.
@@ -78,20 +56,41 @@ Godkänd  & NAMN     & DATUM         \\ \hline
 {\bf ARM} - En processorarkitektur~\cite{chalmersARM}.
 
 \vspace{5mm} \noindent
+{\bf Avståndsmätare} - Mäter avstånd från ett objekt med hjälp av ultraljud och dess eko~\cite{DistMeasure}. Modul som används i detta projekt är HC-SR04.
+
+\vspace{5mm} \noindent
+{\bf Bluetooth-moduler} - Är antingen sändare eller mottagare och möjliggör för radiofrekvensiell överföring genom parning mellan moduler~\cite{Bluetooth}. Modul som används i detta projekt är HC-05.
+
+\vspace{5mm} \noindent
+{\bf GPIO} - General-purpose input/output~\cite{chalmersARM}.
+
+\vspace{5mm} \noindent
+{\bf Oscilloskop} - Instrument som används till att mäta elektriska signaler under en viss tid~\cite{oscilloscope}.
+
+\vspace{5mm} \noindent
+{\bf Potentiometer} - En elektrisk komponent som med hjälp av ett variabelt motstånd kan begränsa spänning~\cite{Potentiometer}.
+
+
+\vspace{5mm} \noindent
+{\bf PWM-signaler} - PWM eller Pulse Width Modulation är en moduleringsteknik som mest används för att styra mängden elektrisk ström som förs till exempelvis en motor~\cite{PWM}.
+
+\vspace{5mm} \noindent
+{\bf RF-moduler} - Radiofrekvensmoduler. Är antingen sändare eller mottagare och möjliggör för radiofrekvensiell överföring~\cite{RFModule}.
+
+\vspace{5mm} \noindent
 {\bf UART} - Universal Asynchronous Receiver/Transmitter~\cite{chalmersARM}.
 
 \vspace{5mm} \noindent
 {\bf USART} - Universal Synchronous/Asynchronous Receiver/Transmitter~\cite{chalmersARM}.
 
-\vspace{5mm} \noindent
-{\bf GPIO} - General-purpose input/output~\cite{chalmersARM}.
+
 
 
 
 \newpage
 \section{Introduktion}
 
-Radiostyrda bilar började produceras på mitten av 60-talet~\cite{RCHistory}. Under åren har de både tävlats med samt varit en väletablerad leksak. Trots att den genomgått mindre justeringar har den radiostyrda bilens uppbyggnad i det stora hela förblivit densamma.
+Radiostyrda bilar började produceras på mitten av 60-talet~\cite{RCHistory}. Under åren har de både tävlats med samt bliit en väletablerad leksak. Trots att den genomgått mindre justeringar har den radiostyrda bilens uppbyggnad i det stora hela förblivit densamma.
 
 \subsection{Syfte}
 
@@ -101,7 +100,7 @@ Syftet med detta projekt är att uppdatera den klassiska radiostyrda bilen genom
 %Syftet med detta projekt är att uppdatera den klassiska radiostyrda bilen med hjälp av ny teknik som bluetooth. För att följaktligen erhålla en mer modern teknisk produkt.
 
 \subsection{Mål}
-Målen nedan beskriver konkret vad som uppnås med projektet.
+Projektets övergripande syfte bryts upp i delmål som mer detaljerade är angivna nedan.
 
 \begin{itemize}
 \item Den befintliga sändaren samt mottagaren som finns i handkontrollen respektive bilens elektronik byts ut mot ARM-baserade system (se Figur 1). Dessa ska vid färdig produkt kontrolleras via Bluetooth.
@@ -120,66 +119,97 @@ Målen nedan beskriver konkret vad som uppnås med projektet.
 %Projektet går ut på att ersätta delar av elektroniken i en radiostyrd bil. Sändaren samt mottagaren som finns i handkontrollen ska bytas ut till en ny handkontroll. Nya handkontrollens sändnings singnal kommer ändras till att slutligen bli  Bluetooth. I samband med singnal bytet kommer nya handkontrollen att anpassad till andara ändringar som ska genomföras. Andra ändringar som ker berör bland annat skälva bilen. Bilens elektronik ska bytas ut mot ARM-baserade system. Vidare ska en kontrollapplikation implementeras i bilen med hjälp av ett antal avståndsmätare. Därefter ska bilen programeras så den självständigt ska kunna köra rakt fram i högsta möjliga takt och bromsa in helt på ett avstånd av maximalt 1 cm från en vägg. Sista steget i arbetsprosessen är att med hjälp av Bluetooth signalen utveckla en aplickation som ska kunna styra bilen och fungera som en fullfjädrad handkontroll.
 
 \subsection{Arbetsmetod}
-Nedan ges en detaljerad förklaring till hur projektet utförts. 
+Projektet utförs med vissa hjälpmedel. Ett versionshanteringssystem, Git, används för att enkelt kunna lagra filer mellan olika datorer. Applikationen Slack utnyttjas för att möjliggöra för strukturerad kommunikation och utöver detta sker möten en gång i veckan för att varje projektgruppsmedlem ska veta vad som sker. Koder till programmen är för samtliga komponenter förutom Androidapplikationen skrivna i C med utvecklingsmiljön Codelite. För att kunna överföra kod till datorenheterna som ersätter mottagare och sändare utnyttjas ETERM. En kompilerad kod exekveras då och genom direktkoppling till en port på respektive enhet kan koden sparas. Hjälpfunktioner till koden har erhållts från datorenheternas egna programbibliotek samt STMicroelectronics.
 
-\subsubsection{Projektledning}
-Projektet utförs med vissa hjälpmedel. Ett versionshanteringssystem, Git, används för att enkelt kunna lagra filer mellan olika datorer. Applikationen Slack utnyttjas för att möjliggöra för strukturerad kommunikation och utöver detta sker möten en gång i veckan för att varje projektgruppsmedlem ska veta vad som sker. Koden till programmen är för samtliga komponenter förutom Androidapplikationen skriven i C med utvecklingsmiljön Codelite. Applikationen är istället utvecklad i Java genom Eclipse och överförd till Android Studio, en utvecklingsmiljö för Andriod.
-
-\subsubsection{Uppmätning av styrsignaler}
-Projektet inleds med att mäta upp befintliga styrsignaler. För att kunna återskapa signalerna som skickas från den ursprungliga mottagaren till bilens styrelektronik kopplas ett kretskort, Adapter Maverick, till bilens egna kontrollenhet, MRX-242. Kretskortet har möjlighet att separera mottagarens signaler och kopplat till ett oscilloskop går det att urskilja specifika signaler så de tydligt kan mätas upp. Signalerna är av typen PWM och deras värde bestäms av medelspänningen. 
-
-
-\subsubsection{Konfiguration av ny mottagare}
-En MD407-enhet ersätter mottagaren i bilen. Kanalerna CH3 och CH4 på det integrerade timer-kretskortet, TIM2, konfigureras för att hanteras av portarna PA2 respektive PA3 i C-koden. Koden, utvecklad i Codelite, initierar CH3 till att reglera motorstyrningen och CH4 till att kontrollera rattutslagen. Följden av detta blir att portarna PA2 och PA3 i den ersättande mottagaren kopplas direkt till bilens styrelektronik, en kabel till motorn och en till styrservot. 
+\subsubsection{Ersättning av mottagare}
+Projektet inleds med att mäta upp befintliga styrsignaler. För att kunna återskapa signalerna som skickas från den ursprungliga mottagaren till bilens styrelektronik mättes signalerna upp med hjälp av ett oscilloskop. Det som möjliggjorde detta var ett tillhandahållet kretskort som kopplat till bilens kontrollenhet kunde separera signalerna. Bilens samtliga funktioner testades och utslagen blev de värden som användes till verifiering för korrekt replikering av styrsignaler. Signalerna är typen PWM och både dess cykeltid och frekvens mättes upp i motorns och rattutslagens maximala lägen. 
 
 \vspace{5mm} \noindent
-Information tas emot genom en mottagande modul. När mottagarmodulen erhåller ett meddelande triggas en funktion i koden. Denna ska undersöka vilket kommando som ska utföras samt till vilken grad detta skall göras enligt bitarnas anvisningar i Figur 2. Värdet 1 eller 2 på kommandobitarna leder till att bilens motor eller styrservo påverkas i angiven ordning. Tar mottagaren exempelvis emot kommandot att bilen ska ändra motorhastigheten skickas denna information till motorns styrelektronik. Den nya hastigheten beror på storleken av värdet. Värdet på meddelandet från sändaren skickas som en PWM-signal till den begärda styrelektroniken i bilen som fångar upp dessa under en period(se exempel i Figur 3), uppfattar värdet och agerar. Detta arbete har förenklats med hjälp av kodbibliotek från STMicroelectronics som innehåller funktioner för att initiera PWM-genererande. Observera att bilen endast svarar korrekt på värden där PWM-signalen är hög under ungefär 8\%-12.4\% av perioden, en högre eller lägre andel än detta kan få elektroniken att överbelastas. Värden i meddelanden mellan RF-modulerna kan antas från 0-63, utifrån 6 bitar, och TIM2 konfigureras därför till att addera en offset av 110 innan PWM-signalen skickas till styrelektroniken för att möjliggöra för korrekt avläsning.
-
-\begin{figure}[H]
-\includegraphics[scale=1]{aByteComVal.jpg}
-\centering
-\caption{\it Specifikationer av byten som seriellt skickas från sändare till mottagare.}
-\end{figure} 
-
-\begin{figure}[H]
-\includegraphics[scale=1]{PWMsignals.jpg}
-\centering
-\caption{\it Exempel på möjliga PWM-signaler. Om byten indikerar att motorn ska påverkas kommer den i fall A och B köra i högsta fart baklänges respektive framlänges. I fall C hamnar bilen i neutralt läge och står då stilla. Signalen i fall D tolkas ej av bilens styrelektronik då det ligger utanför dess avläsningsintervall.}
-\end{figure} 
+Den nya mottagaren återskapar dessa signaler. En MD407-enhet ersätter den ursprungliga mottagaren och dess systemklocka utnyttjas för att skicka rätt styrsignaler till korrekt styrelektronik. Dessa värden testas utförligt för att kunna säkerställa att de replikerande styrsignalerna är identiska i jämförelse med de ursprungliga.
 
 
+%Mottagaren ersätts med en ny datorenhet, MD407. Denna erhåller seriellt bytes som skickas från en sändare (se Figur 2). Byten analyseras och dess systemtimer utnyttjas för skicka rätt signal till korrekt styrelektronik.
 
-\subsubsection{Konfiguration av ny sändare}
-En datorenhet, MD407, ersätter sändaren. Potentiometern kopplas enligt anvisningar från Figur 4 och även sedan till MD407 via en flatkabel för strömförsörjning enligt tidigare nämnd figur. Kablarna som kopplas till datorenheten sätts på PC1-porten och PC2-porten på MD407 i angiven ordning från figuren. De reglerar hastigheten respektive rattutslaget. Initiering av detta skrivs i C med utvecklingsmiljön Codelite.
+%Enheten MD407 användes och dess systemtimer utnyttjades för att möjliggöra för att rätt signal skickas till rätt del i styrelektroniken. När mottagaren seriellt erhåller värden är detta via bytes (se Figur 2). Dessa analyseras i datorenheten 
+
+%kopplas ett kretskort, Adapter Maverick, till bilens egna kontrollenhet, MRX-242. Kretskortet har möjlighet att separera mottagarens signaler och kopplat till ett oscilloskop går det att urskilja specifika signaler så de tydligt kan mätas upp. Intervall för frekvens och cykeltid identifierades och specfierades enligt motorns och rattutslagens olika lägen.
+
+%Signalerna är av typen PWM och deras värde bestäms av medelspänningen. 
 
 
-\begin{figure}[H]
-\includegraphics[scale=0.05]{PotentiometerMedRitning.jpg}
-\centering
-\caption{\it En potentiometer. A, B och C representerar kolumner. B leder ström och kopplas till A respektive C med kort kabel såsom bilden visar. För att få värden till datorenheten kopplas även en kabel från A, rad 1, och C, rad 4, till MD407}
-\end{figure} 
+%\subsubsection{Konfiguration av ny mottagare}
+%Mottagaren i bilen ersätts först med en ny datorenhet. Enheten MD407 används här för att byta ut den ursprungliga mottagaren. Systemets integrerade klocka användes för att replikera de ursprungliga signalerna som tidigare mätts upp. Med hjälp a pulsbredsmodulering kunde dessa
 
-\subsubsection{Kommunikation mellan sändare och mottagare}
-Båda datorenheterna kopplas först samman med RF-moduler. Med hjälp av programmet ETERM kan USART genom USB koppla två bärbara datorer till sändare och mottagare för att ladda upp kompilerad C-kod till MD407-enheterna som då kan utföra operationer utifrån koden. PA0-porten på sändaren initieras till kretskortet UART4 som i sin tur kopplas till en RF-sändare på DATA-pinnen. UART4 kan då skicka data via PA0 till RF-modulen. En identisk procedur görs på mottagaren men på PB11-porten med kretskortet USART3 och en RF-mottagare. Resterande inkopplingar av RF-modulerna görs enligt Figur 5. Koden påbörjar därefter att seriellt skicka bytes med information från sändarens potentiometer till mottagarens enhet för avläsning. Viktigt är att koden initierar bytes att skickas från sändaren ungefär 100 gånger i sekunden för att minska störningar och få värdeövergångarna att bli så jämna som möjligt. Stöd från hjälpfunktioner i bibliotek möjliggör för att kunna skriva till PA0-porten och läsa från PB11-porten. Koden är utvecklad i Codelite.
+
+%En MD407-enhet ersätter mottagaren i bilen. På enheten finns ett integrerat kretskort som hanterar systemets timer. Denna konfigureras till att hantera utdatan som direkt är kopplad till bilens styrelektronik. 
+%
+%Information erhålls en mottagande modul. Mottagaren tar seriellt emot bytes 
+
+%En MD407-enhet ersätter mottagaren i bilen. Kanalerna CH3 och CH4 på det integrerade timer-kretskortet, TIM2, konfigureras för att hanteras av portarna PA2 respektive PA3 i C-koden. Koden, utvecklad i Codelite, initierar CH3 till att reglera motorstyrningen och CH4 till att kontrollera rattutslagen. Följden av detta blir att portarna PA2 och PA3 i den ersättande mottagaren kopplas direkt till bilens styrelektronik, en kabel till motorn och en till styrservot. 
+
+%\vspace{5mm} \noindent
+%Information tas emot genom en mottagande modul. När mottagarmodulen erhåller ett meddelande triggas en funktion i koden. Denna ska undersöka vilket kommando som ska utföras samt till vilken grad detta skall göras enligt bitarnas anvisningar i Figur 2. Värdet 1 eller 2 på kommandobitarna leder till att bilens motor eller styrservo påverkas i angiven ordning. Tar mottagaren exempelvis emot kommandot att bilen ska ändra motorhastigheten skickas denna information till motorns styrelektronik. Den nya hastigheten beror på storleken av värdet. Värdet på meddelandet från sändaren skickas som en PWM-signal till den begärda styrelektroniken i bilen som fångar upp dessa under en period(se exempel i Figur 3), uppfattar värdet och agerar. Detta arbete har förenklats med hjälp av kodbibliotek från STMicroelectronics som innehåller funktioner för att initiera PWM-genererande. Observera att bilen endast svarar korrekt på värden där PWM-signalen är hög under ungefär 8\%-12.4\% av perioden, en högre eller lägre andel än detta kan få elektroniken att överbelastas. Värden i meddelanden mellan RF-modulerna kan antas från 0-63, utifrån 6 bitar, och TIM2 konfigureras därför till att addera en offset av 110 innan PWM-signalen skickas till styrelektroniken för att möjliggöra för korrekt avläsning.
+
+%\begin{figure}[H]
+%\includegraphics[scale=1]{aByteComVal.jpg}
+%\centering
+%\caption{\it Specifikationer av byten som seriellt skickas från sändare till mottagare.}
+%\end{figure} 
+
+%\begin{figure}[H]
+%\includegraphics[scale=1]{PWMsignals.jpg}
+%\centering
+%\caption{\it Exempel på möjliga PWM-signaler. Om byten indikerar att motorn ska påverkas kommer den i fall A och B köra i högsta fart baklänges respektive framlänges. I fall C hamnar bilen i neutralt läge och står då stilla. Signalen i fall D tolkas ej av bilens styrelektronik då det ligger utanför dess avläsningsintervall.}
+%\end{figure} 
+
+
+\subsubsection{Ersättning av sändare}
+En datorenhet, MD407, ersätter sändaren. Reglage för styrning implementas med hjälp av en potentiometer, vilken kopplas till datorenheten. Denna är då strömförsörjande till potentiometern. Värdena datorenheten erhåller från potentiometern översätts från analoga till digitala genom en integrerad ADC. Detta implementeras med hjälp av stödfunktioner.
+
+
+
+
+%\begin{figure}[H]
+%\includegraphics[scale=0.05]{PotentiometerMedRitning.jpg}
+%\centering
+%\caption{\it En potentiometer. A, B och C representerar kolumner. B leder ström och kopplas till A respektive C med kort kabel såsom bilden visar. För att få värden till datorenheten kopplas även en kabel från A, rad 1, och C, rad 4, till MD407}
+%\end{figure} 
+
+\subsubsection{Fastställande av kommunikation mellan datorenheter}
+Datorenheterna kommunicerar via en radiolänk. Primärt kopplas en radiofrekvensiell mottagare och sändare in på respektive enhet för att möjliggöra för ett informationflöde över 433MHz-bandet. När systemet fungerar med RF-modulerna ersätts de av Bluetooth-moduler som istället kommunicerar över en frekvens av 2.4GHz. Kommunikation över Bluetooth kräver initiering av roller till modulerna vilket görs genom AT-kommandon. 
+
+\vspace{5mm} \noindent
+Radiolänken verifieras kontinuerligt. Mottagar- och sändarmodul kopplas om vid varje tillfälle för att erhålla det konstanta flödet av verifiering. Utöver detta används ett oscilloskop för att kunna säkerställa hur kommunikationen mellan mottagar- och sändarmodul fungerar. Den kopplas då till sändaren respektive mottagaren för att testa att ett värde i sändarnoden motsvarar korrekt värde i mottagarnoden. Vid tillfällen då felsökning genomförts på grund av felaktiga signaler till mottagarmodulen har enheterna direktkopplats via en kabel för att lättare kunna verifiera felet.
+
+
+ %samman med RF-moduler. Med hjälp av programmet ETERM kan USART genom USB koppla två bärbara datorer till sändare och mottagare för att ladda upp kompilerad C-kod till MD407-enheterna som då kan utföra operationer utifrån koden. PA0-porten på sändaren initieras till kretskortet UART4 som i sin tur kopplas till en RF-sändare på DATA-pinnen. UART4 kan då skicka data via PA0 till RF-modulen. En identisk procedur görs på mottagaren men på PB11-porten med kretskortet USART3 och en RF-mottagare. Resterande inkopplingar av RF-modulerna görs enligt Figur 5. Koden påbörjar därefter att seriellt skicka bytes med information från sändarens potentiometer till mottagarens enhet för avläsning. Viktigt är att koden initierar bytes att skickas från sändaren ungefär 100 gånger i sekunden för att minska störningar och få värdeövergångarna att bli så jämna som möjligt. Stöd från hjälpfunktioner i bibliotek möjliggör för att kunna skriva till PA0-porten och läsa från PB11-porten. Koden är utvecklad i Codelite.
 
 %LÄGG TILL FIGUR
-\vspace{5mm} \noindent
-En Bluetooth-modul ersätter RF-modulerna. För att kunna möjliggöra meddelanden över Bluetooth kopplas en sådan modul in efter det är verifierat att systemet fungerar med de radiofrekvensiella modulerna. Kablar kopplas till samma portar som RF-modulerna och konfigureras sedan till master respektive slave genom AT-kommandon till modulerna separat. Detta motsvarar sändande respektive mottagande modul. Den sändande modulen paras med den mottagande när de båda har ström och möjliggör då för seriell sändning av bytes mellan dem. Konfigurationerna för master och slave sparas och behöver därför ej göras om vid nästa uppstart.
+%\vspace{5mm} \noindent
+%En Bluetooth-modul ersätter RF-modulerna. För att kunna möjliggöra meddelanden över Bluetooth kopplas en sådan modul in efter det är verifierat att systemet fungerar med de radiofrekvensiella modulerna. Kablar kopplas till samma portar som RF-modulerna och konfigureras sedan till master respektive slave genom AT-kommandon till modulerna separat. Detta motsvarar sändande respektive mottagande modul. Den sändande modulen paras med den mottagande när de båda har ström och möjliggör då för seriell sändning av bytes mellan dem. Konfigurationerna för master och slave sparas och behöver därför ej göras om vid nästa uppstart.
 
-\begin{figure}[H]
-\includegraphics[scale=0.06]{RF-transmitter.jpg}
-\includegraphics[scale=0.05]{RF-receiver.jpg}
-\centering
-\caption{\it 4-pin RF-sändaren (vänster) och 3-pin RF-mottagare (höger). GND kopplas till datorenheternas GPIO-portar för jord och VCC till deras 5V-portar.}
-\end{figure} 
+%\begin{figure}[H]
+%\includegraphics[scale=0.06]{RF-transmitter.jpg}
+%\includegraphics[scale=0.05]{RF-receiver.jpg}
+%\centering
+%\caption{\it 4-pin RF-sändaren (vänster) och 3-pin RF-mottagare (höger). GND kopplas till datorenheternas GPIO-portar för jord och VCC till deras 5V-portar.}
+%\end{figure} 
 
 
 \subsubsection{Komplettering med applikation som sändare}
-Mobilapplikationen ska vara funktionell på en Androidtelefon och kopplas till den radiostyrda bilen via Bluetooth. Två applikationer konstrueras separat; en GUI, grafiskt användargränssnitt, med olika reglage för att styra hastighet och riktning, samt en applikation som kontrollerar Bluetooth. Sedan sammanställs dessa till en applikation för att genom den kunna koppla sin Bluetooth-modul med MD407-mottagaren och på så vis skicka värden till bilen.
+Mobilapplikationen följer ett antal specifikationer. Den ska vara funktionell på en Androidtelefon och kopplas till den radiostyrda bilen via Bluetooth. För att möjliggöra för detta är koden utvecklad i Java genom Eclipse och har sedan överförts till Android Studio, en utvecklingsmiljö för Andriod. Detta utökning av systemet har verifierats genom att testa att samtliga funktioner fungerar och att reglagen på applikationen ger rätt resultat hos bilens styrelektronik. 
+
+
+%först konstruerat två applikationer separat. Den ena är det grafiska användargränssnittet
+
+%Två applikationer konstrueras separat; en GUI, grafiskt användargränssnitt, med olika reglage för att styra hastighet och riktning, samt en applikation som kontrollerar Bluetooth. Sedan sammanställs dessa till en applikation för att genom den kunna koppla sin Bluetooth-modul med MD407-mottagaren och på så vis skicka värden till bilen.
+
+
+
 
 \newpage
 \section{Teknisk beskrivning}
-I denna sektion förklaras den tekniska delen av projektet. En bakgrund beskriver hur systemet fungerade utsprungligen. Detta följs av en översiktlig text över det ersättande systemet samt en del med mer detaljerande beskrivning över de separata delsystemen.
+I denna sektion förklaras den tekniska delen av projektet. En bakgrund beskriver hur systemet fungerade utsprungligen. Detta följs av en översiktlig text över det ersättande systemet samt en sektion med mer detaljerande beskrivning över de separata delsystemen.
 
 
 \subsection{Teknisk bakgrund}
@@ -213,16 +243,26 @@ Figur 7 visar en sammanfattning över systemet med en applikation som sändare. 
 
 
 \subsection{Delsystem}
-Denna del av texten beskriver detaljerat hur systemets delsystem fungerar.
+Denna del av texten beskriver detaljerat hur systemets delsystem fungerar. Dess ordning baseras på flödet av information från sändare till mottagare fram till bilens styrelektronik.
 
-\subsubsection{Specifikation av nya styrsignaler}
-Bilen uppfattar PWM-signaler 72 gånger i sekunden. De ursprungliga signalerna skickas på en frekvens av 72Hz, i mening att replikera dessa ges TIM2s räknare en frekvens av 100kHz. Ett antal klockcykler divideras med denna frekvens och kvoten ska då hamna nära 1/72. Antalet klockcykler är således bestämda till 1388. Resultatet av detta är att de nya PWM-signalerna skickas 72 gånger i sekunden till bilen som styrelektroniken läser av.
 
-\vspace{5mm} \noindent
-PWM-signalerna kan endast avläsas korrekt av styrelektroniken på specifika värden. I varje period under en PWM-signal kan spänningen antingen vara 0, låg, eller 1, hög. Det som bilens styrelektronik svarar på är hur stor del av perioden signalen är hög (se Figur 3),  alternativt hur stor del av signalen som sänder 3.4V. Medelspänningen vid styrning och hastighet när styrningen är maximalt åt vänster respektive höger och hastigheten är maximalt bakåt respektive framåt går från 269mV till 423mV. Bilen når således högsta möjliga vänsterlutning samt fart bakåt vid 269mV, neutralt läge vid 348mV och maximal högerlutning samt fart framåt vid 423mV. Genom att dividera dessa värden enskilt med den maximala spänningen, som kan skickas från pinnarna på MD407, och sedan multiplicera med perioden, erhålls det värde bilens styrelektronik läser av. Detta resulterar i att bilen lyssnar på värden mellan 110-173 klockcykler under en period av 1388 klockcykler, det vill säga en andel av ungefär 8\%-12.4\% av hög signal. Detta styrs i bilen med hjälp av datorenhetens tidsmekanismer och dess standardbibliotek.
+
+
+\subsubsection{Sändare: MD407-enhet via Bluetooth}
+Den sändande datorenheten MD407 skickar värden från potentiometern till den mottagande enheten. Sändaren försörjer dess inkopplade potentiometer (se Figur XX) med ström och läser konstant av utmatningsportarna för denna. På datorenheten finns en integrerad ADC, vilken tar emot värdena från potentiometerns och översätter dessa från analoga till digitala värden. Det 8-bitars värde som skickas mellan sändare och mottagare ställs in enligt specifikationer. Ändras exempelvis vridkontakten på potentiometern för motorn ska kommandot initieras till rätt värde så att mottagaren i sin tur sänder informationen till rätt del i bilens styrelektronik. De 6 minst signifikanta bitarna beror på värdet datorenheten erhåller från potentiometern och tillsammans med kommandot skickas det seriellt från sändarens Bluetooth-modul och avläses i mottagarens.
+
+%Potentiometern kopplas enligt anvisningar från Figur 4 och även sedan till MD407 via en flatkabel för strömförsörjning enligt tidigare nämnd figur. Kablarna som kopplas till datorenheten sätts på PC1-porten och PC2-porten på MD407 i angiven ordning från figuren. De reglerar hastigheten respektive rattutslaget. Initiering av detta skrivs i C med utvecklingsmiljön Codelite.
+
+%De tre kolumnerna av pinnar som finns i mitten på potentiometern(se Figur 2) använts till olika ändamål. Den mittersta kolumnen möjliggör för ström, därav får de vridbara kontakterna på potentiometern ström genom de korta sladdarna mellan strömkolumen till respektive vridkontakt. Sladden från den sista kolumnen på samma rad kopplat till MD407 ger värden konstant till datorenheten. På denna enhet finns en integrerad ADC. Denna tar emot värdena från portarna PC1 samt PC2 och översätter det till digitala värden. Genom RF-moduler kan de nya datorenheterna kommunicera. Resultatet skickas från sändarens RF-modul en byte åt gången 100 gånger i sekunden till mottagarens RF-modul. Specifikationerna som följs är att de första 2 bitarna indikerar kommandot och de resterande 6 bitarna med vilket värde kommandot ska utföras. 
+
+\begin{figure}[H]
+\includegraphics[scale=0.05]{Potentiometer.jpg}
+\centering
+\caption{\it En potentiometer.}
+\end{figure} 
 
 \subsubsection{Sändare: Androidapplikation via Bluetooth}
-Androidapplikationen agerar som handkontroll. Denna skickar bytes seriellt till bilens dator via en Bluetooth-länk. Detta följer samma protokoll som tidigare nämnts där de 2 mest signifikanta bitarna i varje byte bestämmer vilken sorts signal som ska ändras och de resterande bitarna bestämmer med vilket värde detta ska ske. Mobilapplikationen har på skärmen virtuella reglage (se Figur 8) som ska emulera ordinarie handkontrollens analoga funktion så att exempelvis hastighetsövergången är så jämn som möjligt.
+Androidapplikationen agerar som handkontroll. Detta följer samma protokoll som tidigare nämnts där de 2 mest signifikanta bitarna i varje byte bestämmer vilken sorts signal som ska ändras och de resterande bitarna bestämmer med vilket värde detta ska ske. Mobilapplikationen har på skärmen virtuella reglage (se Figur XX) som ska emulera ordinarie handkontrollens analoga funktion så att exempelvis hastighetsövergången är så jämn som möjligt. Denna skickar bytes seriellt till bilens dator via sin integrerade Bluetooth-modul.
 
 \begin{figure}[H]
 \includegraphics[scale=0.2]{applikation1.png}
@@ -231,15 +271,14 @@ Androidapplikationen agerar som handkontroll. Denna skickar bytes seriellt till 
 \caption{\it Applikationens virtuella reglage (höger) samt applikationens Bluetooth-gränssnitt (vänster).}
 \end{figure} 
 
-\subsubsection{Sändare: MD407-enhet via Blluetooth}
-Den sändande datorenheten MD407 skickar värden från potentiometern till den mottagande enheten. Sändaren försörjer dess inkopplade potentiometer med ström och läser konstant av PC1-porten och PC2-porten som i metoden nämndes vara kopplade till potentiometerns utmatningar. På datorenheten finns en integrerad ADC, vilken tar emot värdena från potentiometerns utmatningar och översätter dessa till digitala värden. Resultatet skickas seriellt i bytes från sändarens Bluetooth-modul och avläses i mottagarens.
-
-
-%De tre kolumnerna av pinnar som finns i mitten på potentiometern(se Figur 2) använts till olika ändamål. Den mittersta kolumnen möjliggör för ström, därav får de vridbara kontakterna på potentiometern ström genom de korta sladdarna mellan strömkolumen till respektive vridkontakt. Sladden från den sista kolumnen på samma rad kopplat till MD407 ger värden konstant till datorenheten. På denna enhet finns en integrerad ADC. Denna tar emot värdena från portarna PC1 samt PC2 och översätter det till digitala värden. Genom RF-moduler kan de nya datorenheterna kommunicera. Resultatet skickas från sändarens RF-modul en byte åt gången 100 gånger i sekunden till mottagarens RF-modul. Specifikationerna som följs är att de första 2 bitarna indikerar kommandot och de resterande 6 bitarna med vilket värde kommandot ska utföras. 
-
 \subsubsection{Mottagare: MD407-enhet}
-%Byt it till: ((((generisk Bluetooth-modul som är kopplad till USART1-porten))) när bluetooth kommer
-Signalerna som sändaren skickar hanteras av mottagarens datorenhet. När programmet på denna dator påbörjas måste datorn initialt skicka PWM-signaler som motsvarar neutralt läge för drivmotorn i en kort stund innan övriga signaler kan sändas. Efter detta kan mottagaren ta emot bytes från sändaren genom sin Blluetooth-mottagare, samt skicka PWM-signaler till bilens styrelektronik. Byten analyseras då i mening att skicka en PWM-signal till korrekt elektronik i bilen. Som tidigare nämnts har de 6 minst signifikanta bitarna ett värde mellan 0-63 när mottagaren får dem. Till detta adderas en offset av 110 vilket gör att värdet istället kommer befinna sig i intervallet 110-173. Detta värde motsvarar andelen av perioden 1388 där PWM-signalen till bilens styrelektronik kommer vara hög, som i sin tur motsvarar en viss medelspänning bilens styrelektronik direkt agerar på. Bilen svarar därefter med korrekt funktionalitet. Syftar kommandot exempelvis på motorn (se Figur 9) kommer bilen åka i högsta möjliga hastighet bakåt vid värdet 110. Farten minskar sen vid högre värden och bilen når neutralt läge vid 142. Värden över detta upp till 173 får bilen att öka farten. Uppfattar bilen värden utanför detta intervall kan en överbelastning av bilens elektronik ske. 
+Signalerna som sändaren skickar hanteras av mottagarens datorenhet. När programmet på denna dator påbörjas måste datorn initialt skicka PWM-signaler som motsvarar neutralt läge för drivmotorn i en kort stund innan övriga signaler kan sändas. Efter detta börjar mottagaren seriellt ta emot bytes från sändaren genom sin Blluetooth-mottagare. Mottagaren startar även PWM-signalsgenerering till bilens styrelektronik. Varje mottagen byte analyseras då i mening att skicka en PWM-signal till korrekt elektronik i bilen. I Figur XX visas specifikationen för en sådan byte. De 2 mest signifikanta bitarna indikerar till vilken del i styrelektroniken de resterande 6 bitarnas värde ska till. De 6 minst signifikanta bitarna kommer ha ett värde mellan 0-63 när mottagaren får dem. Till detta adderas en 110 vilket gör att värdet istället kommer befinna sig i intervallet 110-173. Syftar kommandot exempelvis på motorn (se Figur XX) kommer bilen åka i högsta möjliga hastighet bakåt vid värdet 110. Farten minskar sen vid högre värden och bilen når neutralt läge vid 142. Värden över detta upp till 173 får bilen att öka farten. Uppfattar bilen värden utanför detta intervall kan en överbelastning av bilens elektronik ske. Detta värde skickas som PWM-signal till bilens styrelektronik som agerar efter det.
+
+\begin{figure}[H]
+\includegraphics[scale=1]{aByteComVal.jpg}
+\centering
+\caption{\it Specifikationer av byten som seriellt skickas från sändare till mottagare.}
+\end{figure} 
 
 %Utöver detta kan en kontrollapplikation påbörjas(FORTSÄTT VID MER INFO). 
 
@@ -254,6 +293,23 @@ Signalerna som sändaren skickar hanteras av mottagarens datorenhet. När progra
 
 %Datorn i bilen tar då emot ett kommandokod från Bluetooth-länken och analyserar detta i mening att specificera vilket kommando de två bitarna syftar på ska utföras. PWM-signalerna ändras sedan efter värdet på kommandot, de sex minst signifikanta bitarna, eller påbörjar kontrollapplikationen för demonstration. Motorerna tar emot PWM-signalerna och ger utslag beroende på deras medelspänning.
 
+\subsubsection{Specifikation av nya styrsignaler}
+%Bilen uppfattar PWM-signaler 72 gånger i sekunden. De ursprungliga signalerna skickas på en frekvens av 72Hz, i mening att replikera dessa ges TIM2s räknare en frekvens av 100kHz. Ett antal klockcykler divideras med denna frekvens och kvoten ska då hamna nära 1/72. Antalet klockcykler är således bestämda till 1388. Resultatet av detta är att de nya PWM-signalerna skickas 72 gånger i sekunden till bilen som styrelektroniken läser av.
+
+Bilens styrelektronik erhåller PWM-signaler från mottagaren. Under en period av klockcykler skickas delvis maximal spänning och delvis ingen spänning alls. Det antal klockcykler som skickar maximal spänning motsvarar det värde mottagaren erhållt från sändaren. Det som styrelektroniken då svarar på är hur stor andel av perioden som hög spänning mäts upp (se exempel i Figur XX). Denna procentenhet motsvarar en medelspänning som bilens styrelektronik direkt reagerar på. Intervallet som elektroniken i detta projekt svarar på är en andel på ungefär 8\%-12.4\%, motsvarande en medelspänning på 269mV-423mV. Det förstnämnda värdet ger den maximala vänsterlutningen eller den högsta hastigheten bakåt beroende på vilket kommando som informationen från sändaren syftar på. Bilen kommer istället nå sin maximala högerlutning respektive högsta hastighet framåt om värdet är det sistnämnda. Intervallets mittersta värde ger ett neutralt läge i båda fallen.
+
+
+\begin{figure}[H]
+\includegraphics[scale=1]{PWMsignals.jpg}
+\centering
+\caption{\it Exempel på möjliga PWM-signaler. Om kommandot indikerar motorpåverkning kommer den i fall A och B köra i högsta fart baklänges respektive framlänges. I fall C hamnar bilen i neutralt läge och står då stilla. Signalen i fall D tolkas ej korrekt av bilens styrelektronik då det ligger utanför dess avläsningsintervall.}
+\end{figure} 
+
+%\vspace{5mm} \noindent
+%PWM-signalerna kan endast avläsas korrekt av styrelektroniken på specifika värden. I varje period under en PWM-signal kan spänningen antingen vara 0, låg, eller 1, hög. Det som bilens styrelektronik svarar på är hur stor del av perioden signalen är hög (se Figur 3),  alternativt hur stor del av signalen som sänder 3.4V. Medelspänningen vid styrning och hastighet när styrningen är maximalt åt vänster respektive höger och hastigheten är maximalt bakåt respektive framåt går från 269mV till 423mV. Bilen når således högsta möjliga vänsterlutning samt fart bakåt vid 269mV, neutralt läge vid 348mV och maximal högerlutning samt fart framåt vid 423mV. Genom att dividera dessa värden enskilt med den maximala spänningen, som kan skickas från pinnarna på MD407, och sedan multiplicera med perioden, erhålls det värde bilens styrelektronik läser av. Detta resulterar i att bilen lyssnar på värden mellan 110-173 klockcykler under en period av 1388 klockcykler, det vill säga en andel av ungefär 8\%-12.4\% av hög signal. Detta styrs i bilen med hjälp av datorenhetens tidsmekanismer och dess standardbibliotek.
+
+%\vspace{5mm} \noindent
+%Information tas emot genom en mottagande modul. När mottagarmodulen erhåller ett meddelande triggas en funktion i koden. Denna ska undersöka vilket kommando som ska utföras samt till vilken grad detta skall göras enligt bitarnas anvisningar i Figur 2. Värdet 1 eller 2 på kommandobitarna leder till att bilens motor eller styrservo påverkas i angiven ordning. Tar mottagaren exempelvis emot kommandot att bilen ska ändra motorhastigheten skickas denna information till motorns styrelektronik. Den nya hastigheten beror på storleken av värdet. Värdet på meddelandet från sändaren skickas som en PWM-signal till den begärda styrelektroniken i bilen som fångar upp dessa under en period(se exempel i Figur 3), uppfattar värdet och agerar. Detta arbete har förenklats med hjälp av kodbibliotek från STMicroelectronics som innehåller funktioner för att initiera PWM-genererande. Observera att bilen endast svarar korrekt på värden där PWM-signalen är hög under ungefär 8\%-12.4\% av perioden, en högre eller lägre andel än detta kan få elektroniken att överbelastas. Värden i meddelanden mellan RF-modulerna kan antas från 0-63, utifrån 6 bitar, och TIM2 konfigureras därför till att addera en offset av 110 innan PWM-signalen skickas till styrelektroniken för att möjliggöra för korrekt avläsning.
 
 
 
@@ -333,13 +389,13 @@ Mindre förändringar har under projektets gång skett. Då ersättandet av kont
 
 
 \newpage
-\section{Slutsats och diskussion}
+\section{Diskussion och Slutsats}
 %TA MED ATT DET TOG LÄNGRE TID BC FEL I BIBLIOTEK, STYRSERVO SÖNDER
 
 
 \newpage
 %To references
-\bibliographystyle{IEEEtran}
+\addcontentsline{toc}{section}{Bibliography}\bibliographystyle{IEEEtran}
 \bibliography{referenserRapport}
 
 
