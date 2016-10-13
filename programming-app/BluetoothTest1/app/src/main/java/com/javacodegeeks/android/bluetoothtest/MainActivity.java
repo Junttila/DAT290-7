@@ -31,6 +31,7 @@ public class MainActivity extends Activity {
     private Button findBtn;
     private Button send0Btn;
     private Button send00111111Btn;
+    private Button controlBtn;
     private OutputStream OutStream;
     private BluetoothAdapter myBluetoothAdapter;
     private BluetoothSocket socket;
@@ -39,7 +40,7 @@ public class MainActivity extends Activity {
     private Set<BluetoothDevice> pairedDevices;
     private ListView myListView;
     private ArrayAdapter<String> BTArrayAdapter;
-  
+
    @Override
    protected void onCreate(Bundle savedInstanceState) {
       super.onCreate(savedInstanceState);
@@ -117,6 +118,16 @@ public class MainActivity extends Activity {
 				  send00111111(v);
 			  }
 		  });
+
+          controlBtn = (Button)findViewById(R.id.Control);
+          controlBtn.setOnClickListener(new OnClickListener() {
+
+              @Override
+              public void onClick(View v) {
+                  // TODO Auto-generated method stub
+                  control(v);
+              }
+          });
 
 	      myListView = (ListView)findViewById(R.id.listView1);
 	
@@ -207,37 +218,50 @@ public class MainActivity extends Activity {
             sendIntent.putExtra("send0bytes",0);
         }
     }
+    public void control(View view) {
+        Intent sliders = new Intent(this, SeekBarActivity.class);
+        startActivity(sliders);
+    }
 	public void send00111111(View view) {
         // Hittade följande genom att söka på android bluetooth serial
         for (BluetoothDevice d : myBluetoothAdapter.getBondedDevices())
         {
-            if (d.getName() == "HC-05")
+           /* Toast.makeText(getApplicationContext(),d.getName(),
+                    Toast.LENGTH_SHORT).show();*/
+            if (d.getAddress() == "00:15:83:35:82:E6"  || d.getName() == "HC-05" || true)
             {
+                /*Toast.makeText(getApplicationContext(),d.getAddress(),
+                        Toast.LENGTH_SHORT).show();*/
                 btDevice = d;
             }
         }
 
-        UUID uuid = UUID.fromString(btDevice.getUuids()[0].toString());
+       // UUID uuid = UUID.fromString(btDevice.getUuids()[0].toString());
+        UUID uuid = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
+
         try {
             socket = btDevice.createRfcommSocketToServiceRecord(uuid);
+                        Toast.makeText(getApplicationContext(),btDevice.getName(),
+                    Toast.LENGTH_SHORT).show();
+           socket.connect();
             OutStream = socket.getOutputStream(); // here socket is the bluetooth socket you establish
 
-            int x = 0;
-            while (x <= 10) {
-                x++;
+            byte[] bytes = {'a','b','c','d','e'};
+
                 if (myBluetoothAdapter.isEnabled()) {
                     Intent sendIntent = new Intent();
                     sendIntent.setAction(Intent.ACTION_SEND);
                     sendIntent.putExtra("send00111111bytes", 0x3F);
-                    String message="this is test data";
-                    byte[] send = message.getBytes();
-                    OutStream.write(send);//this is what sends the message
-                }
-            }
-            Toast.makeText(getApplicationContext(),"00111111 "+ Integer.toString(x),
-                    Toast.LENGTH_SHORT).show();
 
-        } catch (Exception ex) {}
+                    OutStream.write(bytes);//this is what sends the message
+
+
+                }
+
+        } catch (Exception ex) {
+            Toast.makeText(getApplicationContext(),ex.getMessage(),
+                    Toast.LENGTH_SHORT).show();
+        }
 	}
    
    @Override

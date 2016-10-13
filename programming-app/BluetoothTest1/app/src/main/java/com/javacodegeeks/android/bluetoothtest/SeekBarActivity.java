@@ -1,4 +1,4 @@
-/*package com.javacodegeeks.android.bluetoothtest;
+package com.javacodegeeks.android.bluetoothtest;
 
 import android.animation.ValueAnimator;
 import android.app.Activity;
@@ -113,4 +113,4 @@ public class SeekBarActivity extends Activity {
         });
         anim.start();
     }
-}*/
+}
