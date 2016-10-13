@@ -199,11 +199,20 @@ uint16_t distance_read()
         delay_us(1);
     }
     write_value_SCI(USART1, time);
+    write_SCI(USART1, '\n');
     return time;
 }
 
 void CCR4_update(uint8_t val)
 {
+    if(val>173)
+    {
+        val = 173;
+    }
+    else if(val<110)
+    {
+        val = 110;
+    }
     CCR4_val = val;
     TIM_OCInitStructure.TIM_Pulse = CCR4_val;
     TIM_OC4Init(TIM2, &TIM_OCInitStructure);
@@ -211,6 +220,14 @@ void CCR4_update(uint8_t val)
 }
 void CCR3_update(uint8_t val)
 {
+    if(val>183)
+    {
+        val = 183;
+    }
+    else if(val<120)
+    {
+        val = 120;
+    }
     CCR3_val = val;
     TIM_OCInitStructure.TIM_Pulse = CCR3_val;
     TIM_OC4Init(TIM2, &TIM_OCInitStructure);
@@ -221,14 +238,27 @@ void break_test()
 {
     CCR3_update(152);
     CCR4_update(142);
-    delay_s(3);
+    delay_s(8);
     CCR4_update(173);
     write_SCI(USART1,'s');
-    while(distance_read()>1000)
+    while(distance_read()>3000)
     {
         delay_ms(100);
     }
-    CCR4_update(110);
+    uint32_t s;
+    while(1)
+    {
+        s=distance_read()*115 + 1385000;
+        write_value_SCI(USART1,s/10000);
+        write_SCI(USART1,'b');
+        if(s/10000<150)
+        {
+            CCR4_update(110);
+            break;
+        }
+        CCR4_update(s/10000);
+        delay_ms(40);
+    }
     delay_s(5);
     CCR4_update(142);
     while(1)
@@ -248,6 +278,11 @@ void main(void)
     pulse_init();
     IC_init();
     break_test();
+    while(1)
+    {
+        distance_read();
+        delay_ms(100);
+    }
     //appInit();
     //bt_config();
     
