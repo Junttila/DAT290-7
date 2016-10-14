@@ -17,6 +17,7 @@ import com.daimajia.easing.Skill;
 import com.nineoldandroids.animation.AnimatorSet;
 
 import java.io.OutputStream;
+import java.nio.ByteBuffer;
 import java.util.UUID;
 
 import butterknife.ButterKnife;
@@ -30,8 +31,8 @@ public class SeekBarActivity extends Activity {
     SeekBar snapBarControl;
 
     private static final int SNAP_MIN = 0;
-    private static final int SNAP_MIDDLE = 50;
-    private static final int SNAP_MAX = 100;
+    private static final int SNAP_MIDDLE = 31;
+    private static final int SNAP_MAX = 63;
 
     private static final int LOWER_HALF = (SNAP_MIN + SNAP_MIDDLE) / 2;
     private static final int UPPER_HALF = (SNAP_MIDDLE + SNAP_MAX) / 2;
@@ -102,15 +103,14 @@ public class SeekBarActivity extends Activity {
 
     private void setSnapBarControl() {
         snapBarControl.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
-
+            int progressChanged = 0;
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                String temp = Integer.toBinaryString(progress);
-                Toast.makeText(getApplicationContext(), temp,
-                        Toast.LENGTH_SHORT).show();
+                progressChanged = progress;
+               /* Toast.makeText(getApplicationContext(), progress,
+                        Toast.LENGTH_SHORT).show();*/
+                byte[] bytes = {(byte)progress};
 
-
-                byte[] bytes = {'a', 'b', 'c', 'd', 'e'};
 
 
                 try {
@@ -137,6 +137,13 @@ public class SeekBarActivity extends Activity {
                     setProgressAnimated(seekBar, progress, SNAP_MIDDLE, Skill.ElasticEaseOut, duration);
                 if (progress > UPPER_HALF && progress <= SNAP_MAX) {
                     setProgressAnimated(seekBar, progress, SNAP_MIDDLE, Skill.ElasticEaseOut, duration);
+                }
+                byte[] bytes = {'f', (byte)128};
+                try {
+                    outStream.write(bytes);
+                }
+                catch (Exception e) {
+
                 }
             }
         });
