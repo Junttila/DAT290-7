@@ -187,6 +187,19 @@ void send_pulse()
     GPIO_Write(GPIOC,0x0);
 }
 
+uint32_t abs(int32_t val)
+{
+    if (val < 0)
+    {
+        return (uint32_t)-val;
+    }
+    else
+    {
+        return val;
+    }
+}
+
+uint16_t prev = 0;
 uint16_t distance_read()
 {
     uint32_t time = 0;
@@ -198,8 +211,24 @@ uint16_t distance_read()
         time++;
         delay_us(1);
     }
+    if (prev == 0)
+    {
+        prev = time;
+    }
+    else if(abs((int32_t)(prev - time)) > 1000)
+    {
+        time = prev;
+        write_string_SCI(USART1,"!!!");
+    }
+    else
+    {
+        prev = time;
+    }
     write_value_SCI(USART1, time);
+    write_string_SCI(USART1, "    d");
+    write_value_SCI(USART1, abs((int32_t)(prev - time)));
     write_SCI(USART1, '\n');
+    prev = time;
     return time;
 }
 
@@ -236,19 +265,20 @@ void CCR3_update(uint8_t val)
 
 void break_test()
 {
+    prev = 0;
     CCR3_update(152);
     CCR4_update(142);
     delay_s(8);
     CCR4_update(173);
     write_SCI(USART1,'s');
-    while(distance_read()>3000)
+    while(distance_read()>5000)
     {
-        delay_ms(100);
+        delay_ms(40);
     }
     uint32_t s;
     while(1)
     {
-        s=distance_read()*115 + 1385000;
+        s=distance_read()*115+1155000;
         write_value_SCI(USART1,s/10000);
         write_SCI(USART1,'b');
         if(s/10000<150)
@@ -261,10 +291,7 @@ void break_test()
     }
     delay_s(5);
     CCR4_update(142);
-    while(1)
-    {
-        
-    }
+    while(1);
 }
 
 void main(void)
@@ -315,7 +342,7 @@ void main(void)
                 write_value_SCI(USART1,CCR3_val);
                 break;
                 case 3:
-                
+                break_test();
                 break;
                 default:
                 CCR3_val = 142;
