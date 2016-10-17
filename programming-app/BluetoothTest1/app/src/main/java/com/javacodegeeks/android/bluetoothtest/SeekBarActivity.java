@@ -143,10 +143,10 @@ public class SeekBarActivity extends Activity {
                 progressChanged = progress;
                /* Toast.makeText(getApplicationContext(), progress,
                         Toast.LENGTH_SHORT).show();*/
-                byte[] bytes = {(byte)(progress | 0x8)};
-               /* Toast.makeText(getApplicationContext(), bytes[0],
-                        Toast.LENGTH_SHORT).show();*/
-// comment
+                byte[] bytes = {(byte)(progress & 0x8)};
+                Toast.makeText(getApplicationContext(), Byte.toString(bytes[0]),
+                        Toast.LENGTH_SHORT).show();
+
 
                 try {
                     outStream.write(bytes);
