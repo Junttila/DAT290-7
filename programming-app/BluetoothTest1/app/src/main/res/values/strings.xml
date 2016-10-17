@@ -13,4 +13,5 @@
     <string name="send00111111">Send 63</string>
     <string name="send10111111">Send 191</string>
     <string name="control">Control</string>
+    <string name="go">Go!</string>
 </resources>

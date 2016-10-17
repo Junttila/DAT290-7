@@ -7,6 +7,8 @@ import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.Toast;
@@ -43,6 +45,8 @@ public class SeekBarActivity extends Activity {
     private OutputStream outStream;
     private static final int REQUEST_ENABLE_BT = 1;
 
+    private Button go;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -73,16 +77,36 @@ public class SeekBarActivity extends Activity {
             Toast.makeText(getApplicationContext(),ex.getMessage(),
                     Toast.LENGTH_SHORT).show();
         }
+        go = (Button)findViewById(R.id.go);
+        go.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                // TODO Auto-generated method stub
+                go(v);
+            }
+        });
     }
 
     private void setVolumeControlListener() {
         volumeControl.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
             int progressChanged = 0;
-
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 progressChanged = progress;
+               /* Toast.makeText(getApplicationContext(), progress,
+                        Toast.LENGTH_SHORT).show();*/
+                byte[] bytes = {(byte)(progress | 0x4)};
 
+
+
+                try {
+                    outStream.write(bytes);
+
+                } catch (Exception ex) {
+                    Toast.makeText(getApplicationContext(), ex.getMessage(),
+                            Toast.LENGTH_SHORT).show();
+                }
             }
 
             @Override
@@ -93,9 +117,19 @@ public class SeekBarActivity extends Activity {
 
 
             @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-                Toast.makeText(SeekBarActivity.this, "riktning: " + progressChanged, Toast.LENGTH_SHORT)
-                        .show();
+            public void onStopTrackingTouch(final SeekBar seekBar) {
+
+                final int duration = 750;
+                int progress = seekBar.getProgress();
+                setProgressAnimated(seekBar, progress, SNAP_MIDDLE, Skill.ElasticEaseOut, duration);
+
+                byte[] bytes = {(byte)31 | 0x4};
+                try {
+                    outStream.write(bytes);
+                }
+                catch (Exception e) {
+
+                }
             }
         });
     }
@@ -109,8 +143,9 @@ public class SeekBarActivity extends Activity {
                 progressChanged = progress;
                /* Toast.makeText(getApplicationContext(), progress,
                         Toast.LENGTH_SHORT).show();*/
-                byte[] bytes = {(byte)progress};
-
+                byte[] bytes = {(byte)(progress | 0x8)};
+               /* Toast.makeText(getApplicationContext(), bytes[0],
+                        Toast.LENGTH_SHORT).show();*/
 
 
                 try {
@@ -131,14 +166,9 @@ public class SeekBarActivity extends Activity {
 
                 final int duration = 750;
                 int progress = seekBar.getProgress();
-                if (progress >= SNAP_MIN && progress <= LOWER_HALF)
-                    setProgressAnimated(seekBar, progress, SNAP_MIDDLE, Skill.ElasticEaseOut, duration);
-                if (progress > LOWER_HALF && progress <= UPPER_HALF)
-                    setProgressAnimated(seekBar, progress, SNAP_MIDDLE, Skill.ElasticEaseOut, duration);
-                if (progress > UPPER_HALF && progress <= SNAP_MAX) {
-                    setProgressAnimated(seekBar, progress, SNAP_MIDDLE, Skill.ElasticEaseOut, duration);
-                }
-                byte[] bytes = {'f', (byte)128};
+                setProgressAnimated(seekBar, progress, SNAP_MIDDLE, Skill.ElasticEaseOut, duration);
+
+                byte[] bytes = {(byte)31 | 0x8};
                 try {
                     outStream.write(bytes);
                 }
@@ -172,5 +202,14 @@ public class SeekBarActivity extends Activity {
             }
         });
         anim.start();
+    }
+    public void go(View v) {
+        byte[] bytes = {(byte)0xC};
+        try {
+            outStream.write(bytes);
+        }
+        catch (Exception e) {
+
+        }
     }
 }
