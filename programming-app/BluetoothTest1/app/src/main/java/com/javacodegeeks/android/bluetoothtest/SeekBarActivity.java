@@ -121,7 +121,7 @@ public class SeekBarActivity extends Activity {
 
                 final int duration = 750;
                 int progress = seekBar.getProgress();
-                setProgressAnimated(seekBar, progress, SNAP_MIDDLE, Skill.ElasticEaseOut, duration);
+                setProgressAnimated(seekBar, progress, SNAP_MIDDLE, Skill.ElasticEaseOut, 0);
 
                 byte[] bytes = {(byte)31 | 64};
                 try {
@@ -143,7 +143,7 @@ public class SeekBarActivity extends Activity {
                 progressChanged = progress;
                /* Toast.makeText(getApplicationContext(), progress,
                         Toast.LENGTH_SHORT).show();*/
-                byte[] bytes = {(byte)(progress | 127)};
+                byte[] bytes = {(byte)(progress | 128)};
                 Toast.makeText(getApplicationContext(), Byte.toString(bytes[0]),
                         Toast.LENGTH_SHORT).show();
 
@@ -168,7 +168,7 @@ public class SeekBarActivity extends Activity {
                 int progress = seekBar.getProgress();
                 setProgressAnimated(seekBar, progress, SNAP_MIDDLE, Skill.ElasticEaseOut, duration);
 
-                byte[] bytes = {(byte)31 | 127};
+                byte[] bytes = {(byte)(31 | 128)};
                 try {
                     outStream.write(bytes);
                 }
