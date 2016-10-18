@@ -325,8 +325,12 @@ Androidapplikationen agerar som handkontroll. Detta följer samma protokoll som 
 \subsubsection{Kontrollapplikation}
 Kontrollapplikationen kan aktiveras från en sändande enhet. Både MD407-enheten som agerar sändare och Androidapplikationen har en möjlighet att starta denna. %HUR
 
+
 \vspace{5mm} \noindent
 En $10\mu s$ hög puls triggar igång avstådsmätaren. Då detta sker får porten för eko på avståndsmätaren värdet 1 och ultraljud skickas ut. Om ultraljudet återvänder sätts eko-porten till 0 och pulsens bredd används för att bestämma avståndet till objektet. Detta sker genom att funktionen för kontrollapplikationen inkrementerar en variabel efter varje $\mu s$. Detta tal dividerat med 58 ger avståndet till hindret i cm~\cite{DistMeasure}. Ifall inget hinder uppmäts sänks pinnens värde till 0 efter en stund, pulsens längd tydliggör då att inget hinder finns i närheten.
+
+
+Funktionen som styr kontrollapplikationen implementeras i mottagaren. Vid aktivering skickas värdet 155 till motorn  och bilen fortsätter köra i den hastigheten tills variabeln som mäter $\mu s$ uppnår värdet 8000, alternativt ungefär 138 cm, då värdet till motorn sänks till 151. Denna hastighet pågår tills bilen befinner sig 950$\mu s$ ifrån hindret, då den påbörjar motorbroms.
 
 
 \subsubsection{Radiolänk: Bluetooth-modul}
@@ -446,8 +450,7 @@ Nedanstående punkter användes för att testa kontrollapplikationen.
 
 
 \subsection{Verifikation av projektplan}
-Mindre förändringar har under projektets gång skett. Då ersättandet av kontrollen samt mottagaren varit mer komplicerade än projektgruppen tidigare trott tog denna procedur 3 veckor längre tid än väntat. Detta problem har dock inte stört den slutgiltiga produkten då de övriga delsystemen har kunnat konstrueras parallellt, något som ej urprungligen var planerat.
-
+Mindre förändringar har under projektets gång skett. Då ersättandet av kontrollen samt mottagaren varit mer komplicerade än projektgruppen tidigare trott tog denna procedur 3 veckor längre tid än väntat. Detta problem har troligtvis försämrat kvalitén på kontrollapplikationen men ej Androidapplikationen då denna konstruerats parallellt med det nya systemet.
 
 
 
@@ -460,7 +463,14 @@ Projektet följde ej tidsmodellen som givits i planen. Ett antal felskrivanden i
 
 %HUR VI BESTÄMDE SPECIFIKATIONER ÖVER KONTROLLAPPLIKATION
 \vspace{5mm} \noindent
-Kontrollapplikationen kunde ej färdigställas som tänkt. Planen var att när bilen uppnåt sin maximala hastighet skulle applikationen aktiveras och bilen skulle vid första hinder stanna 1 cm från det. Vid en första verifiering upptäcktes det dock att detta skulle bli för komplicerat med de hjälpmedel som fanns tillgängliga. För det första vibrerar bilen kraftigare ju högre hasstgighet den har. Detta leder till att ultraljudet avståndsmätaren skickar iväg inte alltid återvänder, då det missas om bilen är i en annan höjd. Något som sker vid vibrationer. För det andra skulle det behövas en bättre, alternativt fler, avståndsmätare. Detta skulle resultera i bättre och snabbare beräkning av avstånd till närmaste hinder och på så sätt börja bromsa bilen vid rätt läge. Den mätaren som givits i detta projekt når inte upp till dessa kvalifikationer och behöver därför en lägre hastighet för att garantera kontrollapplikationens funktion, därav garantera bilens säkerhet.
+Kontrollapplikationen kunde ej färdigställas som tänkt. Målet var att bilen efter aktivering av applikationen skulle stanna maximalt 1 cm från närmaste hinder, men detta har ej kunnat implementeras under den givna tiden. Detta beror dels på att avståndsmätaren är av en enklare variant och då inte alltid ger plåitliga värden. Dels på att hjulen inte alltid är raka vilket på en längre sträcka gör att bilen hamnar i ett snett läge. Resultatet blir då att ultraljudet avståndsmätaren skickar ut riskerar att studsa snett. Detta kan i sin tur leda till att ultraljudet tas upp vid felpunkt eller inte alls, vilket ger felberäkningar. Utöver detta har bilens bromsfunktion försvårat arbetet. Bilens egna funktion för motorbromsning resulterar inte till att bilen stannar tvärt, snarare att den rullar sakta innan den helt står stilla. Även i neutralt läge kan hjulen rotera lite ifall däcken står på en dubb. Däcken roterar då tills den är mellan två dubbar. Detta ledde till att det blir osannolikt att ha två likadana fall då bilens bromssträcka beror från test till test. Att då bestämma en konstant funktion som ska fungera för samtliga fall blir väldigt komplicerad. 
+
+
+\vspace{5mm} \noindent
+Ett par faktorer hade kunnat förbättra kontrollapplikationen om mer tid funnits. Till att börja med hade en bättre avståndsmätare givit bättre värden. Värdesfel som den enklare modellen ger ibland hade då undvikts. Dessutom hade fler avståndsmätare lett till bättre verifiering för bilens omkringliggande miljö. Försämringar av kontrollapplikationen då bilens hjul är något svängda hade kunnat reduceras radikalt om inte helt elimineras.
+
+
+%Kontrollapplikationen kunde ej färdigställas som tänkt. Planen var att när bilen uppnåt sin maximala hastighet skulle applikationen aktiveras och bilen skulle vid första hinder stanna 1 cm från det. Vid en första verifiering upptäcktes det dock att detta skulle bli för komplicerat med de hjälpmedel som fanns tillgängliga. För det första vibrerar bilen kraftigare ju högre hasstgighet den har. Detta leder till att ultraljudet avståndsmätaren skickar iväg inte alltid återvänder, då det missas om bilen är i en annan höjd. Något som sker vid vibrationer. För det andra skulle det behövas en bättre, alternativt fler, avståndsmätare. Detta skulle resultera i bättre och snabbare beräkning av avstånd till närmaste hinder och på så sätt börja bromsa bilen vid rätt läge. Den mätaren som givits i detta projekt når inte upp till dessa kvalifikationer och behöver därför en lägre hastighet för att garantera kontrollapplikationens funktion, därav garantera bilens säkerhet.
 
 
 
@@ -497,7 +507,7 @@ Om man ser till ett större perspektiv finns även här implementationsförslag.
 
 \vspace{5mm} \noindent
 %SAMMANFATTNING, GLÖM INTE ATT ÅTERKOPPLA TILL INLEDNING
-Sammanfattningsvis innehåller detta projekt ett förslag på en radiostyrd bil med modern teknik. Uppgradering med nya datorer reducerar utdaterad teknik och dess funktioner passar väl in med det som idag är aktuellt. Potentialen för vidareutveckling hos handkontrollen samt Androidapplikationen är väldigt god. Utöver detta finns även stora designmöjligheter för att konstruera komponenterna till mer konsumentvänliga produkter. I det större perspektivet finns idag smartphones hos en ännu större del av befolkningen än tidigare nämnt, vilket resulterar i en ännu större potentiell marknad för telefonapplikationen. Dagens teknik fokuserar även mycket på självstyrande bilar och en funktion som undviker krock kan komma att spela stor roll. Både för passagerarnas säkerhet, men även miljön runt omkring bilen där demolering undviks. Kort sagt öppnar detta projekt upp för en nyskapande radiostyrd bil där aktuell teknologi är implementerad och bilens funktioner kan i ett makroperspektiv användas till många olika ändamål.
+Sammanfattningsvis innehåller detta projekt en radiostyrd bil med modern teknik. Uppgradering med nya datorer reducerar utdaterad teknik och dess funktioner passar väl in med det som idag är aktuellt. Potentialen för vidareutveckling hos handkontrollen samt Androidapplikationen är väldigt god. Utöver detta finns även stora designmöjligheter för att konstruera komponenterna till mer konsumentvänliga produkter. I det större perspektivet finns idag smartphones hos en ännu större del av befolkningen än tidigare nämnt, vilket resulterar i en ännu större potentiell marknad för telefonapplikationen. Dagens teknik fokuserar även mycket på självstyrande bilar och en funktion som undviker krock kan komma att spela stor roll. Både för passagerarnas säkerhet, men även miljön runt omkring bilen där demolering undviks. Kort sagt öppnar detta projekt upp för en nyskapande radiostyrd bil där aktuell teknologi är implementerad och bilens funktioner kan i ett makroperspektiv användas till många olika ändamål.
 
 
 
