@@ -253,11 +253,11 @@ void CCR4_update(uint8_t val)
 {
     if(val>173)
     {
-        val = 173;
+        val = 183;
     }
-    else if(val<110)
+    else if(val<120)
     {
-        val = 110;
+        val = 120;
     }
     CCR4_val = val;
     TIM_OCInitStructure.TIM_Pulse = CCR4_val;
@@ -268,11 +268,11 @@ void CCR3_update(uint8_t val)
 {
     if(val>183)
     {
-        val = 183;
+        val = 173;
     }
-    else if(val<120)
+    else if(val<110)
     {
-        val = 120;
+        val = 110;
     }
     CCR3_val = val;
     TIM_OCInitStructure.TIM_Pulse = CCR3_val;
@@ -280,15 +280,17 @@ void CCR3_update(uint8_t val)
     TIM_OC3PreloadConfig(TIM2, ENABLE);    
 }
 
+uint8_t first_brake;
 void break_test()
 {
     prev = 0;
-    CCR3_update(151);
-    CCR4_update(142);
+    first_brake = 1;
+    CCR4_update(151);
+    CCR3_update(142);
     delay_s(8);
-    CCR4_update(155);
+    CCR3_update(155);
     write_SCI(USART1,'s');
-    while(distance_read()>5000)
+    while(distance_read()>7000)
     {
         delay_ms(60);
     }
@@ -299,18 +301,17 @@ void break_test()
         //s=distance_read()*13+1475000;
         //write_value_SCI(USART1,s/10000);
         write_SCI(USART1,'b');
-        if(s<2000)
+        if(s<950)
         {
-            CCR4_update(110);
+            CCR3_update(110);
             break;
         }
-        else if(s<4000)
+        else if(s<8000 && first_brake)
         {
-            CCR4_update(151);
-        }
-        else if(s<6000)
-        {
-            CCR4_update(110);
+            CCR3_update(110);
+            delay_ms(600);
+            CCR3_update(151);
+            first_brake = 0;
         }
         
         
@@ -320,8 +321,7 @@ void break_test()
     
     
     delay_s(5);
-    CCR4_update(142);
-    while(1);
+    CCR3_update(142);
 }
 
 void main(void)
@@ -334,12 +334,7 @@ void main(void)
     uint16_t offset = 110;
     pulse_init();
     IC_init();
-    break_test();
-    while(1)
-    {
-        distance_read();
-        delay_ms(100);
-    }
+    //break_test();
     //appInit();
     //bt_config();
     
