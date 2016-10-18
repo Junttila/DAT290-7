@@ -69,8 +69,8 @@ public class SeekBarActivity extends Activity {
         try {
         UUID uuid = UUID.fromString("00001101-0000-1000-8000-00805F9B34FA");
         socket = btDevice.createRfcommSocketToServiceRecord(uuid);
-        Toast.makeText(getApplicationContext(),btDevice.getName(),
-                Toast.LENGTH_SHORT).show();
+  /*      Toast.makeText(getApplicationContext(),btDevice.getName(),
+                Toast.LENGTH_SHORT).show();*/
 
             socket.connect();
             outStream = socket.getOutputStream();
@@ -123,7 +123,7 @@ public class SeekBarActivity extends Activity {
 
                 final int duration = 750;
                 int progress = seekBar.getProgress();
-                setProgressAnimated(seekBar, progress, SNAP_MIDDLE, Skill.ElasticEaseOut, 0);
+                setProgressAnimated(seekBar, progress, SNAP_MIDDLE, Skill.ElasticEaseOut, 1);
 
                 byte[] bytes = {(byte)31 | 64};
                 try {
@@ -206,15 +206,21 @@ public class SeekBarActivity extends Activity {
         anim.start();
     }
     public void go(View v) {
-        byte[] bytes = {(byte)192};
+
 
         DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 switch (which){
                     case DialogInterface.BUTTON_POSITIVE:
-                        //Yes button clicked
-                        break;
+                        byte[] bytes = {(byte)192};
+                        try {
+                            outStream.write(bytes);
+                        }
+                        catch (Exception e) {
+
+                        }
+
 
                     case DialogInterface.BUTTON_NEGATIVE:
                         //No button clicked
@@ -227,11 +233,6 @@ public class SeekBarActivity extends Activity {
         builder.setMessage("Are you sure you want to go?").setPositiveButton("GO!", dialogClickListener)
                 .setNegativeButton("No", dialogClickListener).show();
 
-        try {
-            outStream.write(bytes);
-        }
-        catch (Exception e) {
 
-        }
     }
 }
