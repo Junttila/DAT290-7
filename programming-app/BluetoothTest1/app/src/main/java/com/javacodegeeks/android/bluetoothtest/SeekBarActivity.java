@@ -224,8 +224,8 @@ public class SeekBarActivity extends Activity {
         };
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage("Are you sure?").setPositiveButton("Yes", dialogClickListener)
-                .setNegativeButton("No", dialogClickListener).show();
+        builder.setMessage("You want to go, m8?").setPositiveButton("GO!", dialogClickListener)
+                .setNegativeButton("I'm a wuss", dialogClickListener).show();
 
         try {
             outStream.write(bytes);
