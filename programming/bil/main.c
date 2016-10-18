@@ -199,7 +199,22 @@ uint32_t abs(int32_t val)
     }
 }
 
-uint16_t prev = 0;
+// Simple low pass filter. filterValue determines smoothness. 0 = off; 0.9999 = max 
+int smooth(int sensor_reading, float filterValue, float smoothedValue){
+
+  // Checking validity of filterValue; if beyond range, set to max/min value if out of range.
+  if (filterValue > 1){      
+    filterValue = .99;
+  }
+  else if (filterValue <= 0){
+    filterValue = 0;
+  }
+
+  smoothedValue = (sensor_reading * (1 - filterValue)) + (smoothedValue  *  filterValue);
+  return (int)smoothedValue;
+}
+
+float prev = 0;
 uint16_t distance_read()
 {
     uint32_t time = 0;
@@ -215,7 +230,7 @@ uint16_t distance_read()
     {
         prev = time;
     }
-    else if(abs((int32_t)(prev - time)) > 1000)
+    /*else if(abs((int32_t)(prev - time)) > 1000)
     {
         time = prev;
         write_string_SCI(USART1,"!!!");
@@ -223,13 +238,15 @@ uint16_t distance_read()
     else
     {
         prev = time;
-    }
-    write_value_SCI(USART1, time);
+    }*/
+    
+    int temp = smooth(time,0.6,prev);
+    write_value_SCI(USART1, temp);
     write_string_SCI(USART1, "    d");
-    write_value_SCI(USART1, abs((int32_t)(prev - time)));
+    //write_value_SCI(USART1, abs((int32_t)(prev - time)));
     write_SCI(USART1, '\n');
-    prev = time;
-    return time;
+    prev = temp;
+    return temp;
 }
 
 void CCR4_update(uint8_t val)
@@ -259,36 +276,49 @@ void CCR3_update(uint8_t val)
     }
     CCR3_val = val;
     TIM_OCInitStructure.TIM_Pulse = CCR3_val;
-    TIM_OC4Init(TIM2, &TIM_OCInitStructure);
-    TIM_OC4PreloadConfig(TIM2, ENABLE);    
+    TIM_OC3Init(TIM2, &TIM_OCInitStructure);
+    TIM_OC3PreloadConfig(TIM2, ENABLE);    
 }
 
 void break_test()
 {
     prev = 0;
-    CCR3_update(152);
+    CCR3_update(151);
     CCR4_update(142);
     delay_s(8);
-    CCR4_update(173);
+    CCR4_update(155);
     write_SCI(USART1,'s');
     while(distance_read()>5000)
     {
-        delay_ms(40);
+        delay_ms(60);
     }
     uint32_t s;
     while(1)
     {
-        s=distance_read()*115+1155000;
-        write_value_SCI(USART1,s/10000);
+        s=distance_read();
+        //s=distance_read()*13+1475000;
+        //write_value_SCI(USART1,s/10000);
         write_SCI(USART1,'b');
-        if(s/10000<150)
+        if(s<2000)
         {
             CCR4_update(110);
             break;
         }
-        CCR4_update(s/10000);
-        delay_ms(40);
+        else if(s<4000)
+        {
+            CCR4_update(151);
+        }
+        else if(s<6000)
+        {
+            CCR4_update(110);
+        }
+        
+        
+        //CCR4_update(s/10000);
+        delay_ms(60);
     }
+    
+    
     delay_s(5);
     CCR4_update(142);
     while(1);
