@@ -223,7 +223,7 @@ public class SeekBarActivity extends Activity {
 
 
                     case DialogInterface.BUTTON_NEGATIVE:
-                        //No button clicked
+                        
                         break;
                 }
             }

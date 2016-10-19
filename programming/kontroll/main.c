@@ -84,6 +84,18 @@ void debug_delay()
 
 uint16_t ADC_Val; //Stores the calculated ADC value
  
+void init_go()
+{
+	//RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOC, ENABLE);  
+	GPIO_InitTypeDef GPIO_InitStructure;
+	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_11;
+	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN;
+	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_100MHz;
+	GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
+	GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_DOWN;
+	GPIO_Init(GPIOC, &GPIO_InitStructure);
+}
+ 
 void init_adc(void)
 {
 
@@ -184,6 +196,7 @@ void main(void)
 {
  	init_uart();
 	init_adc();
+	init_go();
 	write_string_SCI(USART1, "\nInit\n");
 	uint8_t d = 0;
 	uint8_t s = 0;
@@ -195,6 +208,13 @@ void main(void)
 	
 	while(1)
 	{
+		if (GPIO_ReadInputDataBit(GPIOC, GPIO_Pin_11) != 1)
+		{
+			send_cmd(3, 0);
+			write_string_SCI(USART1, "GO!");
+
+		}
+		
 		d = adc_get_val(11);
 		s = adc_get_val(12);
 		

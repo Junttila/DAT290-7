@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CodeLite_Workspace Name="bil" Database="">
-  <Project Name="bil" Path="bil/bil.project" Active="Yes"/>
-  <Project Name="kontroll" Path="kontroll/kontroll.project" Active="No"/>
+  <Project Name="bil" Path="bil/bil.project" Active="No"/>
+  <Project Name="kontroll" Path="kontroll/kontroll.project" Active="Yes"/>
   <BuildMatrix>
     <WorkspaceConfiguration Name="Debug" Selected="yes">
       <Environment/>
