@@ -67,10 +67,9 @@ public class SeekBarActivity extends Activity {
                 btDevice = d;
         }
         try {
-        UUID uuid = UUID.fromString("00001101-0000-1000-8000-00805F9B34FA");
+        UUID uuid = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
         socket = btDevice.createRfcommSocketToServiceRecord(uuid);
-  /*      Toast.makeText(getApplicationContext(),btDevice.getName(),
-                Toast.LENGTH_SHORT).show();*/
+
 
             socket.connect();
             outStream = socket.getOutputStream();
@@ -98,7 +97,7 @@ public class SeekBarActivity extends Activity {
                 progressChanged = progress;
                /* Toast.makeText(getApplicationContext(), progress,
                         Toast.LENGTH_SHORT).show();*/
-                byte[] bytes = {(byte)(progress | 64)};
+                byte[] bytes = {(byte)((63-progress) | 64)};
 
 
 
@@ -223,7 +222,7 @@ public class SeekBarActivity extends Activity {
 
 
                     case DialogInterface.BUTTON_NEGATIVE:
-                        //No button clicked
+
                         break;
                 }
             }
