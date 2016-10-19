@@ -301,7 +301,7 @@ void break_test()
         //s=distance_read()*13+1475000;
         //write_value_SCI(USART1,s/10000);
         write_SCI(USART1,'b');
-        if(s<1650)
+        if(s<1750)
         {
             CCR3_update(110);
             break;
