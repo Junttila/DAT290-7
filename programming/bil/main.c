@@ -115,7 +115,7 @@ void IC_init()
 {
 	GPIO_InitTypeDef GPIO_InitStruct;
     
-    GPIO_InitStruct.GPIO_Pin = GPIO_Pin_6; //TIM2 kanal 2
+    GPIO_InitStruct.GPIO_Pin = GPIO_Pin_6;
 	GPIO_InitStruct.GPIO_Mode = GPIO_Mode_IN;
 	GPIO_InitStruct.GPIO_Speed = GPIO_Speed_100MHz;
 	GPIO_InitStruct.GPIO_OType = GPIO_OType_PP;
@@ -251,7 +251,7 @@ uint16_t distance_read()
 
 void CCR4_update(uint8_t val)
 {
-    if(val>173)
+    if(val>183)
     {
         val = 183;
     }
@@ -266,7 +266,7 @@ void CCR4_update(uint8_t val)
 }
 void CCR3_update(uint8_t val)
 {
-    if(val>183)
+    if(val>173)
     {
         val = 173;
     }
@@ -285,12 +285,12 @@ void break_test()
 {
     prev = 0;
     first_brake = 1;
-    CCR4_update(151);
-    CCR3_update(142);
+    CCR4_update(153);
+    CCR3_update(140);
     delay_s(8);
     CCR3_update(155);
     write_SCI(USART1,'s');
-    while(distance_read()>7000)
+    while(distance_read()>8000)
     {
         delay_ms(60);
     }
@@ -301,7 +301,7 @@ void break_test()
         //s=distance_read()*13+1475000;
         //write_value_SCI(USART1,s/10000);
         write_SCI(USART1,'b');
-        if(s<950)
+        if(s<1650)
         {
             CCR3_update(110);
             break;
@@ -334,6 +334,7 @@ void main(void)
     uint16_t offset = 110;
     pulse_init();
     IC_init();
+    break_test();
     //break_test();
     //appInit();
     //bt_config();
@@ -351,7 +352,7 @@ void main(void)
                 CCR4_val = (t & 0b00111111) + offset + 10;
                 if(CCR4_val >= 151 && CCR4_val <= 159)
                 {
-                    CCR4_val = 152;
+                    CCR4_val = 151;
                 }
                 write_string_SCI(USART1,"d:");
                 write_value_SCI(USART1,CCR4_val);
@@ -360,8 +361,7 @@ void main(void)
                 CCR3_val = (t & 0b00111111) + offset;
                 if(CCR3_val >= 129 && CCR3_val <= 149)
                 {
-                    CCR3_val = 149;
-                    debug_delay_long();
+                    CCR3_val = 142;
                 }
                 write_string_SCI(USART1,"s:");
                 write_value_SCI(USART1,CCR3_val);
