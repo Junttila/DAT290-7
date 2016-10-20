@@ -134,7 +134,7 @@ Standarder för kodning är bestämd för underlätta implementation. Programkod
 Projektet inleds med att mäta upp befintliga styrsignaler. För att kunna återskapa signalerna som skickas från den ursprungliga mottagaren till bilens styrelektronik mättes signalerna upp med hjälp av ett oscilloskop. Det som möjliggjorde detta var ett tillhandahållet kretskort som kopplat till bilens kontrollenhet kunde separera signalerna. Bilens samtliga funktioner testades och utslagen blev de värden som användes till verifiering för korrekt replikering av styrsignaler. Signalerna är av typen PWM och både dess cykeltid och frekvens mättes upp i motorns och rattutslagens maximala lägen. 
 
 \vspace{5mm} \noindent
-Den nya mottagaren återskapar dessa signaler. En MD407-enhet ersätter den ursprungliga mottagaren och dess systemklocka utnyttjas för att skicka rätt styrsignaler till korrekt styrelektronik. Dessa värden testas utförligt för att kunna säkerställa att de replikerande styrsignalerna är identiska i jämförelse med de ursprungliga.
+Den nya mottagaren återskapar dessa signaler. En MD407 ersätter den ursprungliga mottagaren och dess systemklocka utnyttjas för att skicka rätt styrsignaler till korrekt styrelektronik. Dessa värden testas utförligt för att kunna säkerställa att de replikerande styrsignalerna är identiska i jämförelse med de ursprungliga.
 
 
 %Mottagaren ersätts med en ny datorenhet, MD407. Denna erhåller seriellt bytes som skickas från en sändare (se Figur 2). Byten analyseras och dess systemtimer utnyttjas för skicka rätt signal till korrekt styrelektronik.
@@ -265,7 +265,7 @@ Bilens styrsignaler kontrolleras av en kontrollenhet, MRX-242~\cite{projektDir}.
 
 
 \subsection{Systemöversikt}
-Systemet har två huvuddelar, en MD407-enhet samt en Androidapplikation som båda kan agera handkontroll, och en MD407-enhet som genererar signaler till motorerna.
+Systemet har två huvuddelar, en MD407 samt en Androidapplikation som båda kan agera handkontroll, och en MD407 som genererar signaler till motorerna.
 
 \subsubsection{Styrning: Från MD407 till MD407}
 \begin{figure}[H]
@@ -275,7 +275,7 @@ Systemet har två huvuddelar, en MD407-enhet samt en Androidapplikation som båd
 \end{figure} 
 
 
-Enligt Figur 6 erhålls en överblick över hur systemet fungerar. Den sändande datorenheten MD407 får information från en potentiometer och skickar dessa värden via Bluetooth till den mottagande MD407-enheten som tar emot värdena och överlämnar dessa till bilens styrelektronik som agerar efter dem.
+Enligt Figur 6 erhålls en överblick över hur systemet fungerar. Den sändande datorenheten MD407 får information från en potentiometer och skickar dessa värden via Bluetooth till den mottagande MD407 som tar emot värdena och överlämnar dessa till bilens styrelektronik som agerar efter dem.
 
 \subsubsection{Styrning: Från Androidapplikation till MD407}
 \begin{figure}[H]
@@ -293,7 +293,7 @@ Denna del av texten beskriver detaljerat hur de separata systemen fungerar. Ordn
 
 
 
-\subsubsection{Sändare: MD407-enhet}
+\subsubsection{Sändare: MD407}
 Den sändande datorenheten MD407 skickar värden från potentiometern till den mottagande enheten. Sändaren försörjer dess inkopplade potentiometer med ström och läser konstant av utmatningsportarna för denna. På datorenheten finns en integrerad ADC, vilken tar emot värdena från potentiometern och översätter dessa från analoga till digitala värden. Det 8-bitars värde som skickas mellan sändare och mottagare (se Figur XX) ställs in enligt specifikationer. Ändras exempelvis vridkontakten på potentiometern för motorn ska kommandot initieras till det värde där mottagaren i sin tur sänder informationen till motorns elektronik. De 6 minst signifikanta bitarna beror på värdet datorenheten erhåller från potentiometern och tillsammans med kommandot skickas det seriellt från sändarens Bluetooth-modul och avläses i mottagarens.
 
 
@@ -323,7 +323,7 @@ Androidapplikationen agerar som handkontroll. Detta följer samma protokoll som 
 \end{figure} 
 
 \subsubsection{Kontrollapplikation}
-Kontrollapplikationen kan aktiveras från en sändande enhet. Både MD407-enheten som agerar sändare och Androidapplikationen har en möjlighet att starta denna. %HUR
+Kontrollapplikationen kan aktiveras från en sändande enhet. Både MD407 som agerar sändare och Androidapplikationen har en möjlighet att starta denna. %HUR
 
 
 \vspace{5mm} \noindent
@@ -337,7 +337,7 @@ Funktionen som styr kontrollapplikationen implementeras i mottagaren. Vid aktive
 Det som möjliggör kommunikation mellan sändare och mottagare är en Bluetooth-modul. Två likadana moduler kopplas till respektive datorenhet vilka då kan sända samt ta emot data från denna. Modulerna är antingen konfigurerade till att vara Master eller Slave. Master-modulen letar aktivt efter en Slave-modul i närheten och kommer vid upptäckt elektroniskt kopplas till den. Detta leder till att Master kan skicka data till Slave utan att riskera störningar från andra signaler.
 
 
-\subsubsection{Mottagare: MD407-enhet}
+\subsubsection{Mottagare: MD407}
 Signalerna som sändaren skickar hanteras av mottagarens datorenhet. När programmet på denna dator påbörjas måste datorn initialt skicka PWM-signaler som motsvarar neutralt läge för drivmotorn i en kort stund innan övriga signaler kan sändas. Efter detta börjar mottagaren seriellt ta emot bytes från sändaren genom sin Bluetooth-mottagare. Enheten startar även PWM-signalsgenerering till bilens styrelektronik. 
 
 \vspace{5mm} \noindent
@@ -386,11 +386,12 @@ Den resulterande produkten har under projektets tid nått verifikationspunkter. 
 
 %Verifikationspunkter anges nedan och resultatet beskrivs efteråt.
 
-\subsection{Sändare: MD407-enhet}
+\subsection{Sändare: MD407}
 Den sändande datorenheten MD407 verifieras på följande punkter:
 \begin{itemize}
-\item Potentiometerns signal skickar rätt värden.
-\item Md407-enhetens ADC ger digitala värden i korrekt intervall.
+\item MD407 kan generera kommandosignaler.
+\item Potentiometern ger rätt spänning till MD407.
+\item MD407 ADC ger digitala värden i korrekt intervall.
 \item Kontrollapplikationen startas och utförs när detta begärs.
 \end{itemize}
 
@@ -410,8 +411,8 @@ Följande punkter har verifierat att Andriodapplikationen fungerar enligt specif
 
 
 
-\subsection{Mottagare: MD407-enhet}
-Den mottagande MD407-enheten har verifierats enligt följande punkter:
+\subsection{Mottagare: MD407}
+En mottagande MD407 har verifierats enligt följande punkter:
 
 \begin{itemize}
 \item Kan ta emot värden från sändande enhet.
@@ -442,7 +443,7 @@ Nedanstående punkter användes för att testa kontrollapplikationen.
 
 \begin{itemize}
 \item Stannar enligt specifikationer maximalt 1 cm från ett hinder vid maximala hastighet.
-\item Fungerar från sändande MD407-enhet.
+\item Fungerar från sändande MD407.
 \item Fungerar från sändande Andriodapplikation.
 \end{itemize}
 
