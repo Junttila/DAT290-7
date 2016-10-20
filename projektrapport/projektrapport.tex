@@ -47,40 +47,27 @@ Godkänd  & NAMN     & DATUM         \\ \hline
 
 \newpage
 \noindent {\Large \bf Ordlista}
-
-
-\vspace{5mm} \noindent
+\\\\
 {\bf ADC} - Analog to digital converter, översätter analoga värden i enheten Volt till digitala värden~\cite{ADC}.
-
-\vspace{5mm} \noindent
+\\\\
 {\bf ARM} - En processorarkitektur~\cite{chalmersARM}.
-
-\vspace{5mm} \noindent
+\\\\
 {\bf Avståndsmätare} - Mäter avstånd från ett objekt med hjälp av ultraljud och dess eko~\cite{DistMeasure}. Modul som används i detta projekt är HC-SR04.
-
-\vspace{5mm} \noindent
+\\\\
 {\bf Bluetooth-moduler} - Är antingen sändare eller mottagare och möjliggör för radiofrekvensiell överföring genom parning mellan moduler~\cite{Bluetooth}. Modul som används i detta projekt är HC-05.
-
-\vspace{5mm} \noindent
+\\\\
 {\bf GPIO} - General-purpose input/output~\cite{chalmersARM}.
-
-\vspace{5mm} \noindent
+\\\\
 {\bf Oscilloskop} - Instrument som används till att mäta elektriska signaler under en viss tid~\cite{oscilloscope}.
-
-\vspace{5mm} \noindent
+\\\\
 {\bf Potentiometer} - En elektrisk komponent som med hjälp av ett variabelt motstånd kan begränsa spänning~\cite{Potentiometer}.
-
-
-\vspace{5mm} \noindent
+\\\\
 {\bf PWM-signaler} - PWM eller Pulse Width Modulation är en moduleringsteknik som mest används för att styra mängden elektrisk ström som förs till exempelvis en motor~\cite{PWM}.
-
-\vspace{5mm} \noindent
+\\\\
 {\bf RF-moduler} - Radiofrekvensmoduler. Är antingen sändare eller mottagare och möjliggör för radiofrekvensiell överföring~\cite{RFModule}.
-
-\vspace{5mm} \noindent
+\\\\
 {\bf UART} - Universal Asynchronous Receiver/Transmitter~\cite{chalmersARM}.
-
-\vspace{5mm} \noindent
+\\\\
 {\bf USART} - Universal Synchronous/Asynchronous Receiver/Transmitter~\cite{chalmersARM}.
 
 
@@ -92,14 +79,12 @@ Godkänd  & NAMN     & DATUM         \\ \hline
 
 %Radiostyrda bilar började produceras på mitten av 60-talet~\cite{RCHistory}. De första radiobilarna drevs med hjälp av bensin och hade grova däck då de skulle köras utomhus. Det var inte förrän 1974 motorerna ersatter av elektriska och kort därefter startade tävlingar med dessa bilar. Detta eskalerade och radiobilen nåde extrem popularitet under 80-talet. Då kom även fler tävlingar och bilarna utvecklades för att kunna köra snabbare.
 
-Radiostyrda bilar började produceras på mitten av 60-talet~\cite{RCHistory}. De första radiobilarna drevs med hjälp av bensin och körde relativt långsamt. Ett drygt decennium senare ersattes motorerna med elektriska varianter och kort därefter började tävlingar hållas. Detta ledde till en väldig popularitet för radiobilen som hobby och utvecklingen av den lade stor vikt vid snabbhet. Trots dessa mindre justeringar har den radiostyrda bilens uppbyggnad i det stora hela förblivit densamma.
+Radiostyrda bilar började produceras på mitten av 60-talet~\cite{RCHistory}. Dessa drevs då med hjälp av bensin och körde relativt långsamt. Ett drygt decennium senare ersattes motorerna med elektriska varianter och kort därefter började tävlingar hållas. Detta ledde till en väldig popularitet för radiobilen som hobby och utvecklingen av den lade stor vikt vid snabbhet. Trots dessa mindre justeringar har den radiostyrda bilens uppbyggnad i det stora hela förblivit densamma.
 
 \subsection{Syfte}
 
 Syftet med detta projekt är att uppdatera den klassiska radiostyrda bilen genom att ersätta befintlig sändare samt mottagare i en radiostyrd bil med nya datorer och även möjliggöra styrning från en telefonapplikation. Avsikten är även att implementera en kontrollapplikation som ska kunna stoppa bilen från att kollidera. Följden av detta blir en produkt mer anpassad till aktuell teknik och det erhålls på så sätt en mer modern teknisk produkt.
 
-
-%Syftet med detta projekt är att uppdatera den klassiska radiostyrda bilen med hjälp av ny teknik som bluetooth. För att följaktligen erhålla en mer modern teknisk produkt.
 
 \subsection{Mål}
 Projektets övergripande syfte bryts upp i delmål som mer detaljerade är angivna nedan.
@@ -115,9 +100,6 @@ Projektets övergripande syfte bryts upp i delmål som mer detaljerade är angiv
 \centering
 \caption{\it MD407, en ARM-dator.}
 \end{figure} 
-
-%Målförslag
-%Projektet går ut på att ersätta delar av elektroniken i en radiostyrd bil. Sändaren samt mottagaren som finns i handkontrollen ska bytas ut till en ny handkontroll. Nya handkontrollens sändnings singnal kommer ändras till att slutligen bli  Bluetooth. I samband med singnal bytet kommer nya handkontrollen att anpassad till andara ändringar som ska genomföras. Andra ändringar som ker berör bland annat skälva bilen. Bilens elektronik ska bytas ut mot ARM-baserade system. Vidare ska en kontrollapplikation implementeras i bilen med hjälp av ett antal avståndsmätare. Därefter ska bilen programeras så den självständigt ska kunna köra rakt fram i högsta möjliga takt och bromsa in helt på ett avstånd av maximalt 1 cm från en vägg. Sista steget i arbetsprosessen är att med hjälp av Bluetooth signalen utveckla en aplickation som ska kunna styra bilen och fungera som en fullfjädrad handkontroll.
 
 \subsection{Arbetsmetod}
 I detta avsnitt finns en överblick av hur projektet utförts vid olika moment. Det börjar med ett avsnitt över projektets administration och följs av en beskrivning av varje komponent som konstrueras i systemet. Dessa är angivna i ordningen de utförs.
@@ -313,7 +295,10 @@ Den sändande datorenheten MD407 skickar värden från potentiometern till den m
 
 
 \subsubsection{Sändare: Androidapplikation}
-Androidapplikationen agerar som handkontroll. Detta följer samma protokoll som tidigare nämnts där de 2 mest signifikanta bitarna i varje byte bestämmer vilken sorts signal som ska ändras och de resterande bitarna bestämmer med vilket värde detta ska ske. Mobilapplikationen har på skärmen virtuella reglage (se Figur XX) som ska emulera ordinarie handkontrollens analoga funktion så att exempelvis hastighetsövergången är så jämn som möjligt. Denna skickar bytes seriellt till bilens dator via sin integrerade Bluetooth-modul.
+Androidapplikationen agerar som handkontroll. Denna har på skärmen virtuella reglage (se Figur XX) som ska emulera ordinarie handkontrollens analoga funktion så att exempelvis hastighetsövergången är så jämn som möjligt. Applikationen har även en tilläggsknapp som aktiverar kontrollapplikationen. Bytes skickas sedan seriellt till mottagarens Bluetooth-modul. Detta följer likadant protokoll som tidigare nämnts där de 2 mest signifikanta bitarna i varje byte bestämmer vilken sorts signal som ska ändras och de resterande bitarna bestämmer med vilket värde detta ska ske. 
+
+
+ %Denna skickar bytes seriellt till bilens dator via sin integrerade Bluetooth-modul.
 
 \begin{figure}[H]
 \includegraphics[scale=0.2]{applikation1.png}
@@ -403,9 +388,12 @@ Resultatet av detta är ett fullt fungerande system. Datorenheten får värden f
 Följande punkter har verifierat att Androidapplikationen fungerar enligt specifikation:
 
 \begin{itemize}
+\item Det är möjligt att aktivera telefonens Bluetooth och upprätta en anslutning till bilens Bluetooth-modul.
 \item Kan skicka värden till den mottagande enheten som ger korrekt följd.
 \item Kontrollapplikationen startas och utförs när detta begärs.
 \end{itemize}
+
+Applikationen fungerar som förväntat. Den kan aktivera Bluetooth och på så sätt ansluta till mottagarens modul. Emellertid kopplar telefonens inbyggda Bluetooth betydligt snabbare än de tilläggsfunktioner som funnits tillgängliga. Rätt värden skickas och bilens agerande efter detta är korrekt. Även kontrollapplikationen aktiveras och utförs riktigt.
 
 %RESULTAT
 %Fila
@@ -494,7 +482,10 @@ Projektgruppen vill belysa en möjlig designuppgradering till handkontrollen. De
 
 %ANDROIDAPPLIKATION
 \vspace{5mm} \noindent
-Med Androidapplikationen ses stora möjligheter. 2013 ägdes en smartphone av ungefär 90\% av Sveriges befolkning mellan 12-45 år~\cite{smartphoneStat}. Telefonapplikationen vänder sig till en väldigt stor andel av folket och projektgruppen ser därför positivt på att utveckla denna. Fokuset med Androidapplikationen har varit på en hårdvarunivå och utseendet är därför inte så tilltalande. Potentialen för att vidareutveckla applikationen är således väldigt god och det blir då möjligt att fokusera på designen och implementation över flertal operativsystem. Med tanke på andelen människor som skulle kunna använda denna telefonapplikation anser projektgruppen att den väger tungt för marknaden. En konsument som innehar applikationen skulle kunna koppla sin telefon via Bluetooth till sin radiobil och handkontrollen blir då inte längre en extra komponent som behöver bäras med. Samma konsument skulle även kunna styra andra radiobilar rent intuitivt, så länge denna bil har en mottagande Bluetooth-modul och likadana kommandofunktioner. Skulle detta möjliggöras kan det behövas att konstruera ett säkerhetslager så att oinbjudna parter ej kan styra bilen.
+Med Androidapplikationen ses stora möjligheter. 2013 ägdes en smartphone av ungefär 90\% av Sveriges befolkning mellan 12-45 år~\cite{smartphoneStat}. Telefonapplikationen vänder sig till en väldigt stor andel av folket och projektgruppen ser därför positivt på att utveckla denna. Fokuset med Androidapplikationen har varit på en hårdvarunivå och utseendet är därför inte så tilltalande. Ur ett designperspektiv är till exempel inte de två reglage som applikationen använder sig av optimalt för styrning av bilen. En bättre lösning varit att ersätta reglagen med en joystick. Applikationen skulle även kunna bli mer användarvänlig genom att tydliggöra knapparnas funktion och på lämpligt sätt sammanställa styrningen och Bluetooth-gränssnittet i samma skärm. Dessutom då taktil återkoppling är opraktiskt på en pekskärm skulle exempelvis audiell återkoppling eller vibration underlätta styrning. Utöver detta kan applikationen implementeras på ett flertal operativsystem och då vara tillgänglig för större andel användare. En konsument som innehar applikationen skulle kunna koppla sin telefon via Bluetooth till sin radiobil och handkontrollen blir då inte längre en extra komponent som behöver bäras med. Denna konsumenten skulle även kunna styra andra radiobilar, rent intuitivt, så länge denna bil har en mottagande Bluetooth-modul och likadana kommandofunktioner. Skulle detta möjliggöras kan det behövas att konstruera ett säkerhetslager så att oinbjudna parter ej kan ta kontroll över bilen.
+
+
+% Potentialen för att vidareutveckla applikationen är således väldigt god och det blir då möjligt att fokusera på designen och implementation över flertal operativsystem. Med tanke på andelen människor som skulle kunna använda denna telefonapplikation anser projektgruppen att den väger tungt för marknaden. En konsument som innehar applikationen skulle kunna koppla sin telefon via Bluetooth till sin radiobil och handkontrollen blir då inte längre en extra komponent som behöver bäras med. Samma konsument skulle även kunna styra andra radiobilar, rent intuitivt, så länge denna bil har en mottagande Bluetooth-modul och likadana kommandofunktioner. Skulle detta möjliggöras kan det behövas att konstruera ett säkerhetslager så att oinbjudna parter ej kan styra bilen.
 
 %KONTROLLAPPLIKATION
 \vspace{5mm} \noindent
