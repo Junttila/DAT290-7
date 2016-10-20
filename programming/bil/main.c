@@ -301,7 +301,7 @@ void break_test()
         //s=distance_read()*13+1475000;
         //write_value_SCI(USART1,s/10000);
         write_SCI(USART1,'b');
-        if(s<1750)
+        if(s<1200)
         {
             CCR3_update(110);
             break;
@@ -334,7 +334,6 @@ void main(void)
     uint16_t offset = 110;
     pulse_init();
     IC_init();
-    break_test();
     //break_test();
     //appInit();
     //bt_config();
