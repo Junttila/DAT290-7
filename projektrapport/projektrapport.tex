@@ -105,10 +105,15 @@ Dokumentation och kommunikation utförs enligt planen för projektet. Ett versio
 \subsubsection{Allmänt: Kodning}
 Standarder för kodning är bestämd för underlätta implementation. Programkoder är för samtliga komponenter förutom Androidapplikationen skrivna i C med utvecklingsmiljön Codelite.  För att kunna överföra kod till datorenheterna som ersätter mottagare och sändare utnyttjas programmet ETERM. En kompilerad kod exekveras då och genom direktkoppling till en port på respektive enhet kan koden sparas och senare användas. Hjälpfunktioner till all programkod har erhållits av uppdragsgivarens samt STMicroelectronics~\cite{STM} kodbibliotek. Utvecklingen av applikationen skedde istället i Java genom Eclipse och importerades sedan till Android Studio, en miljö där stöd för att skapa Androidapplikationer finns.
 
+%%% tycker att istället i meningen: "Utvecklingen av applikationen skedde (istället) i Java genom Eclipse och importerades sedan till Android Studio, en miljö där stöd för att skapa Androidapplikationer finns." ska bort. för du behövs den inte längre.
+
+
 %en utvecklingsmijö för Andriodapplikationer - ORDLISTA
 
 \subsubsection{Delsystem: Konstruktion av mottagare}
-Projektet inleds med att mäta upp befintliga styrsignaler. För att kunna återskapa signalerna som skickas från den ursprungliga mottagaren till bilens styrelektronik mättes signalerna upp med hjälp av ett oscilloskop. Det som möjliggjorde detta var ett tillhandahållet kretskort som kopplat till bilens kontrollenhet kunde separera signalerna. Bilens samtliga funktioner testades och utslagen blev de värden som användes till verifiering för korrekt replikering av styrsignaler. Signalerna är av typen PWM och både dess cykeltid och frekvens mättes upp i motorns och rattutslagens maximala lägen. 
+Projektet inleds med att mäta upp befintliga styrsignaler. För att kunna återskapa signalerna som skickas från den ursprungliga mottagaren till bilens styrelektronik mättes signalerna upp med hjälp av ett oscilloskop. Det som möjliggjorde detta var ett tillhandahållet kretskort som kopplat till bilens kontrollenhet separera signalerna. Bilens samtliga funktioner testades och utslagen blev de värden som användes till verifiering för korrekt replikering av styrsignaler. Signalerna är av typen PWM och både dess cykeltid och frekvens mättes upp i motorns och rattutslagens maximala lägen. 
+
+%%% Tog bort "kunde" i meningen : "Det som möjliggjorde detta var ett tillhandahållet kretskort som kopplat till bilens kontrollenhet (kunde) separera signalerna." 
 
 \vspace{5mm} \noindent
 Den nya mottagaren återskapar dessa signaler. En MD407 ersätter den ursprungliga mottagaren och dess systemklocka utnyttjas för att skicka rätt styrsignaler till korrekt styrelektronik. Dessa värden testas utförligt för att kunna säkerställa att de replikerande styrsignalerna är identiska i jämförelse med de ursprungliga.
@@ -205,8 +210,10 @@ Radiolänken verifieras kontinuerligt. Mottagar- och sändarmodul kopplas om vid
 
 
 \subsubsection{Delsystem: Konstruktion av Androidapplikation}
-Mobilapplikationen följer ett antal specifikationer. Den ska vara funktionell på en Androidtelefon och kopplas till den radiostyrda bilen via Bluetooth. Denna utökning av systemet har verifierats genom att testa att samtliga funktioner fungerar och att reglagen på applikationen ger rätt resultat hos bilens styrelektronik. 
+Mobilapplikationen följer ett antal specifikationer. Den ska vara funktionell på en Androidtelefon och kopplas till den radiostyrda bilen via Bluetooth. Denna utökning av systemet verifierats genom att testa att samtliga funktioner fungerar och att reglagen på applikationen ger rätt resultat hos bilens styrelektronik. 
 
+%%% tar bort har i meningen: "Denna utökning av systemet (har) verifierats genom att testa att samtliga funktioner fungerar och att reglagen på applikationen ger rätt resultat hos bilens styrelektronik. 
+"
 
 %först konstruerat två applikationer separat. Den ena är det grafiska användargränssnittet
 
@@ -223,7 +230,9 @@ Kontrollapplikationen konfigureras i mottagaren. Applikationen som vid aktiverin
 
 
 \noindent
-Avståndsmätarens utdata fångas upp av en funktion. Denna konstrueras och kalibreras för att enligt målet bromsa in helt 1 cm från objektet. Kalibrering sker via testning av funktionen med olika inställningar där effektiviteten utvärderas. Utdatan från avståndsmätaren mäts även upp med hjälp av oscilloskop för att säkerställa att funktionen reagerar på rätt sätt vid olika värden.
+Avståndsmätarens utdata fångas upp av en funktion. Funktionen konstrueras och kalibreras för att utföra givet mål, att bromsa in helt 1 cm från ett objektet. Kalibrering sker via testning av funktionen med olika inställningar där effektiviteten utvärderas. Utdatan från avståndsmätaren mäts även upp med hjälp av oscilloskop för att säkerställa att funktionen reagerar på rätt sätt vid olika värden.
+
+%%% ändrar på mening två i stycket från: "Denna konstrueras och kalibreras för att enligt målet bromsa in helt 1 cm från objektet." tillvad som nu strår.
 
 \vspace{5mm} \noindent
 Aktivering implementeras från två olika plattformar. Då både den sändande datorenheten och Androidapplikationen ska kunna initiera kontrollapplikationen konstrueras en möjlighet till detta på respektive system. %DETTA IMPLEMENTERAS MHA...
@@ -431,6 +440,8 @@ Nedanstående punkter användes för att testa kontrollapplikationen.
 \item Fungerar från sändande Androidapplikation.
 \end{itemize}
 
+%%% kanse skriva en text här mer om vad resultatet var. så som de överstående punterna gar.
+
 %RESULTAT
 
 
@@ -447,7 +458,7 @@ Mindre förändringar har under projektets gång skett. Då ersättandet av kont
 Projektet följde ej tidsmodellen som givits i planen. Ett antal fel i de tillhandahållna biblioteken ledde till extra verifikation för att kunna erhålla rätt hjälpfunktioner. Utöver detta gick bilens styrservo sönder på grund av felaktiga PWM-signaler som t systemet. Arbetet krävde därav lite mer tid när detta skedde. I det stora hela var implementationen av de ersättande mottagar- och sändarnoderna mer invecklade än vad som uppfattats vid början av projektet och detta ledde i sin tur till tid som gick till extra verifikation. Parallellt arbete utnyttjades dock, vilket gjorde att produkten trots allt blev färdig som planerat.
 
 %HANDKONTROLL
-vspace{5mm} \noindent
+\vspace{5mm} \noindent
 Projektgruppen vill belysa vidareutveckling av sändar- samt mottagarnod. Delsystemen är implementerade endast genom hårdvara, ett konsumentvänligt lager finns ej. Detta möjliggör för stor frihet i designen för en butiksfärdig produkt. Ett användarvänligt skal skulle kunna konstrueras för både den ersättande handkontrollen och bilen med den nya mottagaren. 
 
 
