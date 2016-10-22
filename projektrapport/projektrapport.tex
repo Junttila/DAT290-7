@@ -71,9 +71,6 @@ Godkänd  & NAMN     & DATUM         \\ \hline
 {\bf RF-moduler} - Radiofrekvensmoduler. Är antingen sändare eller mottagare och möjliggör för radiofrekvensiell överföring~\cite{RFModule}.
 
 
-
-
-
 \newpage
 \section{Introduktion}
 Radiostyrda bilar började produceras på mitten av 60-talet~\cite{RCHistory}. Dessa drevs då med hjälp av bensin och körde relativt långsamt. Ett drygt decennium senare ersattes motorerna med elektriska varianter och kort därefter började tävlingar anordnas. Detta ledde till en väldig popularitet för radiobilen som hobby och utvecklingen kom då att fokusera på konstruktion av bilar som kunde uppnå högre hastigheter. Trots dessa mindre förändringar har den radiostyrda bilens uppbyggnad i det stora hela förblivit densamma.
@@ -101,72 +98,24 @@ Projektets övergripande syfte bryts upp i delmål som är angivna nedan.
 \subsection{Arbetsmetod}
 I detta avsnitt finns en överblick av hur projektet utförts vid olika moment. Det börjar med två avsnitt över projektets generella specifikationer och följs av en beskrivning av varje komponent som konstrueras i systemet. Dessa är angivna i ordningen de utförs.
 
-\subsubsection{Allmänt: Projektledning \\ Projektledning}
+\subsubsection{Projektledning}
 Dokumentation och kommunikation utförs enligt planen för projektet. Ett versionshanteringssystem, Git, används för att enkelt kunna lagra filer mellan olika datorer. Applikationen Slack utnyttjas för att möjliggöra strukturerad kommunikation och utöver detta sker möten en gång i veckan för att varje projektgruppsmedlem ska få aktuell information. Veckovisa meddelanden för projektets fortskridande har givits till uppdragsgivaren. Detta på grund av att det ska vara enkelt att följa utvecklingen. Under projektets gång delades gruppen upp i mindre arbetslag som självständigt fokuserade på första och andra målet, tredje målet samt dokumentationen. Detta gjordes för att kunna arbeta parallellt med uppgifter och således få mer djupgående förståelse för dessa.
 
-\subsubsection{Allmänt: Kodning \\ Kodning}
-Standarder för kodning är bestämda för underlätta implementation. Programkoder är för samtliga komponenter förutom Androidapplikationen skrivna i C med utvecklingsmiljön Codelite. För att kunna överföra kod till datorenheterna som ersätter mottagare och sändare utnyttjas programmet ETERM. En kompilerad kod laddas då upp via en direktkoppling mellan datorn där koden skrivs och respektive enhet. Programmet kan därefter exekveras. Hjälpfunktioner till all programkod har erhållits av uppdragsgivarens samt STMicroelectronics~\cite{STM} kodbibliotek. 
-
-%VAR SKA DENNA INFO FINNAS
-%%%%%%%%%Utvecklingen av Androidapplikationen skedde istället i Java genom Eclipse och importerades sedan till Android Studio, en miljö där stöd för att skapa Androidapplikationer finns.
-
-%%% tycker att istället i meningen: "Utvecklingen av applikationen skedde (istället) i Java genom Eclipse och importerades sedan till Android Studio, en miljö där stöd för att skapa Androidapplikationer finns." ska bort. för du behövs den inte längre.
-
-
-%en utvecklingsmijö för Andriodapplikationer - ORDLISTA
+\subsubsection{Kodning}
+Standarder för kodning är bestämda för underlätta implementation. Programkoder är för samtliga komponenter förutom Androidapplikationen skrivna i C med utvecklingsmiljön Codelite. För att kunna överföra kod till datorenheterna som ersätter mottagare och sändare utnyttjas programmet ETERM. En kompilerad kod laddas då upp via en direktkoppling mellan datorn där koden skrivs och respektive enhet. Programmet kan därefter exekveras. Hjälpfunktioner till all programkod har erhållits av uppdragsgivarens samt STMicroelectronics~\cite{STM} kodbibliotek. Utvecklingen av Androidapplikationen skedde istället i Java och importerades sedan till Android Studio, en miljö där stöd för att skapa Androidapplikationer finns.
 
 \subsubsection{Styrsignaler}
 Projektet inleds med att mäta upp befintliga styrsignaler. För att kunna återskapa signalerna som skickas från den ursprungliga mottagaren till bilens styrelektronik mättes signalerna upp med hjälp av ett oscilloskop. Det som möjliggjorde detta var ett tillhandahållet kretskort som kopplat till bilens kontrollenhet separerar signalerna. Bilens samtliga funktioner testades och utslagen blev de värden som användes till verifiering för replikering av identiska styrsignaler. Signalerna är av typen PWM och både dess cykeltid och frekvens mättes upp i motorns och rattutslagens maximala lägen. 
 
-\noindent
-%LÄGG TILL I METOD
-%Genom projektet har styrsignaler konstant mätts upp. PWM-signalerna till styrelektroniken i bilen har under varje tillfälle mätts upp med hjälp av oscilloskop. Detta för att kunna urskilja vilka signaler bilen uppfattar, samt verifiera att värdena är korrekta.
 
-\subsubsection{Delsystem: Konstruktion av mottagare \\ Konstruktion av mottagare}
-\vspace{5mm} \noindent
+\subsubsection{Konstruktion av mottagare}
 Den nya mottagaren återskapar PWM-signaler identiska till det ursprungliga systemet. En MD407 ersätter den ursprungliga mottagaren och dess systemklocka utnyttjas för att skicka rätt styrsignaler till korrekt styrelektronik. Dessa värden verifieras med oscilloskop samt på hårdvaran för att kunna säkerställa att de replikerande styrsignalerna är identiska i jämförelse med de ursprungliga. 
 
 
-%RESULTAT??????
-%De verifieras även genom att mätas upp med hjläp av ett oscilloskop för att kunna veta vilka signaler som skickas till styrelektroniken och därmed kunna kontrollera att de får rätt följd.
 
 
-%Mottagaren ersätts med en ny datorenhet, MD407. Denna erhåller seriellt bytes som skickas från en sändare (se Figur 2). Byten analyseras och dess systemtimer utnyttjas för skicka rätt signal till korrekt styrelektronik.
 
-%Enheten MD407 användes och dess systemtimer utnyttjades för att möjliggöra för att rätt signal skickas till rätt del i styrelektroniken. När mottagaren seriellt erhåller värden är detta via bytes (se Figur 2). Dessa analyseras i datorenheten 
-
-%kopplas ett kretskort, Adapter Maverick, till bilens egna kontrollenhet, MRX-242. Kretskortet har möjlighet att separera mottagarens signaler och kopplat till ett oscilloskop går det att urskilja specifika signaler så de tydligt kan mätas upp. Intervall för frekvens och cykeltid identifierades och specfierades enligt motorns och rattutslagens olika lägen.
-
-%Signalerna är av typen PWM och deras värde bestäms av medelspänningen. 
-
-
-%\subsubsection{Konfiguration av ny mottagare}
-%Mottagaren i bilen ersätts först med en ny datorenhet. Enheten MD407 används här för att byta ut den ursprungliga mottagaren. Systemets integrerade klocka användes för att replikera de ursprungliga signalerna som tidigare mätts upp. Med hjälp a pulsbredsmodulering kunde dessa
-
-
-%En MD407-enhet ersätter mottagaren i bilen. På enheten finns ett integrerat kretskort som hanterar systemets timer. Denna konfigureras till att hantera utdatan som direkt är kopplad till bilens styrelektronik. 
-%
-%Information erhålls en mottagande modul. Mottagaren tar seriellt emot bytes 
-
-%En MD407-enhet ersätter mottagaren i bilen. Kanalerna CH3 och CH4 på det integrerade timer-kretskortet, TIM2, konfigureras för att hanteras av portarna PA2 respektive PA3 i C-koden. Koden, utvecklad i Codelite, initierar CH3 till att reglera motorstyrningen och CH4 till att kontrollera rattutslagen. Följden av detta blir att portarna PA2 och PA3 i den ersättande mottagaren kopplas direkt till bilens styrelektronik, en kabel till motorn och en till styrservot. 
-
-%\vspace{5mm} \noindent
-%Information tas emot genom en mottagande modul. När mottagarmodulen erhåller ett meddelande triggas en funktion i koden. Denna ska undersöka vilket kommando som ska utföras samt till vilken grad detta skall göras enligt bitarnas anvisningar i Figur 2. Värdet 1 eller 2 på kommandobitarna leder till att bilens motor eller styrservo påverkas i angiven ordning. Tar mottagaren exempelvis emot kommandot att bilen ska ändra motorhastigheten skickas denna information till motorns styrelektronik. Den nya hastigheten beror på storleken av värdet. Värdet på meddelandet från sändaren skickas som en PWM-signal till den begärda styrelektroniken i bilen som fångar upp dessa under en period(se exempel i Figur 3), uppfattar värdet och agerar. Detta arbete har förenklats med hjälp av kodbibliotek från STMicroelectronics som innehåller funktioner för att initiera PWM-genererande. Observera att bilen endast svarar korrekt på värden där PWM-signalen är hög under ungefär 8\%-12.4\% av perioden, en högre eller lägre andel än detta kan få elektroniken att överbelastas. Värden i meddelanden mellan RF-modulerna kan antas från 0-63, utifrån 6 bitar, och TIM2 konfigureras därför till att addera en offset av 110 innan PWM-signalen skickas till styrelektroniken för att möjliggöra för korrekt avläsning.
-
-%\begin{figure}[H]
-%\includegraphics[scale=1]{aByteComVal.jpg}
-%\centering
-%\caption{\it Specifikationer av byten som seriellt skickas från sändare till mottagare.}
-%\end{figure} 
-
-%\begin{figure}[H]
-%\includegraphics[scale=1]{PWMsignals.jpg}
-%\centering
-%\caption{\it Exempel på möjliga PWM-signaler. Om byten indikerar att motorn ska påverkas kommer den i fall A och B köra i högsta fart baklänges respektive framlänges. I fall C hamnar bilen i neutralt läge och står då stilla. Signalen i fall D tolkas ej av bilens styrelektronik då det ligger utanför dess avläsningsintervall.}
-%\end{figure} 
-
-
-\subsubsection{Delsystem: Konstruktion av sändare \\ Konstruktion av sändare}
+\subsubsection{Konstruktion av sändare}
 En MD407 ersätter sändaren. Reglage för styrning implementeras med hjälp av två potentiometrar (se Figur 2) som kopplas till datorenheten. Dess värden kan då enkelt erhållas av MD407 som sedan översätter dessa analoga värden till digitala via en integrerad ADC. Detta implementeras med hjälp av stödfunktioner från de tidigare nämnda kodbiblioteken.
 
 \begin{figure}[H]
@@ -175,57 +124,29 @@ En MD407 ersätter sändaren. Reglage för styrning implementeras med hjälp av 
 \caption{\it En potentiometer.}
 \end{figure} 
 
-
-
-%\begin{figure}[H]
-%\includegraphics[scale=0.05]{PotentiometerMedRitning.jpg}
-%\centering
-%\caption{\it En potentiometer. A, B och C representerar kolumner. B leder ström och kopplas till A respektive C med kort kabel såsom bilden visar. För att få värden till datorenheten kopplas även en kabel från A, rad 1, och C, rad 4, till MD407}
-%\end{figure} 
-
-\subsubsection{Delsystem: Radiolänk mellan mottagare och sändare \\ Radiolänk mellan mottagare och sändare}
+\subsubsection{Radiolänk mellan mottagare och sändare}
 Datorenheterna kommunicerar via en radiolänk. Primärt kopplas en RF-mottagare och -sändare (se Figur 3) till respektive enhet för att möjliggöra ett informationsflöde över 433MHz-bandet. När systemet fungerar med dessa ersätts de av Bluetooth-moduler (se Figur 3) som istället kommunicerar över en frekvens av 2.4GHz. Kommunikation över Bluetooth kräver initiering av roller till modulerna vilket görs genom AT-kommandon. 
 
 
 
 \begin{figure}[H]
 \centering
-\includegraphics[scale=0.06]{RF-transmitter.jpg}
-\includegraphics[scale=0.05]{RF-receiver.jpg} \\ \vspace{2mm}
-\includegraphics[scale=0.07]{BluetoothFront.jpg}
-\includegraphics[scale=0.078]{BluetoothBack.jpg}
-
+\includegraphics[scale=0.048]{RF-transmitter.jpg}
+\includegraphics[scale=0.04]{RF-receiver.jpg} \\ \vspace{2mm}
+\includegraphics[scale=0.06]{BluetoothFront.jpg}
+\includegraphics[scale=0.066]{BluetoothBack.jpg}
 \caption{\it På övre raden ses en RF-mottagare samt RF-sändare (i angiven ordning) och på undre raden en Bluetooth-moduls framsida samt baksida (i angiven ordning)}
 \end{figure} 
-
-
-
 
 \vspace{5mm} \noindent
 Radiolänken verifieras kontinuerligt. Mottagar- och sändarmodul kopplas in vid varje tillfälle under hela verifikationstiden för att erhålla det konstanta flödet av testning. Utöver detta används ett oscilloskop för att kunna säkerställa hur kommunikationen mellan mottagar- och sändarmodul fungerar. Det kopplas då till sändaren respektive mottagaren för att verifiera att ett värde i sändarnoden motsvarar korrekt värde i mottagarnoden. Vid tillfällen då felsökning genomförts på grund av felaktiga signaler till mottagarmodulen har enheterna direktkopplats via en kabel för att kunna utesluta radiolänken som problem.
 
 
-
-
- %samman med RF-moduler. Med hjälp av programmet ETERM kan USART genom USB koppla två bärbara datorer till sändare och mottagare för att ladda upp kompilerad C-kod till MD407-enheterna som då kan utföra operationer utifrån koden. PA0-porten på sändaren initieras till kretskortet UART4 som i sin tur kopplas till en RF-sändare på DATA-pinnen. UART4 kan då skicka data via PA0 till RF-modulen. En identisk procedur görs på mottagaren men på PB11-porten med kretskortet USART3 och en RF-mottagare. Resterande inkopplingar av RF-modulerna görs enligt Figur 5. Koden påbörjar därefter att seriellt skicka bytes med information från sändarens potentiometer till mottagarens enhet för avläsning. Viktigt är att koden initierar bytes att skickas från sändaren ungefär 100 gånger i sekunden för att minska störningar och få värdeövergångarna att bli så jämna som möjligt. Stöd från hjälpfunktioner i bibliotek möjliggör för att kunna skriva till PA0-porten och läsa från PB11-porten. Koden är utvecklad i Codelite.
-
-%LÄGG TILL FIGUR
-%\vspace{5mm} \noindent
-%En Bluetooth-modul ersätter RF-modulerna. För att kunna möjliggöra meddelanden över Bluetooth kopplas en sådan modul in efter det är verifierat att systemet fungerar med de radiofrekvensiella modulerna. Kablar kopplas till samma portar som RF-modulerna och konfigureras sedan till master respektive slave genom AT-kommandon till modulerna separat. Detta motsvarar sändande respektive mottagande modul. Den sändande modulen paras med den mottagande när de båda har ström och möjliggör då för seriell sändning av bytes mellan dem. Konfigurationerna för master och slave sparas och behöver därför ej göras om vid nästa uppstart.
-
-%\begin{figure}[H]
-%\includegraphics[scale=0.06]{RF-transmitter.jpg}
-%\includegraphics[scale=0.05]{RF-receiver.jpg}
-%\centering
-%\caption{\it 4-pin RF-sändaren (vänster) och 3-pin RF-mottagare (höger). GND kopplas till datorenheternas GPIO-portar för jord och VCC till deras 5V-portar.}
-%\end{figure} 
-
-
-\subsubsection{Delsystem: Konstruktion av Androidapplikation \\ Konstruktion av Androidapplikation}
+\subsubsection{Konstruktion av Androidapplikation}
 Mobilapplikationen följer ett antal specifikationer. Den ska vara funktionell på en Androidtelefon och kopplas till den radiostyrda bilen via Bluetooth. Dess styrning implementeras genom reglage på skärmen som enkelt kan dras åt olika håll. Denna utökning av systemet verifieras genom samtliga funktioner samt att applikationens reglage ger rätt respons hos bilens styrelektronik. 
 
 
-\subsubsection{Delsystem: Konstruktion av kontrollapplikation \\ Konstruktion av kontrollapplikation}
+\subsubsection{Konstruktion av kontrollapplikation}
 Kontrollapplikationen implementeras i mottagaren. Aktivering av denna applikation möjliggörs i båda sändarnoderna. Den ska kunna undvika kollision och detta möjliggörs med en avståndsmätare (se Figur 4) fastkopplad på bilen. Denna aktiveras med hjälp av fördröjningsfunktioner från de tillhandahållna biblioteken. Komponenten skickar sedan data till mottagaren som specificerar avståndet till närmsta hinder. Utdatan från avståndsmätaren mäts även upp med hjälp av oscilloskop för att säkerställa att kontrollapplikationen reagerar på rätt sätt vid olika värden. Dessa värden fångas upp av en funktion. Funktionen konstrueras och kalibreras för att utföra givet mål, att bromsa in helt innan ett hinder. Kalibrering sker via testning av funktionen med olika inställningar där effektiviteten utvärderas. 
 
 
@@ -235,8 +156,6 @@ Kontrollapplikationen implementeras i mottagaren. Aktivering av denna applikatio
 \caption{\it HC-SR04, avståndsmätaren i detta projekt.}
 \end{figure} 
 
-%\noindent
-%Aktivering implementeras från båda sändarnoderna. Då både den sändande datorenheten och Androidapplikationen ska kunna initiera kontrollapplikationen konstrueras en möjlighet till detta på respektive system. 
 
 
 \newpage
@@ -254,7 +173,7 @@ Bilens styrsignaler kontrolleras av en kontrollenhet, MRX-242~\cite{projektDir}.
 \subsection{Systemöversikt}
 Systemet har två huvuddelar, en MD407 samt en Androidapplikation som båda kan agera som sändarnod, och en MD407 som genererar signaler till motorerna.
 
-\subsubsection{Styrning: Från MD407 till MD407 \\ Styrning från MD407 till MD407}
+\subsubsection{Styrning från MD407 till MD407}
 \begin{figure}[H]
 \includegraphics[width=\textwidth]{systemoversikt.jpg}
 \centering
@@ -264,7 +183,7 @@ Systemet har två huvuddelar, en MD407 samt en Androidapplikation som båda kan 
 
 Enligt Figur 5 erhålls en överblick över hur systemet fungerar. Den sändande datorenheten MD407 får information från ett fysiskt gränssnitt, två potentiometrar, och skickar dessa värden via Bluetooth till den mottagande MD407 som tar emot värdena och överlämnar dessa till bilens styrelektronik som agerar efter dem.
 
-\subsubsection{Styrning: Från Androidapplikation till MD407 \\ Styrning från Androidapplikation till MD407}
+\subsubsection{Styrning från Androidapplikation till MD407}
 \begin{figure}[H]
 \includegraphics[width=\textwidth]{systemoversiktAndroid.jpg}
 \centering
@@ -280,7 +199,7 @@ Denna del av texten beskriver detaljerat hur de separata systemen fungerar. Ordn
 
 
 
-\subsubsection{Sändare: MD407 \\ MD407 som sändarnod}
+\subsubsection{MD407 som sändarnod}
 Den sändande MD407 skickar värden från potentiometrarna till den mottagande enheten. Sändaren försörjer dess inkopplade potentiometrar med ström och läser konstant av utmatningsportarna för dess vridkontakter. På datorenheten finns en integrerad ADC, vilken tar emot värdena från potentiometrarna och översätter dessa från analoga till digitala värden. Det skickas sedan 8-bitars värden mellan sändare och mottagare vilka ställs in enligt specifikationerna i Figur 7. Ändras exempelvis vridkontakten på potentiometern för motorn ska kommandot initieras till det värde där mottagaren i sin tur sänder informationen till motorns elektronik. De 6 minst signifikanta bitarna beror på värdet datorenheten erhåller från potentiometrarna och tillsammans med kommandot skickas det seriellt från sändarens Bluetooth-modul och avläses i mottagarens.
 
 
@@ -291,19 +210,8 @@ Den sändande MD407 skickar värden från potentiometrarna till den mottagande e
 \end{figure} 
 
 
-
-
-%Potentiometern kopplas enligt anvisningar från Figur 4 och även sedan till MD407 via en flatkabel för strömförsörjning enligt tidigare nämnd figur. Kablarna som kopplas till datorenheten sätts på PC1-porten och PC2-porten på MD407 i angiven ordning från figuren. De reglerar hastigheten respektive rattutslaget. Initiering av detta skrivs i C med utvecklingsmiljön Codelite.
-
-%De tre kolumnerna av pinnar som finns i mitten på potentiometern(se Figur 2) använts till olika ändamål. Den mittersta kolumnen möjliggör för ström, därav får de vridbara kontakterna på potentiometern ström genom de korta sladdarna mellan strömkolumen till respektive vridkontakt. Sladden från den sista kolumnen på samma rad kopplat till MD407 ger värden konstant till datorenheten. På denna enhet finns en integrerad ADC. Denna tar emot värdena från portarna PC1 samt PC2 och översätter det till digitala värden. Genom RF-moduler kan de nya datorenheterna kommunicera. Resultatet skickas från sändarens RF-modul en byte åt gången 100 gånger i sekunden till mottagarens RF-modul. Specifikationerna som följs är att de första 2 bitarna indikerar kommandot och de resterande 6 bitarna med vilket värde kommandot ska utföras. 
-
-
-
-\subsubsection{Sändare: Androidapplikation \\ Androidapplikation som sändarnod}
+\subsubsection{Androidapplikation som sändarnod}
 Androidapplikationen agerar som sändarnod. Denna ansluter först till mottagarens Bluetooth-modul för att möjliggöra kommunikation mellan dessa. På skärmen finns sedan virtuella reglage (se Figur 8) som emulerar ordinarie handkontrollens analoga funktion så att exempelvis hastighetsövergången är så jämn som möjligt. Applikationen har även en tilläggsknapp som aktiverar kontrollapplikationen. Via Bluetooth-anslutning skickas sedan bytes seriellt från telefonen till mottagarens Bluetooth-modul. Detta följer likadant protokoll som tidigare nämnts där de 2 mest signifikanta bitarna i varje byte bestämmer vilken sorts signal som ska ändras och de resterande bitarna bestämmer med vilket värde detta ska ske. 
-
-
- %Denna skickar bytes seriellt till bilens dator via sin integrerade Bluetooth-modul.
 
 \begin{figure}[H]
 \includegraphics[scale=0.2]{Mobilapp1.png}
@@ -319,15 +227,17 @@ Kontrollapplikationen kan aktiveras från en sändande enhet. Båda sändarnoder
 \vspace{5mm} \noindent
 En $10\mu s$ hög puls triggar igång avståndsmätaren. Då detta sker får porten för eko på avståndsmätaren värdet 1 och ultraljud skickas ut i 8 stycken 40kHz-pulser~\cite{DistMeasure}. Om ultraljudet återvänder sätts eko-porten till 0 och pulsens bredd används för att bestämma avståndet till objektet. Detta sker genom att funktionen för kontrollapplikationen ökar en variabel inkrementellt efter varje $\mu s$. Detta tal dividerat med 58 ger avståndet till hindret i cm~\cite{DistMeasure}. Ifall inget hinder uppmäts efter en viss tid sänks pinnens värde till 0, pulsens längd tydliggör då att inget hinder finns i närheten.
 
-\vspace{5mm} \noindent
+
+\newpage
+\noindent
 Funktionen som styr kontrollapplikationen implementeras i mottagaren. När kommandot från sändarnoden indikerar aktivering av denna funktion skickas värdet 155 till motorn, vilket får bilen att köra i medelhög fart. Bilen fortsätter köra i denna hastigheten tills variabeln som mäter $\mu s$ uppnår värdet 8000, alternativt ungefär 138 cm. Värdet till motorn sänks då till 151, vilket motsvarar en låg fart. Denna hastighet pågår tills bilen befinner sig 1750$\mu s$ ifrån hindret, då den påbörjar motorbromsning.
 
 
-\subsubsection{Radiolänk: Bluetooth-modul \\ Radiolänk via Bluetooth}
+\subsubsection{Radiolänk via Bluetooth}
 Det som möjliggör kommunikation mellan sändare och mottagare är en Bluetooth-modul. Två likadana moduler kopplas till respektive datorenhet vilka då kan sända samt ta emot data från dessa. Modulerna är antingen konfigurerade till att vara Master eller Slave. Master-modulen letar aktivt efter en Slave-modul i närheten och kan vid upptäckt elektroniskt kopplas till den. Detta leder till att Master kan skicka data till Slave utan att riskera störningar från andra Bluetooth-enheter.
 
 
-\subsubsection{Mottagare: MD407 \\ MD407 som mottagarnod}
+\subsubsection{MD407 som mottagarnod}
 Signalerna som sändaren skickar hanteras av mottagarens datorenhet. När programmet på denna dator påbörjas måste datorn initialt skicka PWM-signaler som motsvarar neutralt läge för drivmotorn i en kort stund innan övriga signaler kan sändas. Efter detta börjar mottagaren seriellt ta emot bytes från sändaren genom sin Bluetooth-mottagare. Enheten startar även PWM-signalsgenerering till bilens styrelektronik. 
 
 \vspace{5mm} \noindent
@@ -360,13 +270,6 @@ Bilens styrelektronik erhåller PWM-signaler från mottagaren. Under en period a
 \caption{\it Exempel på möjliga PWM-signaler. Om kommandot indikerar motorpåverkning kommer den i fall A och B köra i högsta fart baklänges respektive framlänges. I fall C hamnar bilen i neutralt läge och står då stilla.}
 \end{figure} 
 
-%\vspace{5mm} \noindent
-%PWM-signalerna kan endast avläsas korrekt av styrelektroniken på specifika värden. I varje period under en PWM-signal kan spänningen antingen vara 0, låg, eller 1, hög. Det som bilens styrelektronik svarar på är hur stor del av perioden signalen är hög (se Figur 3),  alternativt hur stor del av signalen som sänder 3.4V. Medelspänningen vid styrning och hastighet när styrningen är maximalt åt vänster respektive höger och hastigheten är maximalt bakåt respektive framåt går från 269mV till 423mV. Bilen når således högsta möjliga vänsterlutning samt fart bakåt vid 269mV, neutralt läge vid 348mV och maximal högerlutning samt fart framåt vid 423mV. Genom att dividera dessa värden enskilt med den maximala spänningen, som kan skickas från pinnarna på MD407, och sedan multiplicera med perioden, erhålls det värde bilens styrelektronik läser av. Detta resulterar i att bilen lyssnar på värden mellan 110-173 klockcykler under en period av 1388 klockcykler, det vill säga en andel av ungefär 8\%-12.4\% av hög signal. Detta styrs i bilen med hjälp av datorenhetens tidsmekanismer och dess standardbibliotek.
-
-%\vspace{5mm} \noindent
-%Information tas emot genom en mottagande modul. När mottagarmodulen erhåller ett meddelande triggas en funktion i koden. Denna ska undersöka vilket kommando som ska utföras samt till vilken grad detta skall göras enligt bitarnas anvisningar i Figur 2. Värdet 1 eller 2 på kommandobitarna leder till att bilens motor eller styrservo påverkas i angiven ordning. Tar mottagaren exempelvis emot kommandot att bilen ska ändra motorhastigheten skickas denna information till motorns styrelektronik. Den nya hastigheten beror på storleken av värdet. Värdet på meddelandet från sändaren skickas som en PWM-signal till den begärda styrelektroniken i bilen som fångar upp dessa under en period(se exempel i Figur 3), uppfattar värdet och agerar. Detta arbete har förenklats med hjälp av kodbibliotek från STMicroelectronics som innehåller funktioner för att initiera PWM-genererande. Observera att bilen endast svarar korrekt på värden där PWM-signalen är hög under ungefär 8\%-12.4\% av perioden, en högre eller lägre andel än detta kan få elektroniken att överbelastas. Värden i meddelanden mellan RF-modulerna kan antas från 0-63, utifrån 6 bitar, och TIM2 konfigureras därför till att addera en offset av 110 innan PWM-signalen skickas till styrelektroniken för att möjliggöra för korrekt avläsning.
-
-
 
 
 
@@ -376,7 +279,7 @@ Den resulterande produkten har under projektets tid nått verifikationspunkter. 
 
 %Verifikationspunkter anges nedan och resultatet beskrivs efteråt.
 
-\subsection{Sändare: MD407 \\ MD407 som sändarnod}
+\subsection{MD407 som sändarnod}
 Den sändande datorenheten MD407 verifieras på följande punkter:
 \begin{itemize}
 \item MD407 kan generera kommandosignaler.
@@ -389,7 +292,7 @@ Den sändande datorenheten MD407 verifieras på följande punkter:
 Resultatet av detta är ett fullt fungerande system. MD407 kan vid testning generera signaler direkt till mottagaren. Detta fungerar även när den erhåller värden från potentiometrarna. Dessa översätts korrekt till digitala värden som sedan kan skickas från sändarnoden. Dessutom kan kontrollapplikationen aktiveras och utföras på rätt sätt.
 
 
-\subsection{Sändare: Androidapplikation \\ Androidapplikation som sändarnod}
+\subsection{Androidapplikation som sändarnod}
 Följande punkter har verifierat att Androidapplikationen fungerar enligt specifikation:
 
 \begin{itemize}
@@ -401,9 +304,8 @@ Följande punkter har verifierat att Androidapplikationen fungerar enligt specif
 \noindent
 Applikationen fungerar som förväntat. Den kan aktivera Bluetooth och på så sätt ansluta till mottagarens modul. Emellertid kopplar telefonens inbyggda Bluetooth betydligt snabbare till mottagarens än de tilläggsfunktioner som funnits tillgängliga till applikationen. Rätt värden skickas och bilens agerande efter detta är korrekt. Även kontrollapplikationen aktiveras och utförs riktigt.
 
-%RESULTAT
-%Fila
-\subsection{Kommunikationlänk}
+\newpage
+\subsection{Kommunikationslänk}
 Informationsflödet mellan datorenheterna har testats i tre nivåer kontinuerligt under projektets gång:
 \begin{itemize}
 \item Kommunikation är möjligt via direktkopplad kabel.
@@ -414,7 +316,7 @@ Informationsflödet mellan datorenheterna har testats i tre nivåer kontinuerlig
 \noindent
 Vid slutfört projekt kunde alla punkter uppfyllas. Bilens ersättande mottagare har kunnat kommunicera med sändaren via en direktkopplad kabel, en RF-modul och till slut en Bluetooth-modul. När något ej fungerat i flödet mellan sändare och respons på styrsignal har kommunikationen förflyttats till den första nivån för att förenkla felsökning.
 
-\subsection{Mottagare: MD407 \\ MD407 som mottagarnod}
+\subsection{MD407 som mottagarnod}
 En mottagande MD407 har verifierats enligt följande punkter:
 
 \begin{itemize}
@@ -455,56 +357,35 @@ Mindre förändringar har under projektets gång skett men i övrigt har projekt
 %TA MED ATT DET TOG LÄNGRE TID BC FEL I BIBLIOTEK, STYRSERVO SÖNDER
 
 %VARFÖR MÅL 1 TOG LÄNGRE TID
-Projektet följde ej tidsmodellen som givits i planen. Ett antal fel i de tillhandahållna biblioteken ledde till extra verifikation för att kunna erhålla rätt hjälpfunktioner. Utöver detta gick bilens styrservo sönder på grund av att felaktiga PWM-signaler skickats till styrelektroniken som då har överbelastats. Dessutom var implementationen av de ersättande mottagar- och sändarnoderna mer invecklade än vad som uppfattats vid början av projektet och detta krävde därför mer tid än vad som gavs i projektplanen. Parallellt arbete utnyttjades dock, vilket mildrade effekten av uppgiften som tagit mer tid än beräknat. 
+Projektet följde ej tidsmodellen som givits i planen. Ett antal fel i de tillhandahållna biblioteken ledde till extra verifikation för att kunna erhålla rätt hjälpfunktioner. Utöver detta slutade bilens styrservo att fungera på grund av att felaktiga PWM-signaler skickats till styrelektroniken som då överbelastades. Dessutom var implementationen av de ersättande mottagar- och sändarnoderna mer invecklade än vad som uppfattats vid början av projektet och detta krävde därför mer tid än vad som gavs i projektplanen. Parallellt arbete utnyttjades dock, vilket mildrade effekten av uppgiften som tagit mer tid än beräknat. 
 
 %HANDKONTROLL
 \vspace{5mm} \noindent
 Projektgruppen vill belysa en vidareutveckling av sändar- samt mottagarnod. Delsystemen är endast hårdvarunära implementerade, ett konsumentvänligt lager finns ej. Detta möjliggör för stor frihet i designen för en butiksfärdig produkt. Ett användarvänligt skal skulle kunna konstrueras för både den ersättande handkontrollen och bilen med den nya mottagaren. 
-%hårdvarunra i andra meningen antar jag ska vara hårdvarunära
 
 
 %ANDROIDAPPLIKATION
 \vspace{5mm} \noindent
-Med Androidapplikationen ses stora möjligheter. 2013 ägdes en smartphone av ungefär 90\% av Sveriges befolkning mellan 12-45 år~\cite{smartphoneStat}. Telefonapplikationen vänder sig till en väldigt stor andel av folket och projektgruppen ser därför positivt på att utveckla denna. Fokuset med Androidapplikationen har varit på en hårdvarunära nivå och utseendet är därför inte så tilltalande. Ur ett designperspektiv är till exempel inte de två reglage som applikationen använder sig av optimala för styrning av bilen. En bättre lösning hade varit att ersätta reglagen med en joystick. Applikationen skulle även kunna bli mer användarvänlig genom att implementera taktil återkoppling, exempelvis via vibrationer. På lämpligt sätt kan även en sammanställning av styrningen och Bluetooth-gränssnittet hjälpa Androidapplikationen. Utöver detta kan applikationen implementeras på ett flertal operativsystem och således vara tillgänglig för en större mängd användare. 
+Med Androidapplikationen ses stora möjligheter. 2013 ägdes en smartphone av ungefär 90\% av Sveriges befolkning mellan 12-45 år~\cite{smartphoneStat}. Telefonapplikationen vänder sig till en väldigt stor andel av folket och projektgruppen ser därför positivt på att utveckla denna. Fokuset med Androidapplikationen har varit på en hårdvarunära nivå och utseendet är därför inte så tilltalande. Ur ett designperspektiv är till exempel inte de två reglage som applikationen använder sig av optimala för styrning av bilen. En bättre lösning hade varit att ersätta reglagen med en joystick. Applikationen skulle även kunna bli mer användarvänlig genom att implementera taktil återkoppling, exempelvis via vibrationer. På lämpligt sätt kan även en sammanställning av skärmen för styrning och Bluetooth-gränssnitt hjälpa Androidapplikationen. Utöver detta skulle applikationen kunna implementeras på ett flertal operativsystem och således vara tillgänglig för en större mängd användare. 
 
 \vspace{5mm} \noindent
-Androidapplikationen skulle kunna användas till flera olika ändamål. Förutom att den är praktisk då den externa handkontrollen inte längre behövs skulle en användare kunna ansluta till ett flertal bilar via sin applikation. Denna användare skulle då kunna styra andra radiobilar så länge de har en mottagande Bluetooth-modul och likadana kommandofunktioner. Detta skulle vara användbart då risken för att bilens handkontroll kommer bort eller förstörs elimineras. Även kostnaderna för produkten skulle minskas både för tillverkare och konsument eftersom handkontrollen inte behövs. Skulle denna styrning möjliggöras kan det dock behövas att konstruera ett säkerhetslager så att oinbjudna parter ej kan ta kontroll över bilen.
+Androidapplikationen skulle kunna användas till flera olika ändamål. Förutom att den är praktisk då den externa handkontrollen inte längre behövs skulle en användare kunna ansluta till ett flertal bilar via sin applikation. Denna användare skulle då kunna styra andra radiobilar så länge de har en mottagande Bluetooth-modul och likadana kommandofunktioner. Detta skulle vara användbart då risken för att bilens handkontroll kommer bort eller förstörs elimineras. Även kostnaderna för produkten minskas både för tillverkare och konsument eftersom handkontrollen inte behövs. Skulle denna styrning möjliggöras kan det dock behövas att konstruera ett säkerhetslager så att oinbjudna parter ej kan ta kontroll över bilen.
 
 
 
 %HUR VI BESTÄMDE SPECIFIKATIONER ÖVER KONTROLLAPPLIKATION
-\vspace{5mm} 
+\newpage
 \noindent
 Kontrollapplikationen kunde ej färdigställas efter givna mål. Enligt specifikationen skulle bilen stanna högst 1 cm från närmaste hinder, men detta kunde ej uppnås med den ålagda tiden för uppgiften. Det finns flera felkällor som bidragit till svårigheter i utvecklingen. För det första har avståndsmätaren varit mer opålitlig än förväntat vilket lett till att inkonsekventa värden tagits emot. För det andra är bilens egna bromssystem svagt och påverkas av batteriets styrka. Det är därmed svårt att förutsäga bromssträckan. För det tredje störs avståndsmätaren av vibrationer från bilens motor vilket försämrar noggrannheten av uppmätningen ytterligare. 
 
 \vspace{5mm} \noindent
-Ett par faktorer hade kunnat förbättra kontrollapplikationen. En avläsningsalgoritm som bättre filtrerar värden hade givit mer fördelaktig data som noggrannare kunnat beräkna tiden då bilen ska bromsa. Dessutom hade en funktion som beräknar bilens hastighet kunnat användas till att bestämma rätt inbromsningsavstånd beroende på farten. Dessa faktorer hade kunnat resultera i en bättre kontrollapplikation som hade större kontroll över bilen.
-
-
-%Värdesfel som den enklare modellen ger ibland hade då undvikits.
-
-%\vspace{5mm} \noindent
-% Dessutom hade fler avståndsmätare lett till bättre verifiering för bilens omkringliggande miljö. Försämringar av kontrollapplikationen då bilens hjul är något svängda hade kunnat reduceras radikalt om inte helt elimineras.
-
-
-
-%KONTROLLAPPLIKATION
-%\vspace{5mm} \noindent
-%Om man ser till ett större perspektiv finns även här implementationsförslag. Kontrollapplikationen skulle i framtiden kunna spela en stor roll. Även fast koden som använts i det här projektet endast fungerar med samma moduler som utnyttjats, hindrar inte det användning i större sammanhang. Det aktuella forskningsområdet, självstyrande bilar, har gjort att många frågor kring säkerhet ställts. En kontrollapplikation som vid aktivering stannar på ett visst maximalavstånd från ett hinder skulle kunna spela stor roll i passagerarnas säkerhet. Detta skulle då behöva fler, större sensorer och koden skulle behöva använda sig av mer verifierade funktioner för att kunna garantera säkerhet.  
-
-
-
-%En radiobil är bara ett exempel på produkter där projektets mål kan appliceras. Andra produkter som styrs via radiolänk kan även de uppdateras enligt denna projekts modell. 
-
-%Tekniken är färdigställd, överförandet till en konsumentvänlig produkt 
+Ett par faktorer hade kunnat förbättra kontrollapplikationen. En avläsningsalgoritm som bättre filtrerar värden hade givit mer fördelaktig data som noggrannare kunnat beräkna tiden då bilen ska påbörja motorbromsning. Dessutom hade en funktion som mäter bilens hastighet kunnat användas till att bestämma rätt inbromsningsavstånd beroende på farten. Dessa faktorer hade kunnat resultera i en bättre kontrollapplikation som möjliggjort för större kontroll över bilen.
 
 
 
 \vspace{5mm} \noindent
-%SAMMANFATTNING, GLÖM INTE ATT ÅTERKOPPLA TILL INLEDNING
 Sammanfattningsvis innehåller detta projekt en radiostyrd bil med modern teknik. Uppgradering med nya datorer reducerar utdaterad teknik och dess funktioner passar väl in med det som är aktuellt idag. Grunden för systemet är utfört och stora designmöjligheter finns hos sändarnoderna samt hos mottagarnoden. Kort sagt resulterar detta projekt i en stor uppdatering till den klassiska radiostyrda bilen där modern teknik är implementerad.
 
-%I det större perspektivet finns idag smartphones hos en ännu större del av befolkningen än tidigare nämnt, vilket resulterar i en ännu större potentiell marknad för telefonapplikationen.  Dagens teknik fokuserar även mycket på självstyrande bilar och en funktion som undviker krock kan komma att spela stor roll. Både för passagerarnas säkerhet, men även miljön runt omkring bilen där demolering undviks.
 
 
 
